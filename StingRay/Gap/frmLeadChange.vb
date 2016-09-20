@@ -259,7 +259,7 @@ Public Class frmLeadChange
                     changeString = changeString & "affinityCode = '" & modExtra.dictAffinities.Item(item.subItems(1).Text) & "'"
                 ElseIf item.Text = "Status" And item.subItems(1).Text = "Allocated" Then
                     changeLoadedDate = True
-                    changeString = changeString & item.Text & " = '" & item.subItems(1).Text & "'"
+                    changeString = changeString & "Status = 'Allocated', Outcome = NULL"
                 Else
                     changeString = changeString & item.Text & " = '" & item.subItems(1).Text & "'"
                 End If

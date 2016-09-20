@@ -117,20 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lbAllocationExplination.Text" xml:space="preserve">
-    <value>How It Works:
-Your convRate is calculated by looking at the outbound sales you've made in the last 2 weeks
-and dividing this by the outbound leads you've recieved over the last 2 weeks.
-ie: 10 sales / 100 leads recieved = 10% conversion rate.
-
-Allocation of outbound leads by conversion rate:
-Less than 8% = 10 outbound leads per day
-Between 8% and 10% = 15 outbound leads per day
-Above 10% = 30 outbound ledas per day
-
-Agent's will not be allocated outbound leads if they have 20 or more allocated leads.
-Agent's will not be allocated leads if they are not at work.
-
-This allocation is only for outbound leads and inbound leads will be split evenly amoungst agents.</value>
-  </data>
 </root>

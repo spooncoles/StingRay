@@ -27,6 +27,8 @@ Partial Class frmChangeTempAffinity
         Me.txNewAdminCode = New System.Windows.Forms.TextBox()
         Me.btConfirm = New System.Windows.Forms.Button()
         Me.cbSalesOnly = New System.Windows.Forms.CheckBox()
+        Me.txAdminCode = New System.Windows.Forms.TextBox()
+        Me.txAffName = New System.Windows.Forms.TextBox()
         CType(Me.dgTempAffinities, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -35,13 +37,13 @@ Partial Class frmChangeTempAffinity
         Me.dgTempAffinities.AllowUserToAddRows = False
         Me.dgTempAffinities.AllowUserToDeleteRows = False
         Me.dgTempAffinities.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgTempAffinities.Location = New System.Drawing.Point(13, 13)
+        Me.dgTempAffinities.Location = New System.Drawing.Point(13, 30)
         Me.dgTempAffinities.MultiSelect = False
         Me.dgTempAffinities.Name = "dgTempAffinities"
         Me.dgTempAffinities.ReadOnly = True
         Me.dgTempAffinities.RowHeadersVisible = False
         Me.dgTempAffinities.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgTempAffinities.Size = New System.Drawing.Size(320, 373)
+        Me.dgTempAffinities.Size = New System.Drawing.Size(320, 356)
         Me.dgTempAffinities.TabIndex = 0
         '
         'Label1
@@ -82,11 +84,29 @@ Partial Class frmChangeTempAffinity
         Me.cbSalesOnly.Text = "Sales Only"
         Me.cbSalesOnly.UseVisualStyleBackColor = True
         '
+        'txAdminCode
+        '
+        Me.txAdminCode.Location = New System.Drawing.Point(13, 4)
+        Me.txAdminCode.MaxLength = 20
+        Me.txAdminCode.Name = "txAdminCode"
+        Me.txAdminCode.Size = New System.Drawing.Size(100, 20)
+        Me.txAdminCode.TabIndex = 5
+        '
+        'txAffName
+        '
+        Me.txAffName.Location = New System.Drawing.Point(119, 4)
+        Me.txAffName.MaxLength = 20
+        Me.txAffName.Name = "txAffName"
+        Me.txAffName.Size = New System.Drawing.Size(100, 20)
+        Me.txAffName.TabIndex = 6
+        '
         'frmChangeTempAffinity
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(452, 397)
+        Me.Controls.Add(Me.txAffName)
+        Me.Controls.Add(Me.txAdminCode)
         Me.Controls.Add(Me.cbSalesOnly)
         Me.Controls.Add(Me.btConfirm)
         Me.Controls.Add(Me.txNewAdminCode)
@@ -107,4 +127,6 @@ Partial Class frmChangeTempAffinity
     Friend WithEvents txNewAdminCode As System.Windows.Forms.TextBox
     Friend WithEvents btConfirm As System.Windows.Forms.Button
     Friend WithEvents cbSalesOnly As System.Windows.Forms.CheckBox
+    Friend WithEvents txAdminCode As TextBox
+    Friend WithEvents txAffName As TextBox
 End Class

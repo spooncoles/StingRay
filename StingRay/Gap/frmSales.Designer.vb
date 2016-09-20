@@ -35,6 +35,7 @@ Partial Class frmSales
         Dim Series5 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Dim Series6 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Dim Title1 As System.Windows.Forms.DataVisualization.Charting.Title = New System.Windows.Forms.DataVisualization.Charting.Title()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSales))
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tbYourStats = New System.Windows.Forms.TabPage()
         Me.chAgentSales = New System.Windows.Forms.DataVisualization.Charting.Chart()
@@ -51,6 +52,11 @@ Partial Class frmSales
         Me.dgTeamSales = New System.Windows.Forms.DataGridView()
         Me.tbTargets = New System.Windows.Forms.TabPage()
         Me.chAgentTargets = New System.Windows.Forms.DataVisualization.Charting.Chart()
+        Me.tbOutboundAllocation = New System.Windows.Forms.TabPage()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.dgTop5Outbound = New System.Windows.Forms.DataGridView()
+        Me.lbAllocationExplination = New System.Windows.Forms.Label()
+        Me.dgAgentOutboundStats = New System.Windows.Forms.DataGridView()
         Me.dtTo = New System.Windows.Forms.DateTimePicker()
         Me.dtFrom = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -68,6 +74,9 @@ Partial Class frmSales
         CType(Me.dgTeamSales, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tbTargets.SuspendLayout()
         CType(Me.chAgentTargets, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tbOutboundAllocation.SuspendLayout()
+        CType(Me.dgTop5Outbound, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgAgentOutboundStats, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -77,6 +86,7 @@ Partial Class frmSales
         Me.TabControl1.Controls.Add(Me.tbGrid)
         Me.TabControl1.Controls.Add(Me.tbTeamSalesGrid)
         Me.TabControl1.Controls.Add(Me.tbTargets)
+        Me.TabControl1.Controls.Add(Me.tbOutboundAllocation)
         Me.TabControl1.Location = New System.Drawing.Point(0, 35)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -293,6 +303,63 @@ Partial Class frmSales
         Title1.ToolTip = "Runs from the previous Monday to Sunday"
         Me.chAgentTargets.Titles.Add(Title1)
         '
+        'tbOutboundAllocation
+        '
+        Me.tbOutboundAllocation.Controls.Add(Me.Label3)
+        Me.tbOutboundAllocation.Controls.Add(Me.dgTop5Outbound)
+        Me.tbOutboundAllocation.Controls.Add(Me.lbAllocationExplination)
+        Me.tbOutboundAllocation.Controls.Add(Me.dgAgentOutboundStats)
+        Me.tbOutboundAllocation.Location = New System.Drawing.Point(4, 22)
+        Me.tbOutboundAllocation.Name = "tbOutboundAllocation"
+        Me.tbOutboundAllocation.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbOutboundAllocation.Size = New System.Drawing.Size(805, 429)
+        Me.tbOutboundAllocation.TabIndex = 5
+        Me.tbOutboundAllocation.Text = "Outbound Allocation"
+        Me.tbOutboundAllocation.UseVisualStyleBackColor = True
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(551, 103)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(178, 13)
+        Me.Label3.TabIndex = 3
+        Me.Label3.Text = "Top 5 outbound affinities this month:"
+        '
+        'dgTop5Outbound
+        '
+        Me.dgTop5Outbound.AllowUserToAddRows = False
+        Me.dgTop5Outbound.AllowUserToDeleteRows = False
+        Me.dgTop5Outbound.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgTop5Outbound.Location = New System.Drawing.Point(554, 119)
+        Me.dgTop5Outbound.Name = "dgTop5Outbound"
+        Me.dgTop5Outbound.ReadOnly = True
+        Me.dgTop5Outbound.RowHeadersVisible = False
+        Me.dgTop5Outbound.Size = New System.Drawing.Size(240, 150)
+        Me.dgTop5Outbound.TabIndex = 2
+        '
+        'lbAllocationExplination
+        '
+        Me.lbAllocationExplination.AutoSize = True
+        Me.lbAllocationExplination.Location = New System.Drawing.Point(9, 87)
+        Me.lbAllocationExplination.Name = "lbAllocationExplination"
+        Me.lbAllocationExplination.Size = New System.Drawing.Size(462, 182)
+        Me.lbAllocationExplination.TabIndex = 1
+        Me.lbAllocationExplination.Text = resources.GetString("lbAllocationExplination.Text")
+        '
+        'dgAgentOutboundStats
+        '
+        Me.dgAgentOutboundStats.AllowUserToAddRows = False
+        Me.dgAgentOutboundStats.AllowUserToDeleteRows = False
+        Me.dgAgentOutboundStats.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.dgAgentOutboundStats.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgAgentOutboundStats.Location = New System.Drawing.Point(9, 7)
+        Me.dgAgentOutboundStats.Name = "dgAgentOutboundStats"
+        Me.dgAgentOutboundStats.ReadOnly = True
+        Me.dgAgentOutboundStats.RowHeadersVisible = False
+        Me.dgAgentOutboundStats.Size = New System.Drawing.Size(785, 73)
+        Me.dgAgentOutboundStats.TabIndex = 0
+        '
         'dtTo
         '
         Me.dtTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
@@ -375,6 +442,10 @@ Partial Class frmSales
         CType(Me.dgTeamSales, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tbTargets.ResumeLayout(False)
         CType(Me.chAgentTargets, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tbOutboundAllocation.ResumeLayout(False)
+        Me.tbOutboundAllocation.PerformLayout()
+        CType(Me.dgTop5Outbound, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgAgentOutboundStats, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -401,4 +472,9 @@ Partial Class frmSales
     Friend WithEvents lbSales As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents cbAgents As System.Windows.Forms.ComboBox
+    Friend WithEvents tbOutboundAllocation As TabPage
+    Friend WithEvents dgAgentOutboundStats As DataGridView
+    Friend WithEvents lbAllocationExplination As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents dgTop5Outbound As DataGridView
 End Class

@@ -17,18 +17,21 @@ Public Class frmLoadLead
 
         tabControl.TabPages(1).Enabled = False
         If frmSide.lbType.Text.Contains("Admin") Then
+
+            btAddToBatch.Visible = True
+
             cbAgent.DisplayMember = "Key"
             cbAgent.ValueMember = "Value"
             cbAgent.DataSource = New BindingSource(modExtra.dictAgents, Nothing)
 
-            Dim dgComboSource As New DataGridViewComboBoxColumn
-            dgComboSource.Name = "Source"
-            dgComboSource.HeaderText = "Source"
+            Dim dgComboSource As DataGridViewComboBoxColumn = dgLeadsToUpload.Columns("Source")
+            'dgComboSource.Name = "Source"
+            'dgComboSource.HeaderText = "Source"
             For Each source As String In sourcesArray
                 dgComboSource.Items.Add(source)
             Next
             'dgLeadsToUpload.Columns.Add(dgComboSource)
-            dgLeadsToUpload.Columns.Insert(9, dgComboSource)
+            'dgLeadsToUpload.Columns.Insert(9, dgComboSource)
 
             Dim agentColumn As DataGridViewComboBoxColumn = dgLeadsToUpload.Columns("Agent")
             For Each key In dictAgents.Keys
@@ -37,7 +40,7 @@ Public Class frmLoadLead
             agentColumn.Items.Add("")
 
             tabControl.SelectedTab = tbBatch
-            conn.fillDS("SELECT agent, SUM(IF(status = 'Busy', 1, 0)) AS 'Busy', SUM(IF(status = 'Allocated', 1, 0)) AS Allocated " _
+            conn.fillDS("SELECT agent, SUM(IF(status = 'Busy', 1, 0)) AS 'Busy', SUM(IF(status = 'Allocated', 1, 0)) AS Allocated, 0 AS inBatch " _
                         & "FROM lead_primary INNER JOIN sys_users ON agent = userName " _
                         & "WHERE active = 1 AND type = 'Agent' AND status IN ('Allocated', 'Busy') GROUP BY agent", "agentOutstanding")
             dgAgents.DataSource = conn.ds.Tables("agentOutstanding")
@@ -294,112 +297,110 @@ Public Class frmLoadLead
 #End Region
 
     Private Sub btExample_Click(sender As Object, e As EventArgs) Handles btExample.Click
-        IO.File.Copy(systemFolder & "SystemMaterial\LeadLoadExample.xlsx", IO.Path.GetTempPath & "LeadLoadExample.xlsx", True)
+        IO.File.Copy(systemFolder & "SystemMaterial\LeadLoadExample2.xlsx", IO.Path.GetTempPath & "LeadLoadExample2.xlsx", True)
         xlApp = CreateObject("Excel.Application")
-        xlWB = xlApp.Workbooks.Add(IO.Path.GetTempPath & "LeadLoadExample.xlsx")
+        xlWB = xlApp.Workbooks.Add(IO.Path.GetTempPath & "LeadLoadExample2.xlsx")
         xlWS = xlWB.Sheets(1)
         xlApp.ActiveWindow.WindowState = Excel.XlWindowState.xlMaximized
+        xlWB.RefreshAll()
         xlApp.Visible = True
         releaseObject(xlWS)
         releaseObject(xlWB)
         releaseObject(xlApp)
     End Sub
 
-    Private Sub btOpenFile_Click(sender As Object, e As EventArgs) Handles btOpenFile.Click
+#Region "Excel to Batch"
+    'Private Sub btOpenFile_Click(sender As Object, e As EventArgs)
+    '    If MsgBox("Are you sure you do not want these to be loaded to the new leads table?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+    '        If OpenFileDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+    '            xlApp = CreateObject("Excel.Application")
+    '            xlWB = xlApp.Workbooks.Open(OpenFileDialog1.FileName)
+    '            xlWS = xlWB.Sheets(1)
 
-        If OpenFileDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-            xlApp = CreateObject("Excel.Application")
-            xlWB = xlApp.Workbooks.Open(OpenFileDialog1.FileName)
-            xlWS = xlWB.Sheets(1)
+    '            Dim dictColumns As New Dictionary(Of Integer, String)
+    '            dictColumns.Add(1, "Title")
+    '            dictColumns.Add(2, "First Name")
+    '            dictColumns.Add(3, "Last Name")
+    '            dictColumns.Add(4, "Contact Number")
+    '            dictColumns.Add(5, "Email")
+    '            dictColumns.Add(6, "Agent")
+    '            dictColumns.Add(7, "AffinityName")
+    '            dictColumns.Add(8, "Comment")
+    '            dictColumns.Add(9, "Source")
+    '            dictColumns.Add(10, "AffinityCode")
+    '            dictColumns.Add(11, "AffinityID")
 
-            Dim dictColumns As New Dictionary(Of Integer, String)
-            dictColumns.Add(1, "First Name")
-            dictColumns.Add(2, "Last Name")
-            dictColumns.Add(3, "Contact Number")
-            dictColumns.Add(4, "Email")
-            dictColumns.Add(5, "Agent")
-            dictColumns.Add(6, "Comment")
-            dictColumns.Add(7, "AffinityCode")
-            dictColumns.Add(8, "SMS")
-            dictColumns.Add(9, "VIP")
-            dictColumns.Add(10, "Source")
-            dictColumns.Add(12, "AffinityID")
+    '            For i = 1 To 10
+    '                If xlWS.Cells(1, i).Value() <> dictColumns.Item(i) Then
+    '                    fixIssue("Column " & i & " should read """ & dictColumns.Item(i) & """ and not """ & xlWS.Cells(1, i).Value() & """. Please fix.", 1, i)
+    '                    Exit Sub
+    '                End If
+    '            Next
 
-            For i = 1 To 10
-                If xlWS.Cells(1, i).Value() <> dictColumns.Item(i) Then
-                    fixIssue("Column " & i & " should read """ & dictColumns.Item(i) & """ and not """ & xlWS.Cells(1, i).Value() & """. Please fix.", 1, i)
-                    Exit Sub
-                End If
-            Next
+    '            Dim lastrow As Integer
+    '            lastrow = xlWS.Cells(xlWS.Rows.Count, "J").End(Excel.XlDirection.xlUp).Row
 
-            Dim lastrow As Integer
-            lastrow = xlWS.Cells(xlWS.Rows.Count, "A").End(Excel.XlDirection.xlUp).Row
+    '            For i = 2 To lastrow
+    '                'Source Check
+    '                If Not sourcesArray.Contains(xlWS.Cells(i, "I").Value) Then
+    '                    fixIssue("Source in row " & i & " is not valid. please check.", i, 10)
+    '                    Exit Sub
+    '                End If
 
-            For i = 2 To lastrow
-                'GHIJ
-                If xlWS.Cells(i, "H").Value <> "True" And xlWS.Cells(i, "H").Value <> "False" Then
-                    fixIssue("SMS column should read either TRUE or FALSE. Please fix.", i, 7)
-                    Exit Sub
-                ElseIf xlWS.Cells(i, "I").Value <> "True" And xlWS.Cells(i, "I").Value <> "False" Then
-                    fixIssue("VIP column should read either TRUE or FALSE. Please fix.", i, 8)
-                    Exit Sub
-                ElseIf Not sourcesArray.Contains(xlWS.Cells(i, "J").Value) Then
-                    fixIssue("Source in row " & i & " is not valid. please check.", i, 10)
-                    Exit Sub
+    '                If dictAffinities.ContainsValue(xlWS.Cells(i, "J").Value) Then
+    '                    Dim pair As KeyValuePair(Of String, String)
+    '                    Dim affName As String = ""
+    '                    For Each pair In dictAffinities
+    '                        If CStr(pair.Value) = CStr(xlWS.Cells(i, "J").Value) Then
+    '                            affName = pair.Key
+    '                        End If
+    '                    Next
+    '                    dgLeadsToUpload.Rows.Add(New String() {xlWS.Cells(i, "A").Value _
+    '                                                      , xlWS.Cells(i, "B").Value _
+    '                                                      , xlWS.Cells(i, "C").Value _
+    '                                                      , xlWS.Cells(i, "D").Value _
+    '                                                      , xlWS.Cells(i, "E").Value _
+    '                                                      , xlWS.Cells(i, "F").Value _
+    '                                                      , affName _
+    '                                                      , xlWS.Cells(i, "H").Value _
+    '                                                      , xlWS.Cells(i, "I").Value _
+    '                                                      , xlWS.Cells(i, "J").Value _
+    '                                                      , xlWS.Cells(i, "K").Value})
+    '                Else
+    '                    dgLeadsToUpload.Rows.Add(New String() {xlWS.Cells(i, "A").Value _
+    '                                                      , xlWS.Cells(i, "B").Value _
+    '                                                      , xlWS.Cells(i, "C").Value _
+    '                                                      , xlWS.Cells(i, "D").Value _
+    '                                                      , xlWS.Cells(i, "E").Value _
+    '                                                      , xlWS.Cells(i, "F").Value _
+    '                                                      , "Aff Name not found" _
+    '                                                      , xlWS.Cells(i, "H").Value _
+    '                                                      , xlWS.Cells(i, "I").Value _
+    '                                                      , xlWS.Cells(i, "J").Value _
+    '                                                      , xlWS.Cells(i, "K").Value _
+    '                                                      , "" _
+    '                                                      , ""})
+    '                End If
 
-                End If
+    '            Next
 
-                If dictAffinities.ContainsValue(xlWS.Cells(i, "G").Value) Then
-                    Dim pair As KeyValuePair(Of String, String)
-                    Dim affName As String = ""
-                    For Each pair In dictAffinities
-                        If CStr(pair.Value) = CStr(xlWS.Cells(i, "G").Value) Then
-                            affName = pair.Key
-                        End If
-                    Next
-                    dgLeadsToUpload.Rows.Add(New String() {xlWS.Cells(i, "A").Value _
-                                                      , xlWS.Cells(i, "B").Value _
-                                                      , xlWS.Cells(i, "C").Value _
-                                                      , xlWS.Cells(i, "D").Value _
-                                                      , xlWS.Cells(i, "E").Value _
-                                                      , xlWS.Cells(i, "F").Value _
-                                                      , xlWS.Cells(i, "G").Value _
-                                                      , xlWS.Cells(i, "H").Value _
-                                                      , xlWS.Cells(i, "I").Value _
-                                                      , xlWS.Cells(i, "J").Value _
-                                                      , xlWS.Cells(i, "K").Value _
-                                                      , affName})
-                Else
-                    dgLeadsToUpload.Rows.Add(New String() {xlWS.Cells(i, "A").Value _
-                                                      , xlWS.Cells(i, "B").Value _
-                                                      , xlWS.Cells(i, "C").Value _
-                                                      , xlWS.Cells(i, "D").Value _
-                                                      , xlWS.Cells(i, "E").Value _
-                                                      , xlWS.Cells(i, "F").Value _
-                                                      , xlWS.Cells(i, "G").Value _
-                                                      , xlWS.Cells(i, "H").Value _
-                                                      , xlWS.Cells(i, "I").Value _
-                                                      , xlWS.Cells(i, "J").Value _
-                                                      , xlWS.Cells(i, "K").Value _
-                                                      , "Aff Name not found"})
-                End If
+    '            dgLeadsToUpload.AutoResizeColumns()
 
-            Next
+    '            xlWB.Saved = True
+    '            xlWB.Close()
+    '            releaseObject(xlWS)
+    '            releaseObject(xlWB)
+    '            releaseObject(xlApp)
 
-            dgLeadsToUpload.AutoResizeColumns()
+    '            btUpload.Enabled = False
+    '            dgLeadsToUpload.Enabled = True
+    '            btValidate.Text = "Validate"
+    '            recalcAgentAllocated()
+    '        End If
+    '    End If
 
-            xlWB.Close()
-            releaseObject(xlWS)
-            releaseObject(xlWB)
-            releaseObject(xlApp)
-
-            btUpload.Enabled = False
-            dgLeadsToUpload.Enabled = True
-            btValidate.Text = "Validate"
-
-        End If
-
-    End Sub
+    'End Sub
+#End Region
 
     Sub fixIssue(msg As String, r As Integer, c As Integer)
         MsgBox(msg)
@@ -422,70 +423,79 @@ Public Class frmLoadLead
             With dgLeadsToUpload
 
                 'Validation
-                For i = 0 To .Rows.Count - 2
-                    If i <= dgLeadsToUpload.Rows.Count - 1 Then
+                For i = 0 To .Rows.Count - 1
 
-                        If .Rows(i).Cells("Agent").Value = Nothing Then
-                            MsgBox("Please enter an agent at row " & i)
+                    If (.Rows(i).Cells("Agent").Value = Nothing) Or (.Rows(i).Cells("Agent").Value = "") Then
+                        MsgBox("Please enter an agent at row " & i)
+                        .Rows(i).DefaultCellStyle.BackColor = Color.LightPink
+                        Exit Sub
+                    Else
+                        If Not dictAgents.ContainsKey(.Rows(i).Cells("Agent").Value) Then
+                            MsgBox("Can't find agent in active agents for row " & i)
+                            .Rows(i).DefaultCellStyle.BackColor = Color.LightPink
                             Exit Sub
-                        Else
-                            If Not dictAgents.ContainsKey(.Rows(i).Cells("Agent").Value) Then
-                                MsgBox("Can't find agent in active agents for row " & i)
+                        End If
+                    End If
+
+                    If (.Rows(i).Cells("affinityCode").Value = Nothing) Or (.Rows(i).Cells("affinityCode").Value = "") Then
+                        MsgBox("Please enter an affinity at row " & i)
+                        .Rows(i).DefaultCellStyle.BackColor = Color.LightPink
+                        Exit Sub
+                    Else
+                        If Not dictAffinities.ContainsValue(.Rows(i).Cells("affinityCode").Value) Then
+                            If conn.sendReturn("SELECT adminCode from affinities WHERE adminCode = '" & .Rows(i).Cells("affinityCode").Value & "'") = "NULL" Then
+                                MsgBox("Can't find affinity/referal in affinities for row " & i & ". Check code.")
+                                .Rows(i).DefaultCellStyle.BackColor = Color.LightPink
                                 Exit Sub
                             End If
                         End If
+                    End If
 
-                        If .Rows(i).Cells("affinityCode").Value = Nothing Then
-                            MsgBox("Please enter an affinity at row " & i)
+                    'Contact Number validate and batch de-dup
+                    contactNum = .Rows(i).Cells("contactNum").Value
+                    If contactNum <> "" And contactNum <> "0" Then
+                        If validateContactNumber(contactNum) <> "Pass" Then
+                            MsgBox("Contact Number not valid in row " & i)
+                            .Rows(i).DefaultCellStyle.BackColor = Color.LightPink
                             Exit Sub
-                        Else
-                            If Not dictAffinities.ContainsValue(.Rows(i).Cells("affinityCode").Value) Then
-                                If conn.sendReturn("SELECT adminCode from affinities WHERE adminCode = '" & .Rows(i).Cells("affinityCode").Value & "'") = "NULL" Then
-                                    MsgBox("Can't find affinity/referal in affinities for row " & i & ". Check code.")
-                                    Exit Sub
-                                End If
-                            End If
+                        ElseIf contactNum.Length > 11 Then
+                            MsgBox("Contact Number greater than 11 characters in highlighted row " & i)
+                            .Rows(i).DefaultCellStyle.BackColor = Color.LightPink
+                            Exit Sub
                         End If
 
-                        contactNum = .Rows(i).Cells("contactNum").Value
-                        If contactNum <> "" And contactNum <> "0" Then
-                            If validateContactNumber(contactNum) <> "Pass" Then
-                                MsgBox("Contact Number not valid in row " & i)
-                                Exit Sub
-                            ElseIf contactNum.Length > 11 Then
-                                MsgBox("Contact Number greater than 11 characters in row " & i)
-                                Exit Sub
-                            End If
-
-                            If dictContact.ContainsKey(.Rows(i).Cells("contactNum").Value) Then
-                                MsgBox("Duplicate contact num in grid for below rows" & vbNewLine _
+                        If dictContact.ContainsKey(.Rows(i).Cells("contactNum").Value) Then
+                            MsgBox("Duplicate contact num in grid for below highlighted rows" & vbNewLine _
                                        & contactNum & " at row " & dictContact.Item(contactNum.ToString) & vbNewLine _
                                        & contactNum & " at row " & i & vbNewLine & vbNewLine & "Please fix.")
-                                Exit Sub
-                            Else
-                                dictContact.Add(contactNum, i)
-                            End If
+                            .Rows(i).DefaultCellStyle.BackColor = Color.LightPink
+                            .Rows(dictContact.Item(contactNum.ToString)).DefaultCellStyle.BackColor = Color.LightPink
+                            Exit Sub
+                        Else
+                            dictContact.Add(contactNum, i)
+                        End If
+                    End If
 
+                    'Email validate and batch de-dup
+                    If .Rows(i).Cells("email").Value <> "" Then
+                        If Not validateEmail(.Rows(i).Cells("email").Value) Then
+                            MsgBox("Email not valid in row " & i + 1)
+                            .Rows(i).DefaultCellStyle.BackColor = Color.LightPink
+                            Exit Sub
                         End If
 
-                        If .Rows(i).Cells("email").Value <> "" Then
-                            If Not validateEmail(.Rows(i).Cells("email").Value) Then
-                                MsgBox("Email not valid in row " & i + 1)
-                                Exit Sub
-                            End If
-
-                            If dictEmail.ContainsKey(.Rows(i).Cells("email").Value) Then
-                                MsgBox("Duplicate email in grid for below rows" & vbNewLine _
+                        If dictEmail.ContainsKey(.Rows(i).Cells("email").Value) Then
+                            MsgBox("Duplicate email in grid for below rows" & vbNewLine _
                                        & .Rows(i).Cells("email").Value & " at row " & dictEmail.Item(.Rows(i).Cells("email").Value) & vbNewLine _
                                        & .Rows(i).Cells("email").Value & " at row " & i & vbNewLine & vbNewLine & "Please fix.")
-                                Exit Sub
-                            Else
-                                dictEmail.Add(.Rows(i).Cells("email").Value, i)
-                            End If
-
+                            .Rows(i).DefaultCellStyle.BackColor = Color.LightPink
+                            .Rows(dictEmail.Item(.Rows(i).Cells("email").Value)).DefaultCellStyle.BackColor = Color.LightPink
+                            Exit Sub
+                        Else
+                            dictEmail.Add(.Rows(i).Cells("email").Value, i)
                         End If
-
                     End If
+                    .Rows(i).DefaultCellStyle.BackColor = Color.White
                 Next i
 
                 'De-Dup
@@ -527,6 +537,8 @@ Public Class frmLoadLead
                 MsgBox(dupsFound & " duplicate(s) found and removed. Please check dup tab!", MsgBoxStyle.Critical, "Dup(s) Found!")
                 frmLeadChange.loadSpecificLeads(dupLeads)
                 dgDups.AutoResizeColumns()
+
+                'Resize forms
                 If ((frmMain.Width - (Me.Width + frmLeadChange.Width)) / 2) > frmSide.Width + 20 Then
                     Me.Location = New Point(((frmMain.Width - (Me.Width + frmLeadChange.Width)) / 2), (frmMain.Height / 2) - (Me.Height / 2) - 20)
                 Else
@@ -559,32 +571,35 @@ Public Class frmLoadLead
             Dim leadID As Integer = 0
             For Each row As DataGridViewRow In dgLeadsToUpload.Rows
 
-                If row.Index <> dgLeadsToUpload.Rows.Count - 1 Then
+                'If row.Index <> dgLeadsToUpload.Rows.Count Then
 
-                    If Not IsDBNull(row.Cells("contactNum").Value) Then
-                        If Not IsNothing(row.Cells("contactNum").Value) Then
+                If Not IsDBNull(row.Cells("contactNum").Value) Then
+                        If (Not IsNothing(row.Cells("contactNum").Value)) And (row.Cells("contactNum").Value <> "") Then
                             If (row.Cells("contactNum").Value.ToString.Substring(0, 2) = "27") And row.Cells("contactNum").Value.ToString.Length = 11 Then
-                                contactNumberUpload = "0" & row.Cells("contactNum").Value.Substring(2, 9)
+                                contactNumberUpload = "'0" & row.Cells("contactNum").Value.Substring(2, 9) & "'"
                             Else
-                                contactNumberUpload = row.Cells("contactNum").Value.ToString()
+                                contactNumberUpload = "'" & row.Cells("contactNum").Value.ToString() & "'"
                             End If
                         Else
-                            contactNumberUpload = ""
+                            contactNumberUpload = "NULL"
                         End If
                     Else
-                        contactNumberUpload = ""
+                        contactNumberUpload = "NULL"
                     End If
 
-                    leadID = CInt(conn.sendReturn("INSERT INTO lead_primary(agent, status, affinityCode, firstName, lastName, contactNumber, emailAddress,source, loadedBy) " _
+                    Dim titleUpload As String = If(row.Cells("title").Value = "", "NULL", "'" & row.Cells("title").Value & "'")
+                    Dim firstnameUpload As String = If(row.Cells("firstName").Value = "", "NULL", "'" & row.Cells("firstName").Value & "'")
+                Dim lastNameUpload As String = If(row.Cells("lastName").Value = "", "NULL", "'" & Replace(row.Cells("lastName").Value, "'", "''") & "'")
+                Dim emailUpload As String = If(row.Cells("firstName").Value = "", "NULL", "'" & row.Cells("firstName").Value & "'")
+
+                    leadID = CInt(conn.sendReturn("INSERT INTO lead_primary(agent, status, affinityCode, title, firstName, lastName, contactNumber, emailAddress, source, loadedBy) " _
                               & "VALUES('" & row.Cells("Agent").Value & "', 'Allocated', '" & row.Cells("affinityCode").Value & "', " _
-                              & "'" & row.Cells("firstName").Value & "', '" & row.Cells("lastName").Value & "', '" & contactNumberUpload & "', '" & row.Cells("Email").Value & "', '" & row.Cells("source").Value & "', " _
+                              & titleUpload & ", " & firstnameUpload & ", " & lastNameUpload & ", " & contactNumberUpload & ", " & emailUpload & ", '" & row.Cells("source").Value & "', " _
                               & "'" & frmSide.lbUser.Text & "'); SELECT LAST_INSERT_ID();"))
-                    ' If(row.Cells("affinityID").Value <> "", "", "NULL")
                     If row.Cells("affinityID").Value <> "" And row.Cells("leadNewID").Value = "" Then
-                        'conn.send("UPDATE lead_primary SET supplierID = '" & row.Cells("affinityID").Value & "' WHERE leadID = " & leadID)
-                        conn.send("INSERT INTO lead_new (firstName, lastName, contactNumber, emailAdd, comment, supplier, supplierID, source, zestLeadID) " _
-                      & "VALUES ('" & row.Cells("firstName").Value & "', '" & row.Cells("lastName").Value & "', '" & contactNumberUpload & "', '" & row.Cells("Email").Value & "'" _
-                      & ", '" & Replace(row.Cells("comment").Value, "'", "''") & "', '" & row.Cells("affinityCode").Value & "', '" & row.Cells("affinityID").Value & "', '" & row.Cells("source").Value & "', " & leadID & ")")
+                        conn.send("INSERT INTO lead_new (title, firstName, lastName, contactNumber, emailAdd, comment, supplier, supplierID, source, zestLeadID, actionTaken) " _
+                                & "VALUES (" & titleUpload & ", " & firstnameUpload & ", " & lastNameUpload & ", " & contactNumberUpload & ", " & emailUpload _
+                                & ", '" & Replace(row.Cells("comment").Value, "'", "''") & "', '" & row.Cells("affinityCode").Value & "', '" & row.Cells("affinityID").Value & "', '" & row.Cells("source").Value & "', " & leadID & ", 'Allocated')")
                     ElseIf row.Cells("leadNewID").Value <> "" Then
                         conn.send("UPDATE lead_new SET actionTaken = 'Allocated', zestLeadID = " & leadID & " WHERE id = " & row.Cells("leadNewID").Value)
                     End If
@@ -594,7 +609,7 @@ Public Class frmLoadLead
                                   & "VALUES(" & leadID & ", '" & frmSide.lbUser.Text & "', '" & Replace(row.Cells("comment").Value, "'", "''") & "')")
                     End If
 
-                End If
+                'End If
             Next row
             notify("Leads uploaded.")
             dgLeadsToUpload.Rows.Clear()
@@ -609,7 +624,13 @@ Public Class frmLoadLead
             For Each column As DataGridViewColumn In dgLeadsToUpload.Columns
                 dgDups.Columns.Add(CType(column.Clone(), DataGridViewColumn))
             Next
-            dgDups.Columns.Add("zestDupLeadID", "zestDupLeadID")
+            'Dim dupCol As New DataGridViewTextBoxColumn
+            'dupCol.HeaderText = "zestDupLeadID"
+            'dupCol.Name = "zestDupLeadID"
+            ''dupCol.Visible = False
+
+            'dgDups.Columns.Add(dupCol)
+            ''dgDups.Columns.Add("zestDupLeadID", "zestDupLeadID")
         End If
 
         Dim targetRow = CType(dgLeadsToUpload.Rows(dataGridIndex).Clone(), DataGridViewRow)
@@ -633,10 +654,30 @@ Public Class frmLoadLead
 
             For Each row As DataGridViewRow In dgDups.Rows
                 If row.Cells("affinityID").Value <> "" And row.Cells("leadNewID").Value = "" Then
-                    'conn.send("UPDATE lead_primary SET supplierID = '" & row.Cells("affinityID").Value & "' WHERE leadID = " & leadID)
-                    conn.send("INSERT INTO lead_new (firstName, lastName, contactNumber, emailAdd, comment, supplier, supplierID, source, zestLeadID, actionTaken) " _
-                          & "VALUES ('" & row.Cells("firstName").Value & "', '" & row.Cells("lastName").Value & "', '" & row.Cells("contactNum").Value & "', '" & row.Cells("Email").Value & "'" _
-                          & ", '" & Replace(row.Cells("comment").Value, "'", "''") & "', '" & row.Cells("affinityCode").Value & "', '" & row.Cells("affinityID").Value & "', '" & row.Cells("source").Value & "', " & row.Cells("dupLeadID").Value & ", 'Duplicate')")
+                    Dim titleUpload As String = If(row.Cells("title").Value = "", "NULL", "'" & row.Cells("title").Value & "'")
+                    Dim firstnameUpload As String = If(row.Cells("firstName").Value = "", "NULL", "'" & row.Cells("firstName").Value & "'")
+                    Dim lastNameUpload As String = If(row.Cells("lastName").Value = "", "NULL", "'" & row.Cells("lastName").Value & "'")
+                    Dim emailUpload As String = If(row.Cells("firstName").Value = "", "NULL", "'" & row.Cells("firstName").Value & "'")
+
+                    Dim contactNumberUpload As String = ""
+                    If Not IsDBNull(row.Cells("contactNum").Value) Then
+                        If Not IsNothing(row.Cells("contactNum").Value) Then
+                            If (row.Cells("contactNum").Value.ToString.Substring(0, 2) = "27") And row.Cells("contactNum").Value.ToString.Length = 11 Then
+                                contactNumberUpload = "'0" & row.Cells("contactNum").Value.Substring(2, 9) & "'"
+                            Else
+                                contactNumberUpload = "'" & row.Cells("contactNum").Value.ToString() & "'"
+                            End If
+                        Else
+                            contactNumberUpload = "NULL"
+                        End If
+                    Else
+                        contactNumberUpload = "NULL"
+                    End If
+
+                    conn.send("INSERT INTO lead_new (title, firstName, lastName, contactNumber, emailAdd, comment, supplier, supplierID, source, zestLeadID, actionTaken) " _
+                                & "VALUES (" & titleUpload & ", " & firstnameUpload & ", " & lastNameUpload & ", " & contactNumberUpload & ", " & emailUpload _
+                                & ", '" & Replace(row.Cells("comment").Value, "'", "''") & "', '" & row.Cells("affinityCode").Value & "', '" & row.Cells("affinityID").Value & "', '" & row.Cells("source").Value & "', " & row.Cells("dupLeadID").Value & ", 'Duplicate')")
+
                 ElseIf row.Cells("leadNewID").Value <> "" Then
                     conn.send("UPDATE lead_new SET actionTaken = 'Duplicate', zestLeadID = " & row.Cells("dupLeadID").Value & " WHERE id = " & row.Cells("leadNewID").Value)
                 End If
@@ -672,7 +713,7 @@ Public Class frmLoadLead
 
     Public Function apiCount() As Integer
         Dim conAPI As New clConn("Dedi")
-        Dim apiLeads As Object = conAPI.sendReturn("SELECT COUNT(id) FROM lead_new WHERE zestLeadNewID IS NULL")
+        Dim apiLeads As Object = conAPI.sendReturn("SELECT COUNT(id) FROM lead_new WHERE zestLeadNewID IS NULL AND supplierID <> '123456'")
         If apiLeads <> "NULL" Then
             Return CInt(apiLeads)
         Else
@@ -688,7 +729,7 @@ Public Class frmLoadLead
         End If
         Dim contactNumberAPI As String = ""
         Dim newID As Integer
-        conAPI.fillDS("SELECT id, title, firstName, lastName, contactNumber, emailAdd, comment, source, adminCode, supplierID, supplierCampaign FROM lead_new WHERE zestLeadNewID IS NULL", "apiLeads")
+        conAPI.fillDS("SELECT id, title, firstName, lastName, contactNumber, emailAdd, comment, source, adminCode, supplierID, supplierCampaign FROM lead_new WHERE zestLeadNewID IS NULL AND supplierID <> '123456'", "apiLeads")
         For Each apiRow As DataRow In conAPI.ds.Tables("apiLeads").Rows
             If Not IsDBNull(apiRow.Item("contactNumber")) Then
                 If (apiRow.Item("contactNumber").ToString.Substring(0, 2) = "27") And apiRow.Item("contactNumber").ToString.Length = 11 Then
@@ -699,55 +740,52 @@ Public Class frmLoadLead
             Else
                 contactNumberAPI = ""
             End If
-            newID = conn.sendReturn("INSERT INTO lead_new (title, firstName, lastName, contactNumber, emailAdd, comment, supplier, supplierID, supplierCampaign, source) " _
-                                    & "VALUES ('" & apiRow.Item("title") & "', '" & apiRow.Item("firstName") & "', '" & apiRow.Item("lastName") & "', '" & contactNumberAPI & "', '" _
-                                    & apiRow.Item("emailAdd") & "', '" & apiRow.Item("comment") & "', '" & apiRow.Item("adminCode") & "', '" & apiRow.Item("supplierID") & "', '" & apiRow.Item("supplierCampaign") & "', '" & apiRow.Item("source") & "'); SELECT LAST_INSERT_ID();")
+            newID = conn.sendReturn("INSERT INTO lead_new (title, firstName, lastName, contactNumber, emailAdd, comment, supplier, supplierID, supplierCampaign, source, loadedFrom) " _
+                                    & "VALUES ('" & apiRow.Item("title") & "', '" & apiRow.Item("firstName") & "', '" & Replace(apiRow.Item("lastName"), "'", "''") & "', '" & contactNumberAPI & "', '" _
+                                    & apiRow.Item("emailAdd") & "', '" & apiRow.Item("comment") & "', '" & apiRow.Item("adminCode") & "', '" & apiRow.Item("supplierID") & "', '" & apiRow.Item("supplierCampaign") & "', '" & apiRow.Item("source") & "', 'API'); SELECT LAST_INSERT_ID();")
             If CStr(newID) <> "NULL" Then
                 conAPI.send("UPDATE lead_new SET zestLeadNewID = '" & newID & "' WHERE id = " & apiRow.Item("id"))
             End If
         Next apiRow
 
-        conn.fillDS("SELECT id, title, firstName, lastName, contactNumber, lead_new.emailAdd, comment, source, affinityName, supplier, supplierID FROM zestlife.lead_new " _
-                    & "LEFT JOIN affinities ON supplier = adminCode WHERE zestleadID IS NULL", "newLeads")
-        dgAPI.DataSource = conn.ds.Tables("newLeads")
-        dgAPI.AutoResizeColumns()
-        dgAPI.AutoResizeRows()
-        tbAPI.Text = "API (" & apiCount() & ")"
+        refreshLeadsNew()
+
     End Sub
 
     Private Sub btCopy_Click(sender As Object, e As EventArgs) Handles btCopy.Click
         If dgAPI.Rows.Count <> 0 Then
             If rbCopyAll.Checked Then
                 For Each row As DataGridViewRow In dgAPI.Rows
-                    dgLeadsToUpload.Rows.Add(New String() {row.Cells("firstName").Value _
+                    dgLeadsToUpload.Rows.Add(New String() {row.Cells("title").Value _
+                                                          , row.Cells("firstName").Value _
                                                           , row.Cells("lastName").Value _
-                                                          , row.Cells("contactNumber").Value _
-                                                          , row.Cells("emailAdd").Value _
+                                                          , Trim(row.Cells("contactNumber").Value) _
+                                                          , Trim(row.Cells("emailAdd").Value) _
                                                           , "" _
-                                                          , row.Cells("comment").Value _
-                                                          , row.Cells("supplier").Value _
-                                                          , "FALSE" _
-                                                          , "FALSE" _
-                                                          , row.Cells("source").Value _
-                                                          , row.Cells("supplierID").Value _
                                                           , row.Cells("affinityName").Value _
-                                                          , row.Cells("id").Value})
+                                                          , row.Cells("comment").Value _
+                                                          , row.Cells("source").Value _
+                                                          , row.Cells("supplier").Value _
+                                                          , row.Cells("supplierID").Value _
+                                                          , row.Cells("id").Value _
+                                                          , ""})
                 Next
             ElseIf rbCopySelected.Checked Then
                 For Each row As DataGridViewRow In dgAPI.SelectedRows
-                    dgLeadsToUpload.Rows.Add(New String() {row.Cells("firstName").Value _
+                    dgLeadsToUpload.Rows.Add(New String() {row.Cells("title").Value _
+                                                          , row.Cells("firstName").Value _
                                                           , row.Cells("lastName").Value _
-                                                          , row.Cells("contactNumber").Value _
-                                                          , row.Cells("emailAdd").Value _
+                                                          , Trim(row.Cells("contactNumber").Value) _
+                                                          , Trim(row.Cells("emailAdd").Value) _
                                                           , "" _
-                                                          , row.Cells("comment").Value _
-                                                          , row.Cells("supplier").Value _
-                                                          , "FALSE" _
-                                                          , "FALSE" _
-                                                          , row.Cells("source").Value _
-                                                          , row.Cells("supplierID").Value _
                                                           , row.Cells("affinityName").Value _
-                                                          , row.Cells("id").Value})
+                                                          , row.Cells("comment").Value _
+                                                          , row.Cells("source").Value _
+                                                          , row.Cells("supplier").Value _
+                                                          , row.Cells("supplierID").Value _
+                                                          , row.Cells("id").Value _
+                                                          , ""})
+                    dgAPI.Rows.Remove(row)
                 Next
             End If
             tabControl.SelectTab(tbBatch)
@@ -760,11 +798,7 @@ Public Class frmLoadLead
     End Sub
 
     Private Sub tbAPI_Enter(sender As Object, e As EventArgs) Handles tbAPI.Enter
-        conn.fillDS("SELECT id, title, firstName, lastName, contactNumber, lead_new.emailAdd, comment, source, affinityName, supplier, supplierID FROM zestlife.lead_new " _
-                    & "LEFT JOIN affinities ON supplier = adminCode WHERE zestleadID IS NULL", "newLeads")
-        dgAPI.DataSource = conn.ds.Tables("newLeads")
-        dgAPI.AutoResizeColumns()
-        dgAPI.AutoResizeRows()
+        refreshLeadsNew()
     End Sub
 
     Public Sub removeAndUpdateDup(dupID As Integer)
@@ -779,6 +813,7 @@ Public Class frmLoadLead
     End Sub
 
     Private Sub btAllocateSelected_Click(sender As Object, e As EventArgs) Handles btAllocateSelected.Click
+
         Dim agents(dgAgents.SelectedRows.Count) As String
         Dim i As Integer = 0
         For Each row As DataGridViewRow In dgAgents.SelectedRows
@@ -789,17 +824,17 @@ Public Class frmLoadLead
         i = 0
 
         For Each row As DataGridViewRow In dgLeadsToUpload.Rows
-            If row.Index <> dgLeadsToUpload.Rows.Count - 1 Then
-                If row.Cells("Agent").Value = "" Then
-                    row.Cells("Agent").Value = agents(i)
-                    If i = dgAgents.SelectedRows.Count - 1 Then
-                        i = 0
-                    Else
-                        i += 1
-                    End If
+            If row.Cells("Agent").Value = "" Then
+                row.Cells("Agent").Value = agents(i)
+                If i = dgAgents.SelectedRows.Count - 1 Then
+                    i = 0
+                Else
+                    i += 1
                 End If
             End If
         Next
+
+        recalcAgentAllocated()
     End Sub
 
     Private Sub cmsDelete_Click(sender As Object, e As EventArgs) Handles cmsDelete.Click
@@ -819,6 +854,296 @@ Public Class frmLoadLead
                 dgLeadsToUpload.Rows(ht.RowIndex).Selected = True
             End If
         End If
+    End Sub
+
+    Private Sub cmsEditLead_Click(sender As Object, e As EventArgs) Handles cmsEditLead.Click
+        If dgLeadsToUpload.SelectedRows.Count = 1 Then
+            For Each row As DataGridViewRow In dgLeadsToUpload.SelectedRows
+                frmLeadBatchGrid.loadLead(row.Index)
+            Next
+        End If
+    End Sub
+
+    Private Sub btAddToBatch_Click(sender As Object, e As EventArgs) Handles btAddToBatch.Click
+
+        dgLeadsToUpload.Rows.Add(New String() {cbTitle.Text _
+                                      , txFirstName.Text _
+                                      , txLastName.Text _
+                                      , txContactNum.Text _
+                                      , txEmailAdd.Text _
+                                      , cbAgent.Text _
+                                      , lbAffinityName.Text _
+                                      , txComment.Text _
+                                      , cbSource.Text _
+                                      , lbAffinityCode.Text _
+                                      , "" _
+                                      , "" _
+                                      , ""})
+    End Sub
+
+    Private Sub DeleteAsDupToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteAsDupToolStripMenuItem.Click
+        If MsgBox("Are you sure you want to delete and mark as a duplicate the selected row?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            For Each row As DataGridViewRow In dgLeadsToUpload.SelectedRows
+                If row.Cells("affinityID").Value <> "" And row.Cells("leadNewID").Value = "" Then
+                    Dim titleUpload As String = If(row.Cells("title").Value = "", "NULL", "'" & row.Cells("title").Value & "'")
+                    Dim firstnameUpload As String = If(row.Cells("firstName").Value = "", "NULL", "'" & row.Cells("firstName").Value & "'")
+                    Dim lastNameUpload As String = If(row.Cells("lastName").Value = "", "NULL", "'" & row.Cells("lastName").Value & "'")
+                    Dim emailUpload As String = If(row.Cells("firstName").Value = "", "NULL", "'" & row.Cells("firstName").Value & "'")
+                    Dim dupID As String = If(row.Cells("dupLeadID").Value = "", "0", "'" & row.Cells("dupLeadID").Value & "'")
+
+                    Dim contactNumberUpload As String = ""
+                    If Not IsDBNull(row.Cells("contactNum").Value) Then
+                        If Not IsNothing(row.Cells("contactNum").Value) Then
+                            If (row.Cells("contactNum").Value.ToString.Substring(0, 2) = "27") And row.Cells("contactNum").Value.ToString.Length = 11 Then
+                                contactNumberUpload = "'0" & row.Cells("contactNum").Value.Substring(2, 9) & "'"
+                            Else
+                                contactNumberUpload = "'" & row.Cells("contactNum").Value.ToString() & "'"
+                            End If
+                        Else
+                            contactNumberUpload = "NULL"
+                        End If
+                    Else
+                        contactNumberUpload = "NULL"
+                    End If
+
+                    conn.send("INSERT INTO lead_new (title, firstName, lastName, contactNumber, emailAdd, comment, supplier, supplierID, source, zestLeadID, actionTaken, loadedFrom) " _
+                            & "VALUES (" & titleUpload & ", " & firstnameUpload & ", " & lastNameUpload & ", " & contactNumberUpload & ", " & emailUpload _
+                            & ", '" & Replace(row.Cells("comment").Value, "'", "''") & "', '" & row.Cells("affinityCode").Value & "', '" & row.Cells("affinityID").Value & "', '" & row.Cells("source").Value & "', " & dupID & ", 'Marked As Dup by " & frmSide.lbUser.Text & "', '" & frmSide.lbUser.Text & "')")
+
+                ElseIf row.Cells("leadNewID").Value <> "" Then
+                    conn.send("UPDATE lead_new SET actionTaken = 'Marked As Dup by " & frmSide.lbUser.Text & "', zestLeadID = 0 WHERE id = " & row.Cells("leadNewID").Value)
+                End If
+                dgLeadsToUpload.Rows.Remove(row)
+            Next
+
+        End If
+    End Sub
+
+    Private Sub recalcAgentAllocated()
+        For Each rowAgent As DataGridViewRow In dgAgents.Rows
+            rowAgent.Cells("inBatch").Value = 0
+            For Each rowLead As DataGridViewRow In dgLeadsToUpload.Rows
+                If rowLead.Cells("agent").Value = rowAgent.Cells("agent").Value Then
+                    rowAgent.Cells("inBatch").Value += 1
+                End If
+            Next rowLead
+        Next rowAgent
+    End Sub
+
+    Private Sub btAutoAllocate_Click(sender As Object, e As EventArgs) Handles btAutoAllocate.Click
+        Dim agents As String = ""
+        'Dim inboundList As New List(Of Integer)
+
+        If dgAgents.SelectedRows.Count <= 1 Then
+            Dim response As MsgBoxResult = MsgBox("Would you like to allocate to all agent's?" & vbNewLine & "Yes = All agent's" & vbNewLine & "No = Selected agent", MsgBoxStyle.YesNoCancel)
+            If response = MsgBoxResult.Yes Then
+                For Each row As DataGridViewRow In dgAgents.Rows
+                    agents += "'" & row.Cells("Agent").Value & "', "
+                Next
+            ElseIf response = MsgBoxResult.No Then
+                For Each row As DataGridViewRow In dgAgents.SelectedRows
+                    agents += "'" & row.Cells("Agent").Value & "', "
+                Next
+            Else
+                Exit Sub
+            End If
+        Else
+            For Each row As DataGridViewRow In dgAgents.SelectedRows
+                agents += "'" & row.Cells("Agent").Value & "', "
+            Next
+        End If
+        agents = agents.Substring(0, agents.Length - 2)
+        recalcAgentAllocated()
+
+        conn.fillDS("SELECT lead_primary.agent, SUM(IF(status = 'Sale', 1, 0))/loaded as convRate, loadedToday, 0 AS avaliableToday, 0 AS inBatch, 0 as allocated FROM lead_primary " _
+                    & "INNER JOIN (SELECT user FROM hist_events WHERE DATE(timeStamp) = CURDATE() GROUP BY user) AS b ON user = lead_primary.agent INNER JOIN affinities on affinityCode = adminCode " _
+                    & "LEFT JOIN (SELECT agent, COUNT(leadID) as loadedToday FROM lead_primary INNER JOIN affinities on affinityCode = adminCode " _
+                    & "WHERE type = 'Outbound' AND DATE(loadedDate) = DATE(CURDATE()) GROUP BY agent) as a ON lead_primary.agent = a.agent " _
+                    & "LEFT JOIN (SELECT agent, COUNT(leadID) AS loaded FROM lead_primary WHERE DATE(loadedDate) BETWEEN DATE_SUB(curdate(), INTERVAL 2 WEEK) AND DATE_SUB(curdate(), INTERVAL 1 DAY) GROUP BY  agent) as c on lead_primary.agent = c.agent " _
+                    & "WHERE type = 'Outbound' AND DATE(closedDate) BETWEEN DATE_SUB(curdate(), INTERVAL 2 WEEK) AND DATE_SUB(curdate(), INTERVAL 1 DAY) " _
+                    & "AND lead_primary.agent IN (" & agents & ") " _
+                    & "GROUP BY lead_primary.agent  ORDER BY convRate DESC", "agentConv")
+        If conn.ds.Tables("agentConv").Rows.Count = 0 Then
+            MsgBox("No agent's avaliable today")
+            Exit Sub
+        End If
+
+
+        For Each rowConv As DataRow In conn.ds.Tables("agentConv").Rows
+            If rowConv.Item("convRate") < 0.08 Then
+                rowConv.Item("avaliableToday") = 10
+            ElseIf rowConv.Item("convRate") >= 0.08 And rowConv.Item("convRate") < 0.1 Then
+                rowConv.Item("avaliableToday") = 15
+            ElseIf rowConv.Item("convRate") >= 0.1 Then
+                rowConv.Item("avaliableToday") = 30
+            End If
+            If IsDBNull(rowConv.Item("loadedToday")) Then
+                rowConv.Item("loadedToday") = 0
+            End If
+
+            For Each row As DataGridViewRow In dgAgents.Rows
+                If rowConv.Item("agent") = row.Cells("agent").Value Then
+                    rowConv.Item("inBatch") = row.Cells("inBatch").Value
+                    rowConv.Item("allocated") = row.Cells("allocated").Value
+                End If
+            Next
+
+        Next rowConv
+
+
+        Dim count As Integer = 0
+        Dim i As Integer = 0
+        With conn.ds.Tables("agentConv")
+            For Each rowLead As DataGridViewRow In dgLeadsToUpload.Rows
+                If rowLead.Cells("Agent").Value = "" Then
+1:
+                    'Debug.Print(.Rows(i).Item("agent"))
+                    'Debug.Print(.Rows(i).Item("avaliableToday"))
+                    'Debug.Print(.Rows(i).Item("loadedToday") + .Rows(i).Item("inBatch"))
+                    If dictAffType.ContainsKey(rowLead.Cells("affinityCode").Value) Then
+
+                        If (.Rows(i).Item("loadedToday") + .Rows(i).Item("inBatch") < .Rows(i).Item("avaliableToday")) And (.Rows(i).Item("allocated") + .Rows(i).Item("inBatch") < 20) Then
+                            rowLead.Cells("Agent").Value = .Rows(i).Item("Agent")
+                            .Rows(i).Item("inBatch") += 1
+                            If i = .Rows.Count - 1 Then
+                                i = 0
+                            Else
+                                i += 1
+                            End If
+                            count = 0
+                        Else
+                            If count <= .Rows.Count Then
+                                If i = .Rows.Count - 1 Then
+                                    i = 0
+                                Else
+                                    i += 1
+                                End If
+                                count += 1
+                                GoTo 1
+                            Else
+                                GoTo 2
+                            End If
+
+                        End If
+                    End If
+                End If
+            Next rowLead
+        End With
+2:
+        'Inbound allocation
+        conn.fillDS("SELECT agent, COUNT(leadID) as inbounds FROM lead_primary INNER JOIN affinities ON adminCode = affinityCode " _
+                    & "INNER JOIN (SELECT user FROM hist_events WHERE DATE(timeStamp) = CURDATE() GROUP BY user) AS b ON user = lead_primary.agent " _
+                    & "WHERE type = 'Inbound' AND MONTH(loadedDate) = MONTH(curdate()) AND YEAR(loadedDate) = YEAR(curdate()) " _
+                    & "GROUP BY agent ORDER BY COUNT(leadID)", "agentInbounds")
+        Dim inboundCount As Integer = 0
+        For Each rowLead As DataGridViewRow In dgLeadsToUpload.Rows
+            If rowLead.Cells("Agent").Value = "" Then
+                If Not dictAffType.ContainsKey(rowLead.Cells("affinityCode").Value) Then
+                    rowLead.Cells("agent").Value = conn.ds.Tables("agentInbounds").Rows(inboundCount).Item("agent")
+                    If inboundCount >= conn.ds.Tables("agentInbounds").Rows.Count - 1 Then
+                        inboundCount = 0
+                    Else
+                        inboundCount += 1
+                    End If
+                End If
+            End If
+        Next
+
+        'Check if there's left over rows
+        Dim remainingRows As Integer = 0
+        For Each rowLead As DataGridViewRow In dgLeadsToUpload.Rows
+            If rowLead.Cells("Agent").Value = "" Then
+                remainingRows += 1
+            End If
+        Next rowLead
+
+        If remainingRows <> 0 Then
+            If MsgBox("There are " & remainingRows & " leads not allocated." & vbNewLine & "Would you like to remove these leads?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                For a = 0 To dgLeadsToUpload.Rows.Count - 1
+                    If a >= dgLeadsToUpload.Rows.Count Then
+                        Exit For
+                    ElseIf (dgLeadsToUpload.Rows(a).Cells("Agent").Value = "") And (dgLeadsToUpload.Rows(a).Cells("leadNewID").Value <> "") Then
+                        dgLeadsToUpload.Rows.Remove(dgLeadsToUpload.Rows(a))
+                        a -= 1
+                    End If
+                Next a
+            End If
+        End If
+
+        recalcAgentAllocated()
+        notify("Auto Allocation Complete")
+    End Sub
+
+    Private Sub btLoadToLeadNew_Click(sender As Object, e As EventArgs) Handles btLoadToLeadNew.Click
+        If OpenFileDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            xlApp = CreateObject("Excel.Application")
+            xlWB = xlApp.Workbooks.Open(OpenFileDialog1.FileName)
+            xlWS = xlWB.Sheets(1)
+
+            Dim dictColumns As New Dictionary(Of Integer, String)
+            dictColumns.Add(1, "Title")
+            dictColumns.Add(2, "First Name")
+            dictColumns.Add(3, "Last Name")
+            dictColumns.Add(4, "Contact Number")
+            dictColumns.Add(5, "Email")
+            dictColumns.Add(6, "Agent")
+            dictColumns.Add(7, "AffinityName")
+            dictColumns.Add(8, "Comment")
+            dictColumns.Add(9, "Source")
+            dictColumns.Add(10, "AffinityCode")
+            dictColumns.Add(11, "AffinityID")
+
+            For i = 1 To 10
+                If xlWS.Cells(1, i).Value() <> dictColumns.Item(i) Then
+                    fixIssue("Column " & i & " should read """ & dictColumns.Item(i) & """ and not """ & xlWS.Cells(1, i).Value() & """. Please fix.", 1, i)
+                    Exit Sub
+                End If
+            Next
+
+            Dim lastrow As Integer
+            lastrow = xlWS.Cells(xlWS.Rows.Count, "J").End(Excel.XlDirection.xlUp).Row
+
+            For i = 2 To lastrow
+                'Source Check
+                If Not sourcesArray.Contains(xlWS.Cells(i, "I").Value) Then
+                    fixIssue("Source in row " & i & " is not valid. please check.", i, 10)
+                    Exit Sub
+                End If
+
+                If xlWS.Cells(i, "J").Value.ToString() = "" Then
+                    fixIssue("No affinity in row " & i & ". please check.", i, 10)
+                    Exit Sub
+                End If
+
+            Next i
+
+            For i = 2 To lastrow
+                conn.send("INSERT INTO lead_new (title, firstName, lastName, contactNumber, emailAdd, comment, supplier, supplierID, source, loadedFrom) " _
+                                & "VALUES ('" & xlWS.Cells(i, "A").Value & "', '" & xlWS.Cells(i, "B").Value & "', '" & xlWS.Cells(i, "C").Value & "', '" & xlWS.Cells(i, "D").Value & "', '" _
+                                & xlWS.Cells(i, "E").Value & "', '" & xlWS.Cells(i, "H").Value & "', '" & xlWS.Cells(i, "J").Value & "', '" & xlWS.Cells(i, "K").Value & "', '" & xlWS.Cells(i, "I").Value & "', '" & frmSide.lbUser.Text & "')")
+            Next i
+
+            xlWB.Saved = True
+            xlWB.Close()
+            releaseObject(xlWS)
+            releaseObject(xlWB)
+            releaseObject(xlApp)
+
+            refreshLeadsNew()
+        End If
+
+    End Sub
+
+    Private Sub refreshLeadsNew()
+        conn.fillDS("SELECT id, title, firstName, lastName, contactNumber, lead_new.emailAdd, comment, source, affinityName, supplier, supplierID, loadedFrom FROM zestlife.lead_new " _
+            & "LEFT JOIN affinities ON supplier = adminCode WHERE zestleadID IS NULL", "newLeads")
+        dgAPI.DataSource = conn.ds.Tables("newLeads")
+
+        tbAPI.Text = "API (" & apiCount() & ")"
+    End Sub
+
+    Private Sub btRefreshInBatch_Click(sender As Object, e As EventArgs) Handles btRefreshInBatch.Click
+        recalcAgentAllocated()
     End Sub
 
 End Class

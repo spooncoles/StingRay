@@ -870,9 +870,7 @@ Public Class frmLeadView
                 Me.Cursor = Cursors.Default
 
 
-                If Format(Today, "dddd") = "Monday" Or Format(Today, "dddd") = "Saturday" Or Format(Today, "yyyy-MM-dd") = "2016-06-16" Then
-                    ballDay = True
-                ElseIf adminCode = "2577" And ((Today >= New Date(2016, 7, 26)) And (Today <= New Date(2016, 7, 29))) Then
+                If Format(Today, "dddd") = "Monday" Or Format(Today, "dddd") = "Saturday" Then
                     ballDay = True
                 End If
 
@@ -929,7 +927,7 @@ Public Class frmLeadView
             emailHTML += "<li>" & emailOption & "</li>"
             Select Case emailOption
                 Case "Personal App"
-                    attachements += completePersonalAppForm(systemFolder & "SystemMaterial\Personal App Form.docx") & ";"
+                    attachements += completePersonalAppForm(systemFolder & "SystemMaterial\Personal App Form2.docx") & ";"
                 Case Else
                     attachements += systemFolder & "SystemMaterial\" & emailOption & ".pdf" & ";"
             End Select
@@ -970,36 +968,95 @@ Public Class frmLeadView
             Dim dtp As DateTimePicker
             Dim controls As New List(Of Control) From {cbTitle, txFirstName, txLastName, dtpDOB, mtbIdNumber, cbGender, txEmailAddress, mtbContactNumber,
                                                        mtbWorkNumber, cbMedicalAid, cbMedAidPlan, txAccountHolder, cbBankName, txBranchCode, txAccountNumber, cbAccountType,
-                                                       dtpCollectionDate, mtbReplacementPolicy, mtbProcedure, txPostalLine1, txPostalLine2, cbPostalSuburb, cbPostalCity,
-                                                       cbPostalProvince, txPostalCode}
+                                                       dtpCollectionDate, cbPaymentDay, mtbReplacementPolicy, mtbProcedure, txPostalLine1, txPostalLine2, cbPostalSuburb, cbPostalCity,
+                                                       cbPostalProvince, txPostalCode, nudDependants, cbGender, cbAnnualHousehold}
             For Each control In controls
 
                 If (TypeOf control Is TextBox) Or (TypeOf control Is ComboBox) Then
-                    Console.WriteLine(control.Name)
-                    .Text = "<" & control.Tag & ">"
-                    .Replacement.Text = If(control.Text = "", " ", control.Text)
-                    .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                    If control.Name = "cbGender" Then
+                        If control.Text = "Male" Then
+                            .Text = "<male>"
+                            .Replacement.Text = "X"
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                            .Text = "<female>"
+                            .Replacement.Text = " "
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        ElseIf control.Text = "Female" Then
+                            .Text = "<male>"
+                            .Replacement.Text = " "
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                            .Text = "<female>"
+                            .Replacement.Text = "X"
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        Else
+                            .Text = "<male>"
+                            .Replacement.Text = " "
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                            .Text = "<female>"
+                            .Replacement.Text = " "
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        End If
+                    ElseIf control.Name = "cbAnnualHousehold" Then
+                        If control.Text = " < 60 000" Then
+                            .Text = "<low>"
+                            .Replacement.Text = "X"
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        ElseIf control.Text = "60 001 - 480 000" Then
+                            .Text = "<mid>"
+                            .Replacement.Text = "X"
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        ElseIf control.Text = "> 480 000" Then
+                            .Text = "<high>"
+                            .Replacement.Text = "X"
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        ElseIf control.Text = "Undisclosed" Then
+                            .Text = "<dis>"
+                            .Replacement.Text = "X"
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        End If
+
+                        Dim incomes As New List(Of String) From {"low", "mid", "high", "dis"}
+                        For Each income In incomes
+                            .Text = "<" & income & ">"
+                            .Replacement.Text = " "
+                            .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        Next
+                    Else
+                        .Text = "<" & control.Tag & ">"
+                        .Replacement.Text = If(control.Text = "", " ", control.Text)
+                        .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                    End If
 
                 ElseIf TypeOf control Is MaskedTextBox Then
 
-                    mtb = control
-                    mtb.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals
-                    .Text = "<" & control.Tag & ">"
-                    .Replacement.Text = If(control.Text = "", " ", control.Text)
-                    .Execute(Replace:=Word.WdReplace.wdReplaceAll)
-                    mtb.TextMaskFormat = MaskFormat.IncludePromptAndLiterals
+                        mtb = control
+                        mtb.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals
+                        .Text = "<" & control.Tag & ">"
+                        .Replacement.Text = If(control.Text = "", " ", control.Text)
+                        .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        mtb.TextMaskFormat = MaskFormat.IncludePromptAndLiterals
 
-                ElseIf TypeOf control Is DateTimePicker Then
-                    dtp = control
+                    ElseIf TypeOf control Is DateTimePicker Then
+                        dtp = control
+                        .Text = "<" & control.Tag & ">"
+                        If dtp.Checked Then
+                            .Replacement.Text = Format(dtp.Value, "dd/MM/yyyy")
+                        Else
+                            .Replacement.Text = "DD/MM/YYYY"
+                            .Replacement.Font.Color = WdColor.wdColorGray35
+                        End If
+                        .Execute(Replace:=Word.WdReplace.wdReplaceAll)
+                        .Replacement.Font.Color = WdColor.wdColorBlack
+                    ElseIf TypeOf control Is NumericUpDown Then
+                        Dim nud As NumericUpDown = control
                     .Text = "<" & control.Tag & ">"
-                    If dtp.Checked Then
-                        .Replacement.Text = Format(dtp.Value, "dd/MM/yyyy")
+                    If nud.Value > -1 Then
+                        .Replacement.Text = nud.Value
                     Else
-                        .Replacement.Text = "DD/MM/YYYY"
-                        .Replacement.Font.Color = WdColor.wdColorGray35
+                        .Replacement.Text = " "
                     End If
                     .Execute(Replace:=Word.WdReplace.wdReplaceAll)
-                    .Replacement.Font.Color = WdColor.wdColorBlack
+
                 End If
             Next
         End With
@@ -1037,7 +1094,7 @@ Public Class frmLeadView
             cbReason.Height = 20
             cbReason.Location = New System.Drawing.Point(2, gbMain.Height - 128)
             Dim result() As DataRow = dtStatuses.Select("status = '" & sender.tag & "'")
-            For Each row As DataRow In result
+                        For Each row As DataRow In result
                 cbReason.Items.Add(row(1))
             Next
             cbReason.Items.Add("Other")
@@ -2023,5 +2080,9 @@ Public Class frmLeadView
     Private Sub llFirstCollectionDate_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles llFirstCollectionDate.LinkClicked
         MsgBox("This is the date that the first collection will take place." & vbNewLine _
             & "First Collection can only take place 15 days after sale date.", MsgBoxStyle.Information, "First Collection Date")
+    End Sub
+
+    Private Sub llPreExisting_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles llPreExisting.LinkClicked
+        MsgBox("Pre-existing condition definition:" & vbNewLine & "Any medical condition the client is aware of and has sort professional medical assistance of any kind in the last 12 months.", , "Pre-existing condition")
     End Sub
 End Class

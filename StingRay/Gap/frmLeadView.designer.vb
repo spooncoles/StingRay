@@ -132,6 +132,8 @@ Partial Class frmLeadView
         Me.cbBankingOveride = New System.Windows.Forms.CheckBox()
         Me.btValidate = New System.Windows.Forms.Button()
         Me.GroupBox16 = New System.Windows.Forms.GroupBox()
+        Me.llMonthlyDODay = New System.Windows.Forms.LinkLabel()
+        Me.llFirstCollectionDate = New System.Windows.Forms.LinkLabel()
         Me.llAnnualHosehold = New System.Windows.Forms.LinkLabel()
         Me.cbAnnualHousehold = New System.Windows.Forms.ComboBox()
         Me.lbCommDate = New System.Windows.Forms.Label()
@@ -195,11 +197,10 @@ Partial Class frmLeadView
         Me.clbEmailOptions = New System.Windows.Forms.CheckedListBox()
         Me.btSendEmail = New System.Windows.Forms.Button()
         Me.btTransfer = New System.Windows.Forms.Button()
-        Me.llFirstCollectionDate = New System.Windows.Forms.LinkLabel()
-        Me.llMonthlyDODay = New System.Windows.Forms.LinkLabel()
         Me.mtbComment = New StingRay.WaterMarkTextBox()
         Me.mtbProcedure = New StingRay.WaterMarkTextBox()
         Me.mtbReplacementPolicy = New StingRay.WaterMarkTextBox()
+        Me.llPreExisting = New System.Windows.Forms.LinkLabel()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -307,6 +308,7 @@ Partial Class frmLeadView
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.llPreExisting)
         Me.GroupBox2.Controls.Add(Me.mtbProcedure)
         Me.GroupBox2.Controls.Add(Me.nudDependants)
         Me.GroupBox2.Controls.Add(Me.cbMedAidPlan)
@@ -441,7 +443,7 @@ Partial Class frmLeadView
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label5.Location = New System.Drawing.Point(7, 145)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(576, 32)
+        Me.Label5.Size = New System.Drawing.Size(356, 32)
         Me.Label5.TabIndex = 25
         Me.Label5.Text = "Are you aware of any medical procedure that you may undergo in the next 12 months" &
     " that could lead to a claim under the policy?"
@@ -1417,6 +1419,26 @@ Partial Class frmLeadView
         Me.GroupBox16.TabStop = False
         Me.GroupBox16.Text = "Payment Details"
         '
+        'llMonthlyDODay
+        '
+        Me.llMonthlyDODay.AutoSize = True
+        Me.llMonthlyDODay.Location = New System.Drawing.Point(49, 71)
+        Me.llMonthlyDODay.Name = "llMonthlyDODay"
+        Me.llMonthlyDODay.Size = New System.Drawing.Size(126, 13)
+        Me.llMonthlyDODay.TabIndex = 36
+        Me.llMonthlyDODay.TabStop = True
+        Me.llMonthlyDODay.Text = "Monthly Debit Order Day:"
+        '
+        'llFirstCollectionDate
+        '
+        Me.llFirstCollectionDate.AutoSize = True
+        Me.llFirstCollectionDate.Location = New System.Drawing.Point(70, 96)
+        Me.llFirstCollectionDate.Name = "llFirstCollectionDate"
+        Me.llFirstCollectionDate.Size = New System.Drawing.Size(104, 13)
+        Me.llFirstCollectionDate.TabIndex = 35
+        Me.llFirstCollectionDate.TabStop = True
+        Me.llFirstCollectionDate.Text = "First Collection Date:"
+        '
         'llAnnualHosehold
         '
         Me.llAnnualHosehold.AutoSize = True
@@ -2061,26 +2083,6 @@ Partial Class frmLeadView
         Me.btTransfer.Text = "Transfer Lead"
         Me.btTransfer.UseVisualStyleBackColor = True
         '
-        'llFirstCollectionDate
-        '
-        Me.llFirstCollectionDate.AutoSize = True
-        Me.llFirstCollectionDate.Location = New System.Drawing.Point(70, 96)
-        Me.llFirstCollectionDate.Name = "llFirstCollectionDate"
-        Me.llFirstCollectionDate.Size = New System.Drawing.Size(104, 13)
-        Me.llFirstCollectionDate.TabIndex = 35
-        Me.llFirstCollectionDate.TabStop = True
-        Me.llFirstCollectionDate.Text = "First Collection Date:"
-        '
-        'llMonthlyDODay
-        '
-        Me.llMonthlyDODay.AutoSize = True
-        Me.llMonthlyDODay.Location = New System.Drawing.Point(49, 71)
-        Me.llMonthlyDODay.Name = "llMonthlyDODay"
-        Me.llMonthlyDODay.Size = New System.Drawing.Size(126, 13)
-        Me.llMonthlyDODay.TabIndex = 36
-        Me.llMonthlyDODay.TabStop = True
-        Me.llMonthlyDODay.Text = "Monthly Debit Order Day:"
-        '
         'mtbComment
         '
         Me.mtbComment.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
@@ -2114,6 +2116,16 @@ Partial Class frmLeadView
         Me.mtbReplacementPolicy.Visible = False
         Me.mtbReplacementPolicy.WaterMarkColor = System.Drawing.Color.Gray
         Me.mtbReplacementPolicy.WaterMarkText = "Please fill out replacement policy"
+        '
+        'llPreExisting
+        '
+        Me.llPreExisting.AutoSize = True
+        Me.llPreExisting.Location = New System.Drawing.Point(506, 160)
+        Me.llPreExisting.Name = "llPreExisting"
+        Me.llPreExisting.Size = New System.Drawing.Size(107, 13)
+        Me.llPreExisting.TabIndex = 35
+        Me.llPreExisting.TabStop = True
+        Me.llPreExisting.Text = "Pre-existing condition"
         '
         'frmLeadView
         '
@@ -2380,4 +2392,5 @@ Partial Class frmLeadView
     Friend WithEvents llAnnualHosehold As LinkLabel
     Friend WithEvents llMonthlyDODay As LinkLabel
     Friend WithEvents llFirstCollectionDate As LinkLabel
+    Friend WithEvents llPreExisting As LinkLabel
 End Class

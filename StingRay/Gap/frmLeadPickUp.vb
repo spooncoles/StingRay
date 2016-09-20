@@ -283,4 +283,5 @@
         recycled = True
         refreshLeads()
     End Sub
+
 End Class

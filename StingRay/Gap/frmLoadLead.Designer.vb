@@ -23,8 +23,8 @@ Partial Class frmLoadLead
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.tabControl = New System.Windows.Forms.TabControl()
         Me.tabSource = New System.Windows.Forms.TabPage()
         Me.cbOrder = New System.Windows.Forms.ComboBox()
@@ -34,6 +34,7 @@ Partial Class frmLoadLead
         Me.rbAffinity = New System.Windows.Forms.RadioButton()
         Me.rbZwinger = New System.Windows.Forms.RadioButton()
         Me.tabDetails = New System.Windows.Forms.TabPage()
+        Me.btAddToBatch = New System.Windows.Forms.Button()
         Me.txComment = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.btLoad = New System.Windows.Forms.Button()
@@ -61,31 +62,37 @@ Partial Class frmLoadLead
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.dgLeadsToUpload = New System.Windows.Forms.DataGridView()
+        Me.title = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.firstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.contactNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Email = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Agent = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.affinityCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SMS = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.VIP = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.affinityID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.affinityName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.source = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.affinityCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.affinityID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.leadNewID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dupLeadID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cmsDgRight = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.cmsEditLead = New System.Windows.Forms.ToolStripMenuItem()
+        Me.cmsDelete = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeleteAsDupToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
-        Me.btExample = New System.Windows.Forms.Button()
-        Me.btOpenFile = New System.Windows.Forms.Button()
-        Me.btValidate = New System.Windows.Forms.Button()
         Me.btUpload = New System.Windows.Forms.Button()
+        Me.btValidate = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.btRefreshInBatch = New System.Windows.Forms.Button()
+        Me.btAutoAllocate = New System.Windows.Forms.Button()
         Me.btAllocateSelected = New System.Windows.Forms.Button()
         Me.dgAgents = New System.Windows.Forms.DataGridView()
         Me.tbDups = New System.Windows.Forms.TabPage()
         Me.btConfirmDups = New System.Windows.Forms.Button()
         Me.dgDups = New System.Windows.Forms.DataGridView()
         Me.tbAPI = New System.Windows.Forms.TabPage()
+        Me.btExample = New System.Windows.Forms.Button()
+        Me.btLoadToLeadNew = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.rbCopyAll = New System.Windows.Forms.RadioButton()
         Me.rbCopySelected = New System.Windows.Forms.RadioButton()
@@ -94,14 +101,10 @@ Partial Class frmLoadLead
         Me.dgAPI = New System.Windows.Forms.DataGridView()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
-        Me.cmsDgRight = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.txEmailAddSearch = New StingRay.WaterMarkTextBox()
         Me.txIdNumSearch = New StingRay.WaterMarkTextBox()
         Me.txContactNumSearch = New StingRay.WaterMarkTextBox()
         Me.txNameSearch = New StingRay.WaterMarkTextBox()
-        Me.cmsDelete = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AddToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.EditToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tabControl.SuspendLayout()
         Me.tabSource.SuspendLayout()
         CType(Me.dgSelectSource, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -110,6 +113,7 @@ Partial Class frmLoadLead
         Me.TableLayoutPanel3.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.dgLeadsToUpload, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cmsDgRight.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.dgAgents, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -117,7 +121,6 @@ Partial Class frmLoadLead
         CType(Me.dgDups, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tbAPI.SuspendLayout()
         CType(Me.dgAPI, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.cmsDgRight.SuspendLayout()
         Me.SuspendLayout()
         '
         'tabControl
@@ -219,6 +222,7 @@ Partial Class frmLoadLead
         '
         'tabDetails
         '
+        Me.tabDetails.Controls.Add(Me.btAddToBatch)
         Me.tabDetails.Controls.Add(Me.txComment)
         Me.tabDetails.Controls.Add(Me.Label12)
         Me.tabDetails.Controls.Add(Me.btLoad)
@@ -249,6 +253,17 @@ Partial Class frmLoadLead
         Me.tabDetails.TabIndex = 1
         Me.tabDetails.Text = "Details"
         Me.tabDetails.UseVisualStyleBackColor = True
+        '
+        'btAddToBatch
+        '
+        Me.btAddToBatch.Enabled = False
+        Me.btAddToBatch.Location = New System.Drawing.Point(16, 326)
+        Me.btAddToBatch.Name = "btAddToBatch"
+        Me.btAddToBatch.Size = New System.Drawing.Size(221, 23)
+        Me.btAddToBatch.TabIndex = 30
+        Me.btAddToBatch.Text = "Add To Batch"
+        Me.btAddToBatch.UseVisualStyleBackColor = True
+        Me.btAddToBatch.Visible = False
         '
         'txComment
         '
@@ -476,7 +491,7 @@ Partial Class frmLoadLead
         '
         Me.TableLayoutPanel3.ColumnCount = 2
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.TableLayoutPanel1, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Panel1, 1, 0)
         Me.TableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill
@@ -500,109 +515,119 @@ Partial Class frmLoadLead
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(639, 426)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(539, 426)
         Me.TableLayoutPanel1.TabIndex = 6
         '
         'dgLeadsToUpload
         '
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgLeadsToUpload.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        Me.dgLeadsToUpload.AllowUserToAddRows = False
+        Me.dgLeadsToUpload.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.dgLeadsToUpload.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgLeadsToUpload.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.dgLeadsToUpload.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgLeadsToUpload.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.firstName, Me.lastName, Me.contactNum, Me.Email, Me.Agent, Me.comment, Me.affinityCode, Me.SMS, Me.VIP, Me.affinityID, Me.affinityName, Me.leadNewID, Me.dupLeadID})
+        Me.dgLeadsToUpload.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.title, Me.firstName, Me.lastName, Me.contactNum, Me.Email, Me.Agent, Me.affinityName, Me.comment, Me.source, Me.affinityCode, Me.affinityID, Me.leadNewID, Me.dupLeadID})
         Me.dgLeadsToUpload.ContextMenuStrip = Me.cmsDgRight
         Me.dgLeadsToUpload.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgLeadsToUpload.Location = New System.Drawing.Point(3, 38)
         Me.dgLeadsToUpload.Name = "dgLeadsToUpload"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgLeadsToUpload.RowHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgLeadsToUpload.RowHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.dgLeadsToUpload.RowHeadersVisible = False
         Me.dgLeadsToUpload.RowHeadersWidth = 25
-        Me.dgLeadsToUpload.Size = New System.Drawing.Size(633, 385)
+        Me.dgLeadsToUpload.Size = New System.Drawing.Size(533, 385)
         Me.dgLeadsToUpload.TabIndex = 4
+        '
+        'title
+        '
+        Me.title.HeaderText = "Title"
+        Me.title.Name = "title"
+        Me.title.ReadOnly = True
+        Me.title.Width = 52
         '
         'firstName
         '
         Me.firstName.HeaderText = "First Name"
         Me.firstName.Name = "firstName"
         Me.firstName.ReadOnly = True
+        Me.firstName.Width = 82
         '
         'lastName
         '
         Me.lastName.HeaderText = "Last Name"
         Me.lastName.Name = "lastName"
         Me.lastName.ReadOnly = True
+        Me.lastName.Width = 83
         '
         'contactNum
         '
         Me.contactNum.HeaderText = "Contact Number"
         Me.contactNum.Name = "contactNum"
         Me.contactNum.ReadOnly = True
+        Me.contactNum.Width = 109
         '
         'Email
         '
         Me.Email.HeaderText = "Email"
         Me.Email.Name = "Email"
         Me.Email.ReadOnly = True
+        Me.Email.Width = 57
         '
         'Agent
         '
-        Me.Agent.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox
         Me.Agent.HeaderText = "Agent"
         Me.Agent.Name = "Agent"
         Me.Agent.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Agent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'comment
-        '
-        Me.comment.HeaderText = "Comment"
-        Me.comment.Name = "comment"
-        Me.comment.ReadOnly = True
-        '
-        'affinityCode
-        '
-        Me.affinityCode.HeaderText = "Affinity Code"
-        Me.affinityCode.Name = "affinityCode"
-        Me.affinityCode.ReadOnly = True
-        '
-        'SMS
-        '
-        Me.SMS.HeaderText = "SMS"
-        Me.SMS.Name = "SMS"
-        Me.SMS.ReadOnly = True
-        Me.SMS.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.SMS.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'VIP
-        '
-        Me.VIP.HeaderText = "VIP"
-        Me.VIP.Name = "VIP"
-        Me.VIP.ReadOnly = True
-        Me.VIP.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.VIP.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'affinityID
-        '
-        Me.affinityID.HeaderText = "Affinity ID"
-        Me.affinityID.Name = "affinityID"
-        Me.affinityID.ReadOnly = True
+        Me.Agent.Width = 60
         '
         'affinityName
         '
         Me.affinityName.HeaderText = "affinityName"
         Me.affinityName.Name = "affinityName"
         Me.affinityName.ReadOnly = True
+        Me.affinityName.Width = 90
+        '
+        'comment
+        '
+        Me.comment.HeaderText = "Comment"
+        Me.comment.Name = "comment"
+        Me.comment.ReadOnly = True
+        Me.comment.Width = 76
+        '
+        'source
+        '
+        Me.source.HeaderText = "Source"
+        Me.source.Name = "source"
+        Me.source.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.source.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.source.Width = 66
+        '
+        'affinityCode
+        '
+        Me.affinityCode.HeaderText = "Affinity Code"
+        Me.affinityCode.Name = "affinityCode"
+        Me.affinityCode.ReadOnly = True
+        Me.affinityCode.Width = 91
+        '
+        'affinityID
+        '
+        Me.affinityID.HeaderText = "Affinity ID"
+        Me.affinityID.Name = "affinityID"
+        Me.affinityID.ReadOnly = True
+        Me.affinityID.Width = 77
         '
         'leadNewID
         '
@@ -610,89 +635,114 @@ Partial Class frmLoadLead
         Me.leadNewID.Name = "leadNewID"
         Me.leadNewID.ReadOnly = True
         Me.leadNewID.Visible = False
+        Me.leadNewID.Width = 85
         '
         'dupLeadID
         '
         Me.dupLeadID.HeaderText = "dupLeadID"
         Me.dupLeadID.Name = "dupLeadID"
         Me.dupLeadID.ReadOnly = True
+        Me.dupLeadID.Visible = False
+        Me.dupLeadID.Width = 85
+        '
+        'cmsDgRight
+        '
+        Me.cmsDgRight.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.cmsEditLead, Me.cmsDelete, Me.DeleteAsDupToolStripMenuItem})
+        Me.cmsDgRight.Name = "cmsDgRight"
+        Me.cmsDgRight.Size = New System.Drawing.Size(149, 70)
+        '
+        'cmsEditLead
+        '
+        Me.cmsEditLead.Name = "cmsEditLead"
+        Me.cmsEditLead.Size = New System.Drawing.Size(148, 22)
+        Me.cmsEditLead.Text = "Edit"
+        '
+        'cmsDelete
+        '
+        Me.cmsDelete.Name = "cmsDelete"
+        Me.cmsDelete.Size = New System.Drawing.Size(148, 22)
+        Me.cmsDelete.Text = "Delete"
+        '
+        'DeleteAsDupToolStripMenuItem
+        '
+        Me.DeleteAsDupToolStripMenuItem.Name = "DeleteAsDupToolStripMenuItem"
+        Me.DeleteAsDupToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.DeleteAsDupToolStripMenuItem.Text = "Delete As Dup"
         '
         'TableLayoutPanel2
         '
-        Me.TableLayoutPanel2.ColumnCount = 4
+        Me.TableLayoutPanel2.ColumnCount = 2
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel2.Controls.Add(Me.btExample, 0, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.btOpenFile, 1, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.btValidate, 2, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.btUpload, 3, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.btUpload, 0, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.btValidate, 0, 0)
         Me.TableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 1
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(633, 29)
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(533, 29)
         Me.TableLayoutPanel2.TabIndex = 5
-        '
-        'btExample
-        '
-        Me.btExample.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btExample.Location = New System.Drawing.Point(3, 3)
-        Me.btExample.Name = "btExample"
-        Me.btExample.Size = New System.Drawing.Size(152, 23)
-        Me.btExample.TabIndex = 9
-        Me.btExample.Text = "Example"
-        Me.btExample.UseVisualStyleBackColor = True
-        '
-        'btOpenFile
-        '
-        Me.btOpenFile.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btOpenFile.Location = New System.Drawing.Point(161, 3)
-        Me.btOpenFile.Name = "btOpenFile"
-        Me.btOpenFile.Size = New System.Drawing.Size(152, 23)
-        Me.btOpenFile.TabIndex = 18
-        Me.btOpenFile.Text = "Open File"
-        Me.btOpenFile.UseVisualStyleBackColor = True
-        '
-        'btValidate
-        '
-        Me.btValidate.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btValidate.Location = New System.Drawing.Point(319, 3)
-        Me.btValidate.Name = "btValidate"
-        Me.btValidate.Size = New System.Drawing.Size(152, 23)
-        Me.btValidate.TabIndex = 19
-        Me.btValidate.Text = "Validate"
-        Me.btValidate.UseVisualStyleBackColor = True
         '
         'btUpload
         '
         Me.btUpload.Dock = System.Windows.Forms.DockStyle.Fill
         Me.btUpload.Enabled = False
-        Me.btUpload.Location = New System.Drawing.Point(477, 3)
+        Me.btUpload.Location = New System.Drawing.Point(269, 3)
         Me.btUpload.Name = "btUpload"
-        Me.btUpload.Size = New System.Drawing.Size(153, 23)
-        Me.btUpload.TabIndex = 21
+        Me.btUpload.Size = New System.Drawing.Size(261, 23)
+        Me.btUpload.TabIndex = 23
         Me.btUpload.Text = "Upload"
         Me.btUpload.UseVisualStyleBackColor = True
         '
+        'btValidate
+        '
+        Me.btValidate.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btValidate.Location = New System.Drawing.Point(3, 3)
+        Me.btValidate.Name = "btValidate"
+        Me.btValidate.Size = New System.Drawing.Size(260, 23)
+        Me.btValidate.TabIndex = 22
+        Me.btValidate.Text = "Validate"
+        Me.btValidate.UseVisualStyleBackColor = True
+        '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.btRefreshInBatch)
+        Me.Panel1.Controls.Add(Me.btAutoAllocate)
         Me.Panel1.Controls.Add(Me.btAllocateSelected)
         Me.Panel1.Controls.Add(Me.dgAgents)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel1.Location = New System.Drawing.Point(648, 3)
+        Me.Panel1.Location = New System.Drawing.Point(548, 3)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(194, 426)
+        Me.Panel1.Size = New System.Drawing.Size(294, 426)
         Me.Panel1.TabIndex = 7
+        '
+        'btRefreshInBatch
+        '
+        Me.btRefreshInBatch.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.btRefreshInBatch.Location = New System.Drawing.Point(0, 357)
+        Me.btRefreshInBatch.Name = "btRefreshInBatch"
+        Me.btRefreshInBatch.Size = New System.Drawing.Size(294, 23)
+        Me.btRefreshInBatch.TabIndex = 3
+        Me.btRefreshInBatch.Text = "Refresh In Batch count"
+        Me.btRefreshInBatch.UseVisualStyleBackColor = True
+        '
+        'btAutoAllocate
+        '
+        Me.btAutoAllocate.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.btAutoAllocate.Location = New System.Drawing.Point(0, 380)
+        Me.btAutoAllocate.Name = "btAutoAllocate"
+        Me.btAutoAllocate.Size = New System.Drawing.Size(294, 23)
+        Me.btAutoAllocate.TabIndex = 2
+        Me.btAutoAllocate.Text = "Auto Allocate"
+        Me.btAutoAllocate.UseVisualStyleBackColor = True
         '
         'btAllocateSelected
         '
         Me.btAllocateSelected.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.btAllocateSelected.Location = New System.Drawing.Point(0, 403)
         Me.btAllocateSelected.Name = "btAllocateSelected"
-        Me.btAllocateSelected.Size = New System.Drawing.Size(194, 23)
+        Me.btAllocateSelected.Size = New System.Drawing.Size(294, 23)
         Me.btAllocateSelected.TabIndex = 1
         Me.btAllocateSelected.Text = "Allocate Evenly"
         Me.btAllocateSelected.UseVisualStyleBackColor = True
@@ -701,14 +751,15 @@ Partial Class frmLoadLead
         '
         Me.dgAgents.AllowUserToAddRows = False
         Me.dgAgents.AllowUserToDeleteRows = False
+        Me.dgAgents.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.dgAgents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgAgents.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgAgents.Dock = System.Windows.Forms.DockStyle.Top
         Me.dgAgents.Location = New System.Drawing.Point(0, 0)
         Me.dgAgents.Name = "dgAgents"
         Me.dgAgents.ReadOnly = True
         Me.dgAgents.RowHeadersVisible = False
         Me.dgAgents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgAgents.Size = New System.Drawing.Size(194, 426)
+        Me.dgAgents.Size = New System.Drawing.Size(294, 347)
         Me.dgAgents.TabIndex = 0
         '
         'tbDups
@@ -736,6 +787,7 @@ Partial Class frmLoadLead
         '
         Me.dgDups.AllowUserToAddRows = False
         Me.dgDups.AllowUserToDeleteRows = False
+        Me.dgDups.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.dgDups.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgDups.Location = New System.Drawing.Point(8, 36)
         Me.dgDups.Name = "dgDups"
@@ -746,6 +798,8 @@ Partial Class frmLoadLead
         '
         'tbAPI
         '
+        Me.tbAPI.Controls.Add(Me.btExample)
+        Me.tbAPI.Controls.Add(Me.btLoadToLeadNew)
         Me.tbAPI.Controls.Add(Me.Label13)
         Me.tbAPI.Controls.Add(Me.rbCopyAll)
         Me.tbAPI.Controls.Add(Me.rbCopySelected)
@@ -760,10 +814,28 @@ Partial Class frmLoadLead
         Me.tbAPI.Text = "API"
         Me.tbAPI.UseVisualStyleBackColor = True
         '
+        'btExample
+        '
+        Me.btExample.Location = New System.Drawing.Point(322, 6)
+        Me.btExample.Name = "btExample"
+        Me.btExample.Size = New System.Drawing.Size(170, 23)
+        Me.btExample.TabIndex = 20
+        Me.btExample.Text = "Excel Example"
+        Me.btExample.UseVisualStyleBackColor = True
+        '
+        'btLoadToLeadNew
+        '
+        Me.btLoadToLeadNew.Location = New System.Drawing.Point(322, 29)
+        Me.btLoadToLeadNew.Name = "btLoadToLeadNew"
+        Me.btLoadToLeadNew.Size = New System.Drawing.Size(170, 23)
+        Me.btLoadToLeadNew.TabIndex = 19
+        Me.btLoadToLeadNew.Text = "Load Excel to Lead New"
+        Me.btLoadToLeadNew.UseVisualStyleBackColor = True
+        '
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(6, 38)
+        Me.Label13.Location = New System.Drawing.Point(3, 39)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(161, 13)
         Me.Label13.TabIndex = 5
@@ -773,7 +845,7 @@ Partial Class frmLoadLead
         '
         Me.rbCopyAll.AutoSize = True
         Me.rbCopyAll.Checked = True
-        Me.rbCopyAll.Location = New System.Drawing.Point(617, 31)
+        Me.rbCopyAll.Location = New System.Drawing.Point(745, 29)
         Me.rbCopyAll.Name = "rbCopyAll"
         Me.rbCopyAll.Size = New System.Drawing.Size(63, 17)
         Me.rbCopyAll.TabIndex = 4
@@ -784,7 +856,7 @@ Partial Class frmLoadLead
         'rbCopySelected
         '
         Me.rbCopySelected.AutoSize = True
-        Me.rbCopySelected.Location = New System.Drawing.Point(617, 8)
+        Me.rbCopySelected.Location = New System.Drawing.Point(745, 6)
         Me.rbCopySelected.Name = "rbCopySelected"
         Me.rbCopySelected.Size = New System.Drawing.Size(94, 17)
         Me.rbCopySelected.TabIndex = 3
@@ -793,18 +865,18 @@ Partial Class frmLoadLead
         '
         'btCopy
         '
-        Me.btCopy.Location = New System.Drawing.Point(717, 8)
+        Me.btCopy.Location = New System.Drawing.Point(617, 6)
         Me.btCopy.Name = "btCopy"
-        Me.btCopy.Size = New System.Drawing.Size(122, 38)
+        Me.btCopy.Size = New System.Drawing.Size(122, 40)
         Me.btCopy.TabIndex = 2
         Me.btCopy.Text = "Copy to batch tab"
         Me.btCopy.UseVisualStyleBackColor = True
         '
         'btApiCopy
         '
-        Me.btApiCopy.Location = New System.Drawing.Point(9, 3)
+        Me.btApiCopy.Location = New System.Drawing.Point(6, 6)
         Me.btApiCopy.Name = "btApiCopy"
-        Me.btApiCopy.Size = New System.Drawing.Size(122, 29)
+        Me.btApiCopy.Size = New System.Drawing.Size(122, 23)
         Me.btApiCopy.TabIndex = 1
         Me.btApiCopy.Text = "Copy API leads locally"
         Me.btApiCopy.UseVisualStyleBackColor = True
@@ -813,13 +885,15 @@ Partial Class frmLoadLead
         '
         Me.dgAPI.AllowUserToAddRows = False
         Me.dgAPI.AllowUserToDeleteRows = False
+        Me.dgAPI.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.dgAPI.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
         Me.dgAPI.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgAPI.Location = New System.Drawing.Point(3, 54)
+        Me.dgAPI.Location = New System.Drawing.Point(3, 58)
         Me.dgAPI.Name = "dgAPI"
         Me.dgAPI.ReadOnly = True
         Me.dgAPI.RowHeadersVisible = False
         Me.dgAPI.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgAPI.Size = New System.Drawing.Size(836, 376)
+        Me.dgAPI.Size = New System.Drawing.Size(836, 372)
         Me.dgAPI.TabIndex = 0
         '
         'OpenFileDialog1
@@ -828,12 +902,6 @@ Partial Class frmLoadLead
         Me.OpenFileDialog1.FileName = "leadBatchImporter"
         Me.OpenFileDialog1.Filter = "Excel Files|*.xlsx"
         Me.OpenFileDialog1.Title = "Open Lead Importer"
-        '
-        'cmsDgRight
-        '
-        Me.cmsDgRight.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddToolStripMenuItem, Me.EditToolStripMenuItem, Me.cmsDelete})
-        Me.cmsDgRight.Name = "cmsDgRight"
-        Me.cmsDgRight.Size = New System.Drawing.Size(153, 92)
         '
         'txEmailAddSearch
         '
@@ -879,24 +947,6 @@ Partial Class frmLoadLead
         Me.txNameSearch.WaterMarkColor = System.Drawing.Color.Gray
         Me.txNameSearch.WaterMarkText = "Name"
         '
-        'cmsDelete
-        '
-        Me.cmsDelete.Name = "cmsDelete"
-        Me.cmsDelete.Size = New System.Drawing.Size(152, 22)
-        Me.cmsDelete.Text = "Delete"
-        '
-        'AddToolStripMenuItem
-        '
-        Me.AddToolStripMenuItem.Name = "AddToolStripMenuItem"
-        Me.AddToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.AddToolStripMenuItem.Text = "Add"
-        '
-        'EditToolStripMenuItem
-        '
-        Me.EditToolStripMenuItem.Name = "EditToolStripMenuItem"
-        Me.EditToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.EditToolStripMenuItem.Text = "Edit"
-        '
         'frmLoadLead
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -918,6 +968,7 @@ Partial Class frmLoadLead
         Me.TableLayoutPanel3.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         CType(Me.dgLeadsToUpload, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.cmsDgRight.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         CType(Me.dgAgents, System.ComponentModel.ISupportInitialize).EndInit()
@@ -926,7 +977,6 @@ Partial Class frmLoadLead
         Me.tbAPI.ResumeLayout(False)
         Me.tbAPI.PerformLayout()
         CType(Me.dgAPI, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.cmsDgRight.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -982,29 +1032,32 @@ Partial Class frmLoadLead
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents dgLeadsToUpload As DataGridView
     Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
-    Friend WithEvents btExample As Button
-    Friend WithEvents btOpenFile As Button
-    Friend WithEvents btValidate As Button
-    Friend WithEvents btUpload As Button
     Friend WithEvents Panel1 As Panel
     Friend WithEvents btAllocateSelected As Button
     Friend WithEvents dgAgents As DataGridView
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
+    Friend WithEvents cmsDgRight As ContextMenuStrip
+    Friend WithEvents cmsEditLead As ToolStripMenuItem
+    Friend WithEvents cmsDelete As ToolStripMenuItem
+    Friend WithEvents title As DataGridViewTextBoxColumn
     Friend WithEvents firstName As DataGridViewTextBoxColumn
     Friend WithEvents lastName As DataGridViewTextBoxColumn
     Friend WithEvents contactNum As DataGridViewTextBoxColumn
     Friend WithEvents Email As DataGridViewTextBoxColumn
     Friend WithEvents Agent As DataGridViewComboBoxColumn
-    Friend WithEvents comment As DataGridViewTextBoxColumn
-    Friend WithEvents affinityCode As DataGridViewTextBoxColumn
-    Friend WithEvents SMS As DataGridViewCheckBoxColumn
-    Friend WithEvents VIP As DataGridViewCheckBoxColumn
-    Friend WithEvents affinityID As DataGridViewTextBoxColumn
     Friend WithEvents affinityName As DataGridViewTextBoxColumn
+    Friend WithEvents comment As DataGridViewTextBoxColumn
+    Friend WithEvents source As DataGridViewComboBoxColumn
+    Friend WithEvents affinityCode As DataGridViewTextBoxColumn
+    Friend WithEvents affinityID As DataGridViewTextBoxColumn
     Friend WithEvents leadNewID As DataGridViewTextBoxColumn
     Friend WithEvents dupLeadID As DataGridViewTextBoxColumn
-    Friend WithEvents cmsDgRight As ContextMenuStrip
-    Friend WithEvents AddToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents EditToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents cmsDelete As ToolStripMenuItem
+    Friend WithEvents btAddToBatch As Button
+    Friend WithEvents DeleteAsDupToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents btAutoAllocate As Button
+    Friend WithEvents btLoadToLeadNew As Button
+    Friend WithEvents btRefreshInBatch As Button
+    Friend WithEvents btExample As Button
+    Friend WithEvents btUpload As Button
+    Friend WithEvents btValidate As Button
 End Class

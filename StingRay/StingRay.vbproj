@@ -133,6 +133,12 @@
     <Compile Include="Gap\frmIncentives.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Gap\frmLeadBatchGrid.Designer.vb">
+      <DependentUpon>frmLeadBatchGrid.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Gap\frmLeadBatchGrid.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Gap\frmLeadChange.Designer.vb">
       <DependentUpon>frmLeadChange.vb</DependentUpon>
     </Compile>
@@ -287,6 +293,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gap\frmIncentives.resx">
       <DependentUpon>frmIncentives.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gap\frmLeadBatchGrid.resx">
+      <DependentUpon>frmLeadBatchGrid.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gap\frmLeadChange.resx">
       <DependentUpon>frmLeadChange.vb</DependentUpon>

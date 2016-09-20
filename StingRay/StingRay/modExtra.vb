@@ -6,8 +6,10 @@ Imports Microsoft.Office.Interop
 Imports System.Text
 Imports MySql.Data.MySqlClient
 Module modExtra
+
     Public conn As New clConn("224")
 
+    Public dictAffType As New Dictionary(Of String, String)
     Public dictAffinities As New Dictionary(Of String, String)
     Public dictAgents As New Dictionary(Of String, Integer)
     Public dictProducts As New Dictionary(Of String, String)
@@ -166,6 +168,12 @@ Module modExtra
             For Each affinity In conn.ds.Tables("affinities").Rows
                 dictAffinities.Add(affinity.item(0), affinity.item(1))
             Next affinity
+
+            conn.fillDS("SELECT adminCode, type FROM affinities WHERE affinity = 1 AND type NOT IN  ('Inbound', 'Zwing')", "affTypes")
+            For Each affinity In conn.ds.Tables("affTypes").Rows
+                dictAffType.Add(affinity.item(0), affinity.item(1))
+            Next affinity
+
         End If
 
         If products Then
@@ -201,7 +209,7 @@ Module modExtra
 
     Sub hideSideButtons()
         With frmSide
-            Dim hideControls As New List(Of Control) From {.pbRefresh, .lbAllocated, .btAllocated, .lbBusy, .btBusy, .lbScheduled, .btScheduled, .lbQaFails, .btQaFails, .lbTransfers, .btTransfers, .lbSales, .btSales}
+            Dim hideControls As New List(Of Control) From { .pbRefresh, .lbAllocated, .btAllocated, .lbBusy, .btBusy, .lbScheduled, .btScheduled, .lbQaFails, .btQaFails, .lbTransfers, .btTransfers, .lbSales, .btSales}
             For Each field In hideControls
                 field.Visible = False
             Next field

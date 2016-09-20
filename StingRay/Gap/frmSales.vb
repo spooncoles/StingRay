@@ -107,8 +107,33 @@
             dgTeamSales.Refresh()
             lbTotalSales.Text = "Total Sales for selected period = " & dgTeamSales.Rows.Count
         End If
-
         dgSales.AutoResizeColumns()
+
+        'Outbound Stats
+        conn.fillDS("SELECT lead_primary.agent, leadsRecieved, SUM(IF(status = 'Sale', 1, 0)) AS Sales, (SUM(IF(status = 'Sale', 1, 0))/leadsRecieved)*100 as convRate, IF(loadedToday IS NULL, 0, loadedToday) AS loadedToday, 0 AS avaliableToday, DATE_SUB(curdate(), INTERVAL 2 WEEK) AS dateFrom, DATE_SUB(curdate(), INTERVAL 1 DAY) AS dateTo FROM lead_primary " _
+                    & "INNER JOIN affinities on affinityCode = adminCode LEFT JOIN (SELECT agent, COUNT(leadID) as loadedToday FROM lead_primary INNER JOIN affinities on affinityCode = adminCode " _
+                    & "WHERE type = 'Outbound' AND DATE(loadedDate) = DATE(CURDATE()) AND lead_primary.agent = '" & frmSide.lbUser.Text & "') as a ON lead_primary.agent = a.agent " _
+                    & "LEFT JOIN (SELECT agent, COUNT(leadID) as leadsRecieved FROM lead_primary WHERE DATE(loadedDate) BETWEEN DATE_SUB(curdate(), INTERVAL 2 WEEK) AND DATE_SUB(curdate(), INTERVAL 1 DAY) AND agent = '" & frmSide.lbUser.Text & "') as c ON lead_primary.agent = c.agent " _
+                    & "WHERE type = 'Outbound' AND DATE(closedDate) BETWEEN DATE_SUB(curdate(), INTERVAL 2 WEEK) AND DATE_SUB(curdate(), INTERVAL 1 DAY) AND lead_primary.agent = '" & frmSide.lbUser.Text & "'", "outboundStats")
+        dgAgentOutboundStats.DataSource = conn.ds.Tables("outboundStats")
+        With conn.ds.Tables("outboundStats").Rows(0)
+            If .Item("convRate") < 8 Then
+                .Item("avaliableToday") = 10
+            ElseIf .Item("convRate") >= 8 And .Item("convRate") < 10 Then
+                .Item("avaliableToday") = 15
+            ElseIf .Item("convRate") >= 10 Then
+                .Item("avaliableToday") = 30
+            End If
+        End With
+
+        'Top 5 Outbound
+        conn.fillDS("SELECT affinityName FROM lead_primary INNER JOIN affinities ON adminCode = affinityCode " _
+                    & "WHERE type = 'Outbound' AND MONTH(loadedDate) = MONTH(CURDATE()) AND YEAR(loadedDate) = YEAR(CURDATE()) " _
+                    & "GROUP BY affinityName ORDER BY COUNT(leadID) DESC LIMIT 5", "outboundTop5")
+        dgTop5Outbound.DataSource = conn.ds.Tables("outboundTop5")
+
+
+
 
     End Sub
 
