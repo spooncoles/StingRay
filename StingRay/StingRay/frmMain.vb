@@ -1,13 +1,10 @@
-﻿Public Class frmMain
+﻿Imports System.ComponentModel
+
+Public Class frmMain
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
-        Application.Exit()
-    End Sub
-
-    Private Sub frmMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         If Application.OpenForms().OfType(Of frmLeadView).Any Then
             MsgBox("You cannot exit while still in a lead!")
-            e.Cancel = True
         Else
             If frmSide.lbType.Text = "Agent" Then
                 If frmSide.lvQueue.Items.Count > 0 Then
@@ -19,7 +16,7 @@
                 End If
             End If
             conn.recordEvent("Logout")
-            'Application.Exit()
+            Application.Exit()
         End If
     End Sub
 
@@ -120,5 +117,28 @@
 
     Private Sub QAStatsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles QAStatsToolStripMenuItem.Click
         frmQaStats.Show()
+    End Sub
+
+    Private Sub frmMain_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        If Application.OpenForms().OfType(Of frmLeadView).Any Then
+            MsgBox("You cannot exit while still in a lead!")
+            e.Cancel = True
+        Else
+            If frmSide.lbType.Text = "Agent" Then
+                If frmSide.lvQueue.Items.Count > 0 Then
+                    If MsgBox("There are leads in Queue." & vbNewLine & "Do you want to save these for next time?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                        saveQueue(frmSide.lbUser.Text)
+                    Else
+                        conn.send("UPDATE sys_agent_info SET previousQueue = NULL WHERE userName = '" & frmSide.lbUser.Text & "'")
+                    End If
+                End If
+            End If
+            conn.recordEvent("Logout")
+            'Application.Exit()
+        End If
+    End Sub
+
+    Private Sub FindReferralDetailsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FindReferralDetailsToolStripMenuItem.Click
+        frmReferralLookUp.Show()
     End Sub
 End Class

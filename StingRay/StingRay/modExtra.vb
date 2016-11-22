@@ -12,8 +12,9 @@ Module modExtra
     Public dictAffType As New Dictionary(Of String, String)
     Public dictAffinities As New Dictionary(Of String, String)
     Public dictAgents As New Dictionary(Of String, Integer)
-    Public dictProducts As New Dictionary(Of String, String)
-    Public sourcesArray() As String = {"SMS", "Email", "Warm", "Cold", "Call Centre", "Web Search", "Referral", "Radio Add", "CPT", "JHB"}
+    Public dictProducts2016 As New Dictionary(Of String, String)
+    Public dictProducts2017 As New Dictionary(Of String, String)
+    Public sourcesArray() As String = {"SMS", "Email", "Warm", "Cold", "Call Centre", "Web Search", "Referral", "Radio Add", "CPT", "JHB", "Facebook"}
     Public leadTypeArray() As String = {"Inbound", "Outbound", "Zwing", "Liberty"}
     Public systemFolder As String = "\\zactfp03\Zestlife_home\Zestlife Call Centre\ZestSystem\"
     Public dtMedicalAids As New DataTable
@@ -50,6 +51,20 @@ Module modExtra
             If bt.Text = "NULL" Then bt.Text = "0"
         Next bt
 
+        Dim recieveResponse As String = conn.sendReturn("SELECT recieveLeads FROM sys_agent_info WHERE userName = '" & frmSide.lbUser.Text & "'")
+        If recieveResponse = "0" Then
+            frmSide.cbRecieveLeads.Checked = False
+            frmSide.cbRecieveLeads.ForeColor = Color.Red
+        Else
+            frmSide.cbRecieveLeads.Checked = True
+            frmSide.cbRecieveLeads.ForeColor = Color.Black
+        End If
+        'If CInt(frmSide.btBusy.Text) > 300 Then
+        '    frmSide.btBusy.BackColor = Color.Red
+        'ElseIf CInt(frmSide.btBusy.Text) > 200 Then
+        '    frmSide.btBusy.BackColor = Color.Orange
+        'End If
+
     End Sub
 
     Public Sub afterlogin()
@@ -61,7 +76,7 @@ Module modExtra
                 menuItems(True, False, False, False)
 
                 If frmSide.btScheduled.Text <> 0 Then
-                    MsgBox("You have " & frmSide.btScheduled.Text & " rechedules today or before." & vbNewLine & "Please click ""Reschedule"" button in side bar to view.")
+                    notify("You have " & frmSide.btScheduled.Text & " rechedules today or before." & vbNewLine & "Please click ""Reschedule"" button in side bar to view.")
                 End If
 
                 recycleAvaliable = conn.sendReturn("SELECT recycleAvaliable FROM sys_agent_info WHERE userName = '" & frmSide.lbUser.Text & "'")
@@ -86,6 +101,12 @@ Module modExtra
                 menuItems(False, False, False, True)
                 hideSideButtons()
                 frmExportSalesFile.Show()
+            Case "Referral Admin"
+                loadDictionaries(False, False, False, False, False, False)
+                menuItems(False, False, False, True)
+                hideSideButtons()
+                frmReferralLookUp.Show()
+                frmMain.ExportSalesFileToolStripMenuItem.Visible = False
 
             Case "Admin"
                 refreshSideBar()
@@ -177,9 +198,14 @@ Module modExtra
         End If
 
         If products Then
-            conn.fillDS("SELECT productID, CAST(CONCAT(cost, '_', description) AS CHAR(200)) FROM sys_products", "products")
+            conn.fillDS("SELECT productID, CAST(CONCAT(cost, '_', description) AS CHAR(200)) FROM sys_products WHERE campaign = 'Gap' AND year = '2016'", "products")
             For Each product In conn.ds.Tables("products").Rows
-                dictProducts.Add(product.item(0), product.item(1))
+                dictProducts2016.Add(product.item(0), product.item(1))
+            Next product
+
+            conn.fillDS("SELECT productID, CAST(CONCAT(cost, '_', description) AS CHAR(200)) FROM sys_products WHERE campaign = 'Gap' AND year = '2017'", "products")
+            For Each product In conn.ds.Tables("products").Rows
+                dictProducts2017.Add(product.item(0), product.item(1))
             Next product
         End If
 
@@ -209,7 +235,7 @@ Module modExtra
 
     Sub hideSideButtons()
         With frmSide
-            Dim hideControls As New List(Of Control) From { .pbRefresh, .lbAllocated, .btAllocated, .lbBusy, .btBusy, .lbScheduled, .btScheduled, .lbQaFails, .btQaFails, .lbTransfers, .btTransfers, .lbSales, .btSales}
+            Dim hideControls As New List(Of Control) From { .pbRefresh, .lbAllocated, .btAllocated, .lbBusy, .btBusy, .lbScheduled, .btScheduled, .lbQaFails, .btQaFails, .lbTransfers, .btTransfers, .lbSales, .btSales, .cbRecieveLeads}
             For Each field In hideControls
                 field.Visible = False
             Next field
@@ -300,7 +326,7 @@ Module modExtra
 
     End Sub
 
-#Region "OLD email"
+#Region "OLD stuff"
     'Public Sub emailOutlook(ByVal toAdd As String, ByVal subject As String, ByVal body As String, Optional ccAdd As String = "", Optional ByVal attachment As String = "")
 
     '    Dim oApp As New Outlook.Application
@@ -322,57 +348,59 @@ Module modExtra
     '    oAttachs = Nothing
 
     'End Sub
+
+
+    'Public Function GetFileFromDB(docName As String) As String
+    '    'Dim conn As New MySqlConnection
+    '    'Dim cmd As New MySqlCommand
+    '    Dim myData As MySqlDataReader
+    '    Dim SQL As String
+    '    Dim rawData() As Byte
+    '    Dim FileSize As UInt32
+    '    Dim fs As FileStream
+
+    '    'conn.ConnectionString = "server=127.0.0.1;" _
+    '    '    & "uid=root;" _
+    '    '    & "pwd=12345;" _
+    '    '    & "database=test"
+
+    '    SQL = "SELECT docName, fileSize, doc FROM sys_documents"
+
+    '    Try
+    '        'conn.Open()
+
+    '        'cmd.Connection = conn
+    '        'cmd.CommandText = SQL
+    '        conn.comSQL.CommandText = SQL
+
+    '        myData = conn.comSQL.ExecuteReader
+
+    '        If Not myData.HasRows Then Throw New Exception("There are no BLOBs to save")
+
+    '        myData.Read()
+
+    '        FileSize = myData.GetUInt32(myData.GetOrdinal("fileSize"))
+    '        rawData = New Byte(FileSize) {}
+
+    '        myData.GetBytes(myData.GetOrdinal("doc"), 0, rawData, 0, FileSize)
+
+    '        fs = New FileStream(Path.GetTempPath() & docName, FileMode.OpenOrCreate, FileAccess.Write)
+    '        fs.Write(rawData, 0, FileSize)
+    '        fs.Close()
+
+    '        Return Path.GetTempPath() & docName
+
+    '        MessageBox.Show("File successfully written to disk!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk)
+
+    '        myData.Close()
+    '        'conn.Close()
+    '    Catch ex As Exception
+    '        Return "NULL"
+    '        MessageBox.Show("There was an error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    End Try
+    'End Function
+
 #End Region
-
-    Public Function GetFileFromDB(docName As String) As String
-        'Dim conn As New MySqlConnection
-        'Dim cmd As New MySqlCommand
-        Dim myData As MySqlDataReader
-        Dim SQL As String
-        Dim rawData() As Byte
-        Dim FileSize As UInt32
-        Dim fs As FileStream
-
-        'conn.ConnectionString = "server=127.0.0.1;" _
-        '    & "uid=root;" _
-        '    & "pwd=12345;" _
-        '    & "database=test"
-
-        SQL = "SELECT docName, fileSize, doc FROM sys_documents"
-
-        Try
-            'conn.Open()
-
-            'cmd.Connection = conn
-            'cmd.CommandText = SQL
-            conn.comSQL.CommandText = SQL
-
-            myData = conn.comSQL.ExecuteReader
-
-            If Not myData.HasRows Then Throw New Exception("There are no BLOBs to save")
-
-            myData.Read()
-
-            FileSize = myData.GetUInt32(myData.GetOrdinal("fileSize"))
-            rawData = New Byte(FileSize) {}
-
-            myData.GetBytes(myData.GetOrdinal("doc"), 0, rawData, 0, FileSize)
-
-            fs = New FileStream(Path.GetTempPath() & docName, FileMode.OpenOrCreate, FileAccess.Write)
-            fs.Write(rawData, 0, FileSize)
-            fs.Close()
-
-            Return Path.GetTempPath() & docName
-
-            MessageBox.Show("File successfully written to disk!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk)
-
-            myData.Close()
-            'conn.Close()
-        Catch ex As Exception
-            Return "NULL"
-            MessageBox.Show("There was an error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Function
 
     Public Sub checkVersion()
         If (conn.sendReturn("SELECT value FROM sys_defaults WHERE description = 'Version'") <> Application.ProductVersion) Then
@@ -413,6 +441,37 @@ Module modExtra
         objTask.ReminderSet = True
         objTask.ReminderTime = taskDateTime
         objTask.Save()
+
+    End Sub
+
+    Public Sub exportDataTable(dt As DataTable)
+        Dim xlApp As Excel.Application = CreateObject("Excel.Application")
+        Dim xlWB As Excel.Workbook = xlApp.Workbooks.Add()
+        Dim xlWS As Excel.Worksheet = xlWB.Sheets(1)
+        Try
+            notify("Exporting...")
+
+            For col = 0 To dt.Columns.Count - 1
+                xlWS.Cells(1, col + 1).Value = dt.Columns(col).ColumnName
+
+                For i = 0 To dt.Rows.Count - 1
+                    xlWS.Cells(i + 2, col + 1).Value = dt.Rows(i).Item(col)
+                Next i
+
+            Next col
+        Catch ex As Exception
+            MsgBox("There was an error with exporting. Please speak to the administrator!", MsgBoxStyle.Critical)
+        Finally
+            xlApp.ActiveWindow.WindowState = Excel.XlWindowState.xlMaximized
+            xlApp.Visible = True
+            releaseObject(xlWS)
+            releaseObject(xlWB)
+            releaseObject(xlApp)
+            MsgBox("Export Done")
+
+        End Try
+
+
 
     End Sub
 

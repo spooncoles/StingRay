@@ -200,18 +200,18 @@ Public Class frmLeadChange
             End If
 
             For Each item In lvChanges.Items
-                If item.Text = cbFieldChange.Text Then
+                If (item.Text = cbFieldChange.Text) Or (item.text = "AffinityCode" And cbFieldChange.Text = "Affinity") Then
                     If MsgBox("Do you want to replace current change field with this selection?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
                         item.Remove()
                     Else
                         Exit Sub
                     End If
-
                 End If
             Next
+
             Dim changeTo As String = ""
             Select Case cbFieldChange.Text
-                Case "firstName", "lastName"
+                Case "firstName", "lastName", "Comment"
                     changeTo = txEmailAddChange.Text
                 Case "EmailAddress"
                     If validateEmail(txEmailAddChange.Text) Then
@@ -248,25 +248,32 @@ Public Class frmLeadChange
         If lvChanges.Items.Count <> 0 Then
             Dim singleChange As Boolean = False
             Dim changeLoadedDate As Boolean = False
+            Dim comment As String = ""
             Dim changeString = "UPDATE lead_primary SET "
             For Each item In lvChanges.Items
                 Select Case item.Text
-                    Case "emailAddress", "contactNumber", "firstName", "lastName"
+                    Case "emailAddress", "contactNumber", "firstName", "lastName", "Comment"
                         singleChange = True
                 End Select
-                
+
                 If item.Text = "Affinity" Then
                     changeString = changeString & "affinityCode = '" & modExtra.dictAffinities.Item(item.subItems(1).Text) & "'"
                 ElseIf item.Text = "Status" And item.subItems(1).Text = "Allocated" Then
                     changeLoadedDate = True
                     changeString = changeString & "Status = 'Allocated', Outcome = NULL"
+                ElseIf item.Text = "Comment" Then
+                    comment = item.subItems(1).Text
                 Else
                     changeString = changeString & item.Text & " = '" & item.subItems(1).Text & "'"
                 End If
-                If item.Index <> lvChanges.Items.Count - 1 Then
+
+                If (item.Index <> lvChanges.Items.Count - 1) And (item.Text <> "Comment") Then
                     changeString = changeString & ", "
+                ElseIf (item.Index = lvChanges.Items.Count - 1) And (item.Text = "Comment") Then
+                    changeString = changeString.Substring(0, changeString.Length - 2)
                 End If
             Next item
+
             If changeLoadedDate Then
                 changeString = changeString & ", loadedDate = '" & Format(Now(), "yyyy-MM-dd HH:mm:ss") & "'"
             End If
@@ -279,7 +286,7 @@ Public Class frmLeadChange
                 If MsgBox("Are you sure you want to change the selected lead?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
             ElseIf dgPickUp.SelectedRows.Count > 1 Then
                 If singleChange Then
-                    MsgBox("You cannot change multiple leads if you are changing the contact number, email address, first name or last name!")
+                    MsgBox("You cannot change multiple leads if you are changing the contact number, email address, first name, last name or comment!")
                     Exit Sub
                 End If
                 If MsgBox("Are you sure you want to change the selected " & dgPickUp.SelectedRows.Count & " leads?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
@@ -289,14 +296,21 @@ Public Class frmLeadChange
                 For Each item In lvChanges.Items
                     If item.Text = "Affinity" Then
                         conn.recordChange(item.Text, conn.sendReturn("SELECT affinityCode FROM lead_primary WHERE leadID = " & row.Cells("leadID").Value), modExtra.dictAffinities.Item(item.subItems(1).Text), row.Cells("leadID").Value)
-                    Else
+                    ElseIf item.Text <> "Comment" Then
                         conn.recordChange(item.Text, conn.sendReturn("SELECT " & item.Text & " FROM lead_primary WHERE leadID = " & row.Cells("leadID").Value), item.subItems(1).Text, row.Cells("leadID").Value)
                     End If
                     If changeLoadedDate Then
                         conn.recordChange("loadedDate", Format(CDate(conn.sendReturn("SELECT loadedDate FROM lead_primary WHERE leadID = " & row.Cells("leadID").Value)), "yyyy-MM-dd HH:mm:ss"), Format(Now(), "yyyy-MM-dd HH:mm:ss"), row.Cells("leadID").Value)
                     End If
                 Next item
-                conn.send(changeString & row.Cells("leadID").Value)
+                If changeString <> "UPDATE lead_primary SET  WHERE leadID = " Then
+                    conn.send(changeString & row.Cells("leadID").Value)
+                End If
+
+                If comment <> "" Then
+                    conn.send("INSERT INTO lead_comments (leadID, user, comment) VALUES ('" & row.Cells("leadID").Value & "', '" & frmSide.lbUser.Text & "', '" & Replace(comment, "'", "''") & "')")
+                    comment = ""
+                End If
                 If specificLeads Then
                     If Application.OpenForms().OfType(Of frmLoadLead).Any Then
                         frmLoadLead.removeAndUpdateDup(row.Cells("leadID").Value)
@@ -311,10 +325,9 @@ Public Class frmLeadChange
             End If
 
             If Not specificLeads Then
-                    refreshLeads()
-                End If
-
-            Else
+                refreshLeads()
+            End If
+        Else
                 MsgBox("No changes selected!")
         End If
 
@@ -331,7 +344,8 @@ Public Class frmLeadChange
     End Sub
 
     Public Sub loadSpecificLeads(arrLeads As ArrayList)
-        Dim selectString As String = "SELECT leadID, loadedDate, CONCAT(firstName, ' ', lastName) AS Name, status, outcome, agent, affinityName, contactNumber, emailAddress, source FROM lead_primary" _
+        btCopyChanges.Visible = True
+        Dim selectString As String = "SELECT leadID, loadedDate, CONCAT(firstName, ' ', lastName) AS Name, status, IF(outcome IS NULL, '', outcome) AS outcome, agent, affinityName, contactNumber, emailAddress, source FROM lead_primary" _
                                          & " INNER JOIN affinities ON adminCode = affinityCode WHERE leadID IN ("
         Dim orderString As String = " ORDER BY FIELD(leadID"
         For Each lead In arrLeads
@@ -386,4 +400,56 @@ Public Class frmLeadChange
         End If
     End Sub
 
+    Private Sub btCopyChanges_Click(sender As Object, e As EventArgs) Handles btCopyChanges.Click
+        For Each item In lvChanges.Items
+            item.Remove()
+        Next
+
+        If dgPickUp.SelectedRows.Count <> 1 Then
+            MsgBox("Please select only one record to copy.")
+            Exit Sub
+        End If
+
+        Dim dupID As String = ""
+        Dim rowChanges As DataGridViewRow = dgPickUp.SelectedRows(0)
+        dupID = rowChanges.Cells("leadID").Value
+
+        If dupID = "" Then
+            MsgBox("No DupID to link back.")
+            Exit Sub
+        End If
+
+        conn.fillDS("SELECT title, firstName, lastName, contactNumber AS contactNum, emailAddress AS Email, Agent, affinityCode, Source FROM lead_primary WHERE leadID = " & dupID, "dupInfo")
+        Dim rowChange As DataRow = conn.ds.Tables("dupInfo").Rows(0)
+        Dim columns() As String = {"title", "firstName", "lastName", "contactNum", "Email", "Agent", "affinityCode", "Source"}
+
+        If Application.OpenForms().OfType(Of frmLoadLead).Any Then
+            For Each rowDup As DataGridViewRow In frmLoadLead.dgDups.Rows
+                If rowDup.Cells("dupLeadID").Value = dupID Then
+                    For Each column In columns
+
+                        If IsDBNull(rowDup.Cells(column).Value) Then rowDup.Cells(column).Value = ""
+                        If IsDBNull(rowChange.Item(column)) Then rowChange.Item(column) = ""
+
+                        If rowDup.Cells(column).Value <> rowChange.Item(column) Then
+                            If column = "Email" Then
+                                lvChanges.Items.Add(New ListViewItem({"EmailAddress", rowDup.Cells(column).Value}))
+                            ElseIf column = "contactNum" Then
+                                lvChanges.Items.Add(New ListViewItem({"ContactNumber", rowDup.Cells(column).Value}))
+                            Else
+                                lvChanges.Items.Add(New ListViewItem({column, rowDup.Cells(column).Value}))
+                            End If
+                        End If
+
+                    Next column
+                    If rowDup.Cells("Comment").Value <> "" Then
+                        lvChanges.Items.Add(New ListViewItem({"Comment", rowDup.Cells("Comment").Value}))
+                    End If
+                    lvChanges.Items.Add(New ListViewItem({"Status", "Allocated"}))
+
+                End If
+            Next rowDup
+        End If
+
+    End Sub
 End Class

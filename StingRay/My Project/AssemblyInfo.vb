@@ -8,10 +8,10 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Zest")> 
+<Assembly: AssemblyTitle("StingRay")>
 <Assembly: AssemblyDescription("Lead Management Tool")> 
-<Assembly: AssemblyCompany("Zestlife")> 
-<Assembly: AssemblyProduct("Zest")> 
+<Assembly: AssemblyCompany("Zestlife")>
+<Assembly: AssemblyProduct("StingRay")>
 <Assembly: AssemblyCopyright("Copyright ©  2016")> 
 <Assembly: AssemblyTrademark("")> 
 

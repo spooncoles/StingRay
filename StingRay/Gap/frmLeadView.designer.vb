@@ -29,6 +29,8 @@ Partial Class frmLeadView
         Me.rbManApplication = New System.Windows.Forms.RadioButton()
         Me.rbTelApplication = New System.Windows.Forms.RadioButton()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.llPreExisting = New System.Windows.Forms.LinkLabel()
+        Me.mtbProcedure = New StingRay.WaterMarkTextBox()
         Me.nudDependants = New System.Windows.Forms.NumericUpDown()
         Me.cbMedAidPlan = New System.Windows.Forms.ComboBox()
         Me.cbMedicalAid = New System.Windows.Forms.ComboBox()
@@ -71,6 +73,23 @@ Partial Class frmLeadView
         Me.txLastName = New System.Windows.Forms.TextBox()
         Me.txFirstName = New System.Windows.Forms.TextBox()
         Me.tpProduct = New System.Windows.Forms.TabPage()
+        Me.gbProduct2017 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.rbTypeOther = New System.Windows.Forms.RadioButton()
+        Me.rbTypeSingle = New System.Windows.Forms.RadioButton()
+        Me.GroupBox7 = New System.Windows.Forms.GroupBox()
+        Me.rbUniversal2017 = New System.Windows.Forms.RadioButton()
+        Me.rbMatchCover = New System.Windows.Forms.RadioButton()
+        Me.gbProduct2016 = New System.Windows.Forms.GroupBox()
+        Me.gbProductExcess = New System.Windows.Forms.GroupBox()
+        Me.rbWithExcess = New System.Windows.Forms.RadioButton()
+        Me.rbNoExcess = New System.Windows.Forms.RadioButton()
+        Me.gbProductPrimary = New System.Windows.Forms.GroupBox()
+        Me.rbUniversal = New System.Windows.Forms.RadioButton()
+        Me.rbStandard = New System.Windows.Forms.RadioButton()
+        Me.rbCore = New System.Windows.Forms.RadioButton()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.cbProdYear = New System.Windows.Forms.ComboBox()
         Me.gbDentistryUW = New System.Windows.Forms.GroupBox()
         Me.lbDentistryUW = New System.Windows.Forms.Label()
         Me.cbAfford = New System.Windows.Forms.CheckBox()
@@ -87,14 +106,7 @@ Partial Class frmLeadView
         Me.rbCancer2 = New System.Windows.Forms.RadioButton()
         Me.rbCancer1 = New System.Windows.Forms.RadioButton()
         Me.rbNoCancer = New System.Windows.Forms.RadioButton()
-        Me.gbProductExcess = New System.Windows.Forms.GroupBox()
-        Me.rbWithExcess = New System.Windows.Forms.RadioButton()
-        Me.rbNoExcess = New System.Windows.Forms.RadioButton()
         Me.lbProdDesc = New System.Windows.Forms.Label()
-        Me.gbProductPrimary = New System.Windows.Forms.GroupBox()
-        Me.rbUniversal = New System.Windows.Forms.RadioButton()
-        Me.rbStandard = New System.Windows.Forms.RadioButton()
-        Me.rbCore = New System.Windows.Forms.RadioButton()
         Me.tpAddress = New System.Windows.Forms.TabPage()
         Me.gbPhysical = New System.Windows.Forms.GroupBox()
         Me.Label27 = New System.Windows.Forms.Label()
@@ -159,6 +171,7 @@ Partial Class frmLeadView
         Me.tbDisclosures = New System.Windows.Forms.TabPage()
         Me.cbDisclosed = New System.Windows.Forms.CheckBox()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
+        Me.mtbReplacementPolicy = New StingRay.WaterMarkTextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.rbPolicyReplaceNo = New System.Windows.Forms.RadioButton()
         Me.rbPolicyReplaceYes = New System.Windows.Forms.RadioButton()
@@ -198,9 +211,6 @@ Partial Class frmLeadView
         Me.btSendEmail = New System.Windows.Forms.Button()
         Me.btTransfer = New System.Windows.Forms.Button()
         Me.mtbComment = New StingRay.WaterMarkTextBox()
-        Me.mtbProcedure = New StingRay.WaterMarkTextBox()
-        Me.mtbReplacementPolicy = New StingRay.WaterMarkTextBox()
-        Me.llPreExisting = New System.Windows.Forms.LinkLabel()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -211,12 +221,16 @@ Partial Class frmLeadView
         Me.GroupBox10.SuspendLayout()
         Me.GroupBox11.SuspendLayout()
         Me.tpProduct.SuspendLayout()
+        Me.gbProduct2017.SuspendLayout()
+        Me.GroupBox6.SuspendLayout()
+        Me.GroupBox7.SuspendLayout()
+        Me.gbProduct2016.SuspendLayout()
+        Me.gbProductExcess.SuspendLayout()
+        Me.gbProductPrimary.SuspendLayout()
         Me.gbDentistryUW.SuspendLayout()
         Me.gbCancerUW.SuspendLayout()
         Me.gbProductDentistry.SuspendLayout()
         Me.gbProductCancer.SuspendLayout()
-        Me.gbProductExcess.SuspendLayout()
-        Me.gbProductPrimary.SuspendLayout()
         Me.tpAddress.SuspendLayout()
         Me.gbPhysical.SuspendLayout()
         Me.GroupBox13.SuspendLayout()
@@ -325,6 +339,28 @@ Partial Class frmLeadView
         Me.GroupBox2.Size = New System.Drawing.Size(669, 205)
         Me.GroupBox2.TabIndex = 7
         Me.GroupBox2.TabStop = False
+        '
+        'llPreExisting
+        '
+        Me.llPreExisting.AutoSize = True
+        Me.llPreExisting.Location = New System.Drawing.Point(506, 160)
+        Me.llPreExisting.Name = "llPreExisting"
+        Me.llPreExisting.Size = New System.Drawing.Size(107, 13)
+        Me.llPreExisting.TabIndex = 35
+        Me.llPreExisting.TabStop = True
+        Me.llPreExisting.Text = "Pre-existing condition"
+        '
+        'mtbProcedure
+        '
+        Me.mtbProcedure.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
+        Me.mtbProcedure.Location = New System.Drawing.Point(102, 176)
+        Me.mtbProcedure.Name = "mtbProcedure"
+        Me.mtbProcedure.Size = New System.Drawing.Size(511, 20)
+        Me.mtbProcedure.TabIndex = 30
+        Me.mtbProcedure.Tag = "procedureIn12Months"
+        Me.mtbProcedure.Visible = False
+        Me.mtbProcedure.WaterMarkColor = System.Drawing.Color.Gray
+        Me.mtbProcedure.WaterMarkText = "Please fill out procedure details"
         '
         'nudDependants
         '
@@ -747,21 +783,214 @@ Partial Class frmLeadView
         'tpProduct
         '
         Me.tpProduct.BackColor = System.Drawing.SystemColors.Control
+        Me.tpProduct.Controls.Add(Me.gbProduct2017)
+        Me.tpProduct.Controls.Add(Me.gbProduct2016)
+        Me.tpProduct.Controls.Add(Me.Label21)
+        Me.tpProduct.Controls.Add(Me.cbProdYear)
         Me.tpProduct.Controls.Add(Me.gbDentistryUW)
         Me.tpProduct.Controls.Add(Me.cbAfford)
         Me.tpProduct.Controls.Add(Me.gbCancerUW)
         Me.tpProduct.Controls.Add(Me.lbProdCost)
         Me.tpProduct.Controls.Add(Me.gbProductDentistry)
         Me.tpProduct.Controls.Add(Me.gbProductCancer)
-        Me.tpProduct.Controls.Add(Me.gbProductExcess)
         Me.tpProduct.Controls.Add(Me.lbProdDesc)
-        Me.tpProduct.Controls.Add(Me.gbProductPrimary)
         Me.tpProduct.Location = New System.Drawing.Point(4, 22)
         Me.tpProduct.Name = "tpProduct"
         Me.tpProduct.Padding = New System.Windows.Forms.Padding(3)
         Me.tpProduct.Size = New System.Drawing.Size(681, 292)
         Me.tpProduct.TabIndex = 2
         Me.tpProduct.Text = "Product"
+        '
+        'gbProduct2017
+        '
+        Me.gbProduct2017.Controls.Add(Me.GroupBox6)
+        Me.gbProduct2017.Controls.Add(Me.GroupBox7)
+        Me.gbProduct2017.Location = New System.Drawing.Point(4, 33)
+        Me.gbProduct2017.Name = "gbProduct2017"
+        Me.gbProduct2017.Size = New System.Drawing.Size(108, 168)
+        Me.gbProduct2017.TabIndex = 32
+        Me.gbProduct2017.TabStop = False
+        Me.gbProduct2017.Text = "2017 Product"
+        '
+        'GroupBox6
+        '
+        Me.GroupBox6.Controls.Add(Me.rbTypeOther)
+        Me.GroupBox6.Controls.Add(Me.rbTypeSingle)
+        Me.GroupBox6.Location = New System.Drawing.Point(7, 96)
+        Me.GroupBox6.Name = "GroupBox6"
+        Me.GroupBox6.Size = New System.Drawing.Size(93, 62)
+        Me.GroupBox6.TabIndex = 6
+        Me.GroupBox6.TabStop = False
+        Me.GroupBox6.Text = "Type"
+        '
+        'rbTypeOther
+        '
+        Me.rbTypeOther.AutoSize = True
+        Me.rbTypeOther.Location = New System.Drawing.Point(6, 36)
+        Me.rbTypeOther.Name = "rbTypeOther"
+        Me.rbTypeOther.Size = New System.Drawing.Size(51, 17)
+        Me.rbTypeOther.TabIndex = 3
+        Me.rbTypeOther.Tag = "O"
+        Me.rbTypeOther.Text = "Other"
+        Me.rbTypeOther.UseVisualStyleBackColor = True
+        '
+        'rbTypeSingle
+        '
+        Me.rbTypeSingle.AutoSize = True
+        Me.rbTypeSingle.Location = New System.Drawing.Point(6, 19)
+        Me.rbTypeSingle.Name = "rbTypeSingle"
+        Me.rbTypeSingle.Size = New System.Drawing.Size(78, 17)
+        Me.rbTypeSingle.TabIndex = 2
+        Me.rbTypeSingle.Tag = "S"
+        Me.rbTypeSingle.Text = "Single < 55"
+        Me.rbTypeSingle.UseVisualStyleBackColor = True
+        '
+        'GroupBox7
+        '
+        Me.GroupBox7.Controls.Add(Me.rbUniversal2017)
+        Me.GroupBox7.Controls.Add(Me.rbMatchCover)
+        Me.GroupBox7.Location = New System.Drawing.Point(7, 16)
+        Me.GroupBox7.Name = "GroupBox7"
+        Me.GroupBox7.Size = New System.Drawing.Size(93, 77)
+        Me.GroupBox7.TabIndex = 5
+        Me.GroupBox7.TabStop = False
+        Me.GroupBox7.Text = "Primary"
+        '
+        'rbUniversal2017
+        '
+        Me.rbUniversal2017.AutoSize = True
+        Me.rbUniversal2017.Location = New System.Drawing.Point(6, 37)
+        Me.rbUniversal2017.Name = "rbUniversal2017"
+        Me.rbUniversal2017.Size = New System.Drawing.Size(69, 17)
+        Me.rbUniversal2017.TabIndex = 3
+        Me.rbUniversal2017.TabStop = True
+        Me.rbUniversal2017.Tag = "U"
+        Me.rbUniversal2017.Text = "Universal"
+        Me.rbUniversal2017.UseVisualStyleBackColor = True
+        '
+        'rbMatchCover
+        '
+        Me.rbMatchCover.AutoSize = True
+        Me.rbMatchCover.Location = New System.Drawing.Point(6, 19)
+        Me.rbMatchCover.Name = "rbMatchCover"
+        Me.rbMatchCover.Size = New System.Drawing.Size(86, 17)
+        Me.rbMatchCover.TabIndex = 1
+        Me.rbMatchCover.TabStop = True
+        Me.rbMatchCover.Tag = "M"
+        Me.rbMatchCover.Text = "Match Cover"
+        Me.rbMatchCover.UseVisualStyleBackColor = True
+        '
+        'gbProduct2016
+        '
+        Me.gbProduct2016.Controls.Add(Me.gbProductExcess)
+        Me.gbProduct2016.Controls.Add(Me.gbProductPrimary)
+        Me.gbProduct2016.Location = New System.Drawing.Point(4, 33)
+        Me.gbProduct2016.Name = "gbProduct2016"
+        Me.gbProduct2016.Size = New System.Drawing.Size(108, 168)
+        Me.gbProduct2016.TabIndex = 4
+        Me.gbProduct2016.TabStop = False
+        Me.gbProduct2016.Text = "2016 Product"
+        '
+        'gbProductExcess
+        '
+        Me.gbProductExcess.Controls.Add(Me.rbWithExcess)
+        Me.gbProductExcess.Controls.Add(Me.rbNoExcess)
+        Me.gbProductExcess.Location = New System.Drawing.Point(7, 96)
+        Me.gbProductExcess.Name = "gbProductExcess"
+        Me.gbProductExcess.Size = New System.Drawing.Size(93, 62)
+        Me.gbProductExcess.TabIndex = 6
+        Me.gbProductExcess.TabStop = False
+        Me.gbProductExcess.Text = "Excess"
+        '
+        'rbWithExcess
+        '
+        Me.rbWithExcess.AutoSize = True
+        Me.rbWithExcess.Location = New System.Drawing.Point(6, 36)
+        Me.rbWithExcess.Name = "rbWithExcess"
+        Me.rbWithExcess.Size = New System.Drawing.Size(84, 17)
+        Me.rbWithExcess.TabIndex = 3
+        Me.rbWithExcess.Tag = "E"
+        Me.rbWithExcess.Text = "With Excess"
+        Me.rbWithExcess.UseVisualStyleBackColor = True
+        '
+        'rbNoExcess
+        '
+        Me.rbNoExcess.AutoSize = True
+        Me.rbNoExcess.Location = New System.Drawing.Point(6, 19)
+        Me.rbNoExcess.Name = "rbNoExcess"
+        Me.rbNoExcess.Size = New System.Drawing.Size(76, 17)
+        Me.rbNoExcess.TabIndex = 2
+        Me.rbNoExcess.Tag = "N"
+        Me.rbNoExcess.Text = "No Excess"
+        Me.rbNoExcess.UseVisualStyleBackColor = True
+        '
+        'gbProductPrimary
+        '
+        Me.gbProductPrimary.Controls.Add(Me.rbUniversal)
+        Me.gbProductPrimary.Controls.Add(Me.rbStandard)
+        Me.gbProductPrimary.Controls.Add(Me.rbCore)
+        Me.gbProductPrimary.Location = New System.Drawing.Point(7, 16)
+        Me.gbProductPrimary.Name = "gbProductPrimary"
+        Me.gbProductPrimary.Size = New System.Drawing.Size(93, 77)
+        Me.gbProductPrimary.TabIndex = 5
+        Me.gbProductPrimary.TabStop = False
+        Me.gbProductPrimary.Text = "Primary"
+        '
+        'rbUniversal
+        '
+        Me.rbUniversal.AutoSize = True
+        Me.rbUniversal.Location = New System.Drawing.Point(6, 52)
+        Me.rbUniversal.Name = "rbUniversal"
+        Me.rbUniversal.Size = New System.Drawing.Size(69, 17)
+        Me.rbUniversal.TabIndex = 3
+        Me.rbUniversal.TabStop = True
+        Me.rbUniversal.Tag = "U"
+        Me.rbUniversal.Text = "Universal"
+        Me.rbUniversal.UseVisualStyleBackColor = True
+        '
+        'rbStandard
+        '
+        Me.rbStandard.AutoSize = True
+        Me.rbStandard.Location = New System.Drawing.Point(6, 36)
+        Me.rbStandard.Name = "rbStandard"
+        Me.rbStandard.Size = New System.Drawing.Size(68, 17)
+        Me.rbStandard.TabIndex = 2
+        Me.rbStandard.TabStop = True
+        Me.rbStandard.Tag = "S"
+        Me.rbStandard.Text = "Standard"
+        Me.rbStandard.UseVisualStyleBackColor = True
+        '
+        'rbCore
+        '
+        Me.rbCore.AutoSize = True
+        Me.rbCore.Location = New System.Drawing.Point(6, 19)
+        Me.rbCore.Name = "rbCore"
+        Me.rbCore.Size = New System.Drawing.Size(47, 17)
+        Me.rbCore.TabIndex = 1
+        Me.rbCore.TabStop = True
+        Me.rbCore.Tag = "C"
+        Me.rbCore.Text = "Core"
+        Me.rbCore.UseVisualStyleBackColor = True
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(7, 11)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(72, 13)
+        Me.Label21.TabIndex = 9
+        Me.Label21.Text = "Product Year:"
+        '
+        'cbProdYear
+        '
+        Me.cbProdYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbProdYear.FormattingEnabled = True
+        Me.cbProdYear.Items.AddRange(New Object() {"2016", "2017"})
+        Me.cbProdYear.Location = New System.Drawing.Point(85, 8)
+        Me.cbProdYear.Name = "cbProdYear"
+        Me.cbProdYear.Size = New System.Drawing.Size(141, 21)
+        Me.cbProdYear.TabIndex = 8
+        Me.cbProdYear.Tag = "productYear"
         '
         'gbDentistryUW
         '
@@ -848,7 +1077,7 @@ Partial Class frmLeadView
         'lbProdCost
         '
         Me.lbProdCost.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbProdCost.Location = New System.Drawing.Point(1, 196)
+        Me.lbProdCost.Location = New System.Drawing.Point(3, 211)
         Me.lbProdCost.Name = "lbProdCost"
         Me.lbProdCost.Size = New System.Drawing.Size(225, 23)
         Me.lbProdCost.TabIndex = 5
@@ -858,9 +1087,9 @@ Partial Class frmLeadView
         '
         Me.gbProductDentistry.Controls.Add(Me.rbWithDentistry)
         Me.gbProductDentistry.Controls.Add(Me.rbNoDentistry)
-        Me.gbProductDentistry.Location = New System.Drawing.Point(109, 108)
+        Me.gbProductDentistry.Location = New System.Drawing.Point(114, 133)
         Me.gbProductDentistry.Name = "gbProductDentistry"
-        Me.gbProductDentistry.Size = New System.Drawing.Size(117, 68)
+        Me.gbProductDentistry.Size = New System.Drawing.Size(112, 68)
         Me.gbProductDentistry.TabIndex = 4
         Me.gbProductDentistry.TabStop = False
         Me.gbProductDentistry.Text = "Dentistry"
@@ -879,10 +1108,12 @@ Partial Class frmLeadView
         'rbNoDentistry
         '
         Me.rbNoDentistry.AutoSize = True
+        Me.rbNoDentistry.Checked = True
         Me.rbNoDentistry.Location = New System.Drawing.Point(6, 19)
         Me.rbNoDentistry.Name = "rbNoDentistry"
         Me.rbNoDentistry.Size = New System.Drawing.Size(83, 17)
         Me.rbNoDentistry.TabIndex = 2
+        Me.rbNoDentistry.TabStop = True
         Me.rbNoDentistry.Tag = "X"
         Me.rbNoDentistry.Text = "No Dentistry"
         Me.rbNoDentistry.UseVisualStyleBackColor = True
@@ -892,9 +1123,9 @@ Partial Class frmLeadView
         Me.gbProductCancer.Controls.Add(Me.rbCancer2)
         Me.gbProductCancer.Controls.Add(Me.rbCancer1)
         Me.gbProductCancer.Controls.Add(Me.rbNoCancer)
-        Me.gbProductCancer.Location = New System.Drawing.Point(109, 8)
+        Me.gbProductCancer.Location = New System.Drawing.Point(114, 33)
         Me.gbProductCancer.Name = "gbProductCancer"
-        Me.gbProductCancer.Size = New System.Drawing.Size(117, 94)
+        Me.gbProductCancer.Size = New System.Drawing.Size(112, 94)
         Me.gbProductCancer.TabIndex = 4
         Me.gbProductCancer.TabStop = False
         Me.gbProductCancer.Text = "Cancer Cover"
@@ -904,10 +1135,10 @@ Partial Class frmLeadView
         Me.rbCancer2.AutoSize = True
         Me.rbCancer2.Location = New System.Drawing.Point(6, 65)
         Me.rbCancer2.Name = "rbCancer2"
-        Me.rbCancer2.Size = New System.Drawing.Size(65, 17)
+        Me.rbCancer2.Size = New System.Drawing.Size(75, 17)
         Me.rbCancer2.TabIndex = 4
         Me.rbCancer2.Tag = "K"
-        Me.rbCancer2.Text = "Option 2"
+        Me.rbCancer2.Text = "R 175,000"
         Me.rbCancer2.UseVisualStyleBackColor = True
         '
         'rbCancer1
@@ -915,112 +1146,33 @@ Partial Class frmLeadView
         Me.rbCancer1.AutoSize = True
         Me.rbCancer1.Location = New System.Drawing.Point(5, 42)
         Me.rbCancer1.Name = "rbCancer1"
-        Me.rbCancer1.Size = New System.Drawing.Size(65, 17)
+        Me.rbCancer1.Size = New System.Drawing.Size(69, 17)
         Me.rbCancer1.TabIndex = 3
         Me.rbCancer1.Tag = "C"
-        Me.rbCancer1.Text = "Option 1"
+        Me.rbCancer1.Text = "R 75,000"
         Me.rbCancer1.UseVisualStyleBackColor = True
         '
         'rbNoCancer
         '
         Me.rbNoCancer.AutoSize = True
+        Me.rbNoCancer.Checked = True
         Me.rbNoCancer.Location = New System.Drawing.Point(6, 19)
         Me.rbNoCancer.Name = "rbNoCancer"
         Me.rbNoCancer.Size = New System.Drawing.Size(107, 17)
         Me.rbNoCancer.TabIndex = 2
+        Me.rbNoCancer.TabStop = True
         Me.rbNoCancer.Tag = "X"
         Me.rbNoCancer.Text = "No Cancer Cover"
         Me.rbNoCancer.UseVisualStyleBackColor = True
         '
-        'gbProductExcess
-        '
-        Me.gbProductExcess.Controls.Add(Me.rbWithExcess)
-        Me.gbProductExcess.Controls.Add(Me.rbNoExcess)
-        Me.gbProductExcess.Location = New System.Drawing.Point(4, 108)
-        Me.gbProductExcess.Name = "gbProductExcess"
-        Me.gbProductExcess.Size = New System.Drawing.Size(99, 68)
-        Me.gbProductExcess.TabIndex = 2
-        Me.gbProductExcess.TabStop = False
-        Me.gbProductExcess.Text = "Excess"
-        '
-        'rbWithExcess
-        '
-        Me.rbWithExcess.AutoSize = True
-        Me.rbWithExcess.Location = New System.Drawing.Point(5, 42)
-        Me.rbWithExcess.Name = "rbWithExcess"
-        Me.rbWithExcess.Size = New System.Drawing.Size(84, 17)
-        Me.rbWithExcess.TabIndex = 3
-        Me.rbWithExcess.Tag = "E"
-        Me.rbWithExcess.Text = "With Excess"
-        Me.rbWithExcess.UseVisualStyleBackColor = True
-        '
-        'rbNoExcess
-        '
-        Me.rbNoExcess.AutoSize = True
-        Me.rbNoExcess.Location = New System.Drawing.Point(6, 19)
-        Me.rbNoExcess.Name = "rbNoExcess"
-        Me.rbNoExcess.Size = New System.Drawing.Size(76, 17)
-        Me.rbNoExcess.TabIndex = 2
-        Me.rbNoExcess.Tag = "N"
-        Me.rbNoExcess.Text = "No Excess"
-        Me.rbNoExcess.UseVisualStyleBackColor = True
-        '
         'lbProdDesc
         '
-        Me.lbProdDesc.Location = New System.Drawing.Point(3, 232)
+        Me.lbProdDesc.Location = New System.Drawing.Point(4, 243)
         Me.lbProdDesc.Name = "lbProdDesc"
         Me.lbProdDesc.Size = New System.Drawing.Size(225, 23)
         Me.lbProdDesc.TabIndex = 1
         Me.lbProdDesc.Text = "Please select a product."
         Me.lbProdDesc.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        '
-        'gbProductPrimary
-        '
-        Me.gbProductPrimary.Controls.Add(Me.rbUniversal)
-        Me.gbProductPrimary.Controls.Add(Me.rbStandard)
-        Me.gbProductPrimary.Controls.Add(Me.rbCore)
-        Me.gbProductPrimary.Location = New System.Drawing.Point(4, 4)
-        Me.gbProductPrimary.Name = "gbProductPrimary"
-        Me.gbProductPrimary.Size = New System.Drawing.Size(99, 98)
-        Me.gbProductPrimary.TabIndex = 0
-        Me.gbProductPrimary.TabStop = False
-        Me.gbProductPrimary.Text = "Primary"
-        '
-        'rbUniversal
-        '
-        Me.rbUniversal.AutoSize = True
-        Me.rbUniversal.Location = New System.Drawing.Point(5, 65)
-        Me.rbUniversal.Name = "rbUniversal"
-        Me.rbUniversal.Size = New System.Drawing.Size(69, 17)
-        Me.rbUniversal.TabIndex = 3
-        Me.rbUniversal.TabStop = True
-        Me.rbUniversal.Tag = "U"
-        Me.rbUniversal.Text = "Universal"
-        Me.rbUniversal.UseVisualStyleBackColor = True
-        '
-        'rbStandard
-        '
-        Me.rbStandard.AutoSize = True
-        Me.rbStandard.Location = New System.Drawing.Point(6, 42)
-        Me.rbStandard.Name = "rbStandard"
-        Me.rbStandard.Size = New System.Drawing.Size(68, 17)
-        Me.rbStandard.TabIndex = 2
-        Me.rbStandard.TabStop = True
-        Me.rbStandard.Tag = "S"
-        Me.rbStandard.Text = "Standard"
-        Me.rbStandard.UseVisualStyleBackColor = True
-        '
-        'rbCore
-        '
-        Me.rbCore.AutoSize = True
-        Me.rbCore.Location = New System.Drawing.Point(6, 19)
-        Me.rbCore.Name = "rbCore"
-        Me.rbCore.Size = New System.Drawing.Size(47, 17)
-        Me.rbCore.TabIndex = 1
-        Me.rbCore.TabStop = True
-        Me.rbCore.Tag = "C"
-        Me.rbCore.Text = "Core"
-        Me.rbCore.UseVisualStyleBackColor = True
         '
         'tpAddress
         '
@@ -1505,7 +1657,7 @@ Partial Class frmLeadView
         '
         Me.cbPaymentDay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbPaymentDay.FormattingEnabled = True
-        Me.cbPaymentDay.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "25", "26", "27", "28", "29", "30", "31", "Last Day"})
+        Me.cbPaymentDay.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "Last Day"})
         Me.cbPaymentDay.Location = New System.Drawing.Point(180, 63)
         Me.cbPaymentDay.Name = "cbPaymentDay"
         Me.cbPaymentDay.Size = New System.Drawing.Size(141, 21)
@@ -1697,6 +1849,18 @@ Partial Class frmLeadView
         Me.GroupBox8.Size = New System.Drawing.Size(668, 34)
         Me.GroupBox8.TabIndex = 16
         Me.GroupBox8.TabStop = False
+        '
+        'mtbReplacementPolicy
+        '
+        Me.mtbReplacementPolicy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
+        Me.mtbReplacementPolicy.Location = New System.Drawing.Point(282, 10)
+        Me.mtbReplacementPolicy.Name = "mtbReplacementPolicy"
+        Me.mtbReplacementPolicy.Size = New System.Drawing.Size(380, 20)
+        Me.mtbReplacementPolicy.TabIndex = 31
+        Me.mtbReplacementPolicy.Tag = "policyReplaced"
+        Me.mtbReplacementPolicy.Visible = False
+        Me.mtbReplacementPolicy.WaterMarkColor = System.Drawing.Color.Gray
+        Me.mtbReplacementPolicy.WaterMarkText = "Please fill out replacement policy"
         '
         'Label12
         '
@@ -2059,7 +2223,7 @@ Partial Class frmLeadView
         '
         Me.clbEmailOptions.CausesValidation = False
         Me.clbEmailOptions.CheckOnClick = True
-        Me.clbEmailOptions.Items.AddRange(New Object() {"Brochure", "Brochure (Afrikaans)", "Personal App", "Extended Dentistry", "Gap FAQ's", "PMB Explaination", "Brochure - Adcorp"})
+        Me.clbEmailOptions.Items.AddRange(New Object() {"Brochure", "Brochure (2017)", "Brochure (Afrikaans)", "Personal App", "Personal App (2017)", "Extended Dentistry", "Gap FAQ's", "PMB Explaination", "Brochure - Adcorp"})
         Me.clbEmailOptions.Location = New System.Drawing.Point(1, 16)
         Me.clbEmailOptions.Name = "clbEmailOptions"
         Me.clbEmailOptions.Size = New System.Drawing.Size(159, 64)
@@ -2092,40 +2256,6 @@ Partial Class frmLeadView
         Me.mtbComment.TabIndex = 31
         Me.mtbComment.WaterMarkColor = System.Drawing.Color.Gray
         Me.mtbComment.WaterMarkText = "Please enter comment then press enter"
-        '
-        'mtbProcedure
-        '
-        Me.mtbProcedure.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.mtbProcedure.Location = New System.Drawing.Point(102, 176)
-        Me.mtbProcedure.Name = "mtbProcedure"
-        Me.mtbProcedure.Size = New System.Drawing.Size(511, 20)
-        Me.mtbProcedure.TabIndex = 30
-        Me.mtbProcedure.Tag = "procedureIn12Months"
-        Me.mtbProcedure.Visible = False
-        Me.mtbProcedure.WaterMarkColor = System.Drawing.Color.Gray
-        Me.mtbProcedure.WaterMarkText = "Please fill out procedure details"
-        '
-        'mtbReplacementPolicy
-        '
-        Me.mtbReplacementPolicy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.mtbReplacementPolicy.Location = New System.Drawing.Point(282, 10)
-        Me.mtbReplacementPolicy.Name = "mtbReplacementPolicy"
-        Me.mtbReplacementPolicy.Size = New System.Drawing.Size(380, 20)
-        Me.mtbReplacementPolicy.TabIndex = 31
-        Me.mtbReplacementPolicy.Tag = "policyReplaced"
-        Me.mtbReplacementPolicy.Visible = False
-        Me.mtbReplacementPolicy.WaterMarkColor = System.Drawing.Color.Gray
-        Me.mtbReplacementPolicy.WaterMarkText = "Please fill out replacement policy"
-        '
-        'llPreExisting
-        '
-        Me.llPreExisting.AutoSize = True
-        Me.llPreExisting.Location = New System.Drawing.Point(506, 160)
-        Me.llPreExisting.Name = "llPreExisting"
-        Me.llPreExisting.Size = New System.Drawing.Size(107, 13)
-        Me.llPreExisting.TabIndex = 35
-        Me.llPreExisting.TabStop = True
-        Me.llPreExisting.Text = "Pre-existing condition"
         '
         'frmLeadView
         '
@@ -2164,6 +2294,16 @@ Partial Class frmLeadView
         Me.GroupBox11.PerformLayout()
         Me.tpProduct.ResumeLayout(False)
         Me.tpProduct.PerformLayout()
+        Me.gbProduct2017.ResumeLayout(False)
+        Me.GroupBox6.ResumeLayout(False)
+        Me.GroupBox6.PerformLayout()
+        Me.GroupBox7.ResumeLayout(False)
+        Me.GroupBox7.PerformLayout()
+        Me.gbProduct2016.ResumeLayout(False)
+        Me.gbProductExcess.ResumeLayout(False)
+        Me.gbProductExcess.PerformLayout()
+        Me.gbProductPrimary.ResumeLayout(False)
+        Me.gbProductPrimary.PerformLayout()
         Me.gbDentistryUW.ResumeLayout(False)
         Me.gbCancerUW.ResumeLayout(False)
         Me.gbCancerUW.PerformLayout()
@@ -2171,10 +2311,6 @@ Partial Class frmLeadView
         Me.gbProductDentistry.PerformLayout()
         Me.gbProductCancer.ResumeLayout(False)
         Me.gbProductCancer.PerformLayout()
-        Me.gbProductExcess.ResumeLayout(False)
-        Me.gbProductExcess.PerformLayout()
-        Me.gbProductPrimary.ResumeLayout(False)
-        Me.gbProductPrimary.PerformLayout()
         Me.tpAddress.ResumeLayout(False)
         Me.gbPhysical.ResumeLayout(False)
         Me.gbPhysical.PerformLayout()
@@ -2246,14 +2382,7 @@ Partial Class frmLeadView
     Friend WithEvents btDeclined As System.Windows.Forms.Button
     Friend WithEvents btInvalid As System.Windows.Forms.Button
     Friend WithEvents btReschedual As System.Windows.Forms.Button
-    Friend WithEvents gbProductExcess As System.Windows.Forms.GroupBox
-    Friend WithEvents rbWithExcess As System.Windows.Forms.RadioButton
-    Friend WithEvents rbNoExcess As System.Windows.Forms.RadioButton
     Friend WithEvents lbProdDesc As System.Windows.Forms.Label
-    Friend WithEvents gbProductPrimary As System.Windows.Forms.GroupBox
-    Friend WithEvents rbUniversal As System.Windows.Forms.RadioButton
-    Friend WithEvents rbStandard As System.Windows.Forms.RadioButton
-    Friend WithEvents rbCore As System.Windows.Forms.RadioButton
     Friend WithEvents lbLeadID As System.Windows.Forms.Label
     Friend WithEvents gbProductDentistry As System.Windows.Forms.GroupBox
     Friend WithEvents rbWithDentistry As System.Windows.Forms.RadioButton
@@ -2393,4 +2522,21 @@ Partial Class frmLeadView
     Friend WithEvents llMonthlyDODay As LinkLabel
     Friend WithEvents llFirstCollectionDate As LinkLabel
     Friend WithEvents llPreExisting As LinkLabel
+    Friend WithEvents gbProduct2016 As GroupBox
+    Friend WithEvents gbProductExcess As GroupBox
+    Friend WithEvents rbWithExcess As RadioButton
+    Friend WithEvents rbNoExcess As RadioButton
+    Friend WithEvents gbProductPrimary As GroupBox
+    Friend WithEvents rbUniversal As RadioButton
+    Friend WithEvents rbStandard As RadioButton
+    Friend WithEvents rbCore As RadioButton
+    Friend WithEvents Label21 As Label
+    Friend WithEvents cbProdYear As ComboBox
+    Friend WithEvents gbProduct2017 As GroupBox
+    Friend WithEvents GroupBox6 As GroupBox
+    Friend WithEvents rbTypeOther As RadioButton
+    Friend WithEvents rbTypeSingle As RadioButton
+    Friend WithEvents GroupBox7 As GroupBox
+    Friend WithEvents rbUniversal2017 As RadioButton
+    Friend WithEvents rbMatchCover As RadioButton
 End Class

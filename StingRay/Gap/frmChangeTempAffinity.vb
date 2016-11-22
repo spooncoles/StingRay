@@ -35,7 +35,6 @@
         dgTempAffinities.DataSource = conn.ds.Tables("tempAffinities")
     End Sub
 
-
     Private Sub txAdminCode_KeyUp(sender As Object, e As KeyEventArgs) Handles txAdminCode.KeyUp
         If cbSalesOnly.Checked Then
             conn.fillDS("SELECT adminCode, affinityName, affinity FROM affinities INNER JOIN lead_primary ON adminCode = affinityCode WHERE adminCode LIKE '" & txAdminCode.Text & "%' AND status = 'Sale' AND LEFT(adminCode, 4) = 'TEMP' AND affinity = 0 GROUP BY adminCode ORDER BY affinityName", "tempAffinities")
@@ -53,4 +52,5 @@
         End If
         dgTempAffinities.DataSource = conn.ds.Tables("tempAffinities")
     End Sub
+
 End Class

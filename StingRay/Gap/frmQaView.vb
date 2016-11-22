@@ -113,6 +113,14 @@
     End Sub
 
     Public Sub loadLead(ByRef leadID As Integer)
+        Dim qaAgent As String = conn.sendReturn("SELECT qaAgent FROM lead_sale_info WHERE leadID = " & leadID)
+        If qaAgent <> "NULL" And qaAgent <> frmSide.lbUser.Text Then
+            MsgBox("This lead is being QAed by " & qaAgent & ". Please select another.")
+            frmQaPickUp.refreshLeads()
+            Exit Sub
+        End If
+
+        conn.send("UPDATE lead_sale_info SET qaAgent = '" & frmSide.lbUser.Text & "' WHERE leadID = " & leadID)
 
         If Not dtLeadInfo Is Nothing Then
             If Not dtLeadInfo.Columns.Contains("Field") Then
@@ -137,7 +145,7 @@
         gbLeadDetails.Tag = CStr(leadID)
 
         Dim sql As String = "SELECT agent, title, firstName, lastName, loadedDate, closedDate, affinityname, idNumber, emailAddress, contactNumber, cellNumber, homeNumber, workNumber, CAST(dateOfBirth AS CHAR(100)) AS DOB," _
-                            & " gender, appType, medicalAid, medicalAidPlan, medicalDependants, holderName, accountNumber, accountType, bankName, branchCode, paymentDay, CAST(firstDebitDate AS CHAR(100)) AS debitDate, paymentType, annualHousehold, employeeNum, description AS Product, cost," _
+                            & " gender, appType, medicalAid, medicalAidPlan, medicalDependants, holderName, accountNumber, accountType, bankName, branchCode, paymentDay, CAST(firstDebitDate AS CHAR(100)) AS debitDate, paymentType, annualHousehold, employeeNum, description AS Product, productYear, cost," _
                             & " postal1, postal2, postalSuburb, postalCity, postalProvince, postalCode, physicalIsPostal, physical1, physical2, physicalSuburb, physicalCity, physicalProvince, physicalCode" _
                             & " FROM zestlife.lead_primary INNER JOIN lead_sale_info ON lead_primary.leadID = lead_sale_info.leadID INNER JOIN affinities ON adminCode = affinityCode INNER JOIN sys_products ON productTaken = productID LEFT JOIN lead_banking ON lead_primary.leadID = lead_banking.leadID INNER JOIN lead_address ON lead_primary.leadID = lead_address.leadID" _
         & " WHERE lead_primary.leadID = " & CStr(leadID)
@@ -161,7 +169,7 @@
 
         Me.Show()
         frmQaPickUp.Close()
-        conn.send("UPDATE lead_sale_info SET qaAgent = '" & frmSide.lbUser.Text & "' WHERE leadID = " & leadID)
+
         conn.recordEvent("QA Pick Up", , leadID)
 
         Dim colWidth As Integer = 0
@@ -262,7 +270,7 @@
         Next gb
 
         If txOverallComment.Text <> "" Then
-            conn.send("UPDATE lead_sale_info SET qaStatus = '" & type & "', qaOverallComment = '" & txOverallComment.Text & "'" & ratingsUpdate & " WHERE leadID = " & gbLeadDetails.Tag)
+            conn.send("UPDATE lead_sale_info SET qaStatus = '" & type & "', qaOverallComment = '" & Replace(txOverallComment.Text, "'", "''") & "'" & ratingsUpdate & " WHERE leadID = " & gbLeadDetails.Tag)
         Else
             conn.send("UPDATE lead_sale_info SET qaStatus = '" & type & "'" & ratingsUpdate & " WHERE leadID = " & gbLeadDetails.Tag)
         End If

@@ -23,8 +23,8 @@ Partial Class frmLoadLead
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.tabControl = New System.Windows.Forms.TabControl()
         Me.tabSource = New System.Windows.Forms.TabPage()
         Me.cbOrder = New System.Windows.Forms.ComboBox()
@@ -88,6 +88,9 @@ Partial Class frmLoadLead
         Me.btAllocateSelected = New System.Windows.Forms.Button()
         Me.dgAgents = New System.Windows.Forms.DataGridView()
         Me.tbDups = New System.Windows.Forms.TabPage()
+        Me.btConfirmSingleDup = New System.Windows.Forms.Button()
+        Me.btEmailBusy = New System.Windows.Forms.Button()
+        Me.btCheckDups = New System.Windows.Forms.Button()
         Me.btConfirmDups = New System.Windows.Forms.Button()
         Me.dgDups = New System.Windows.Forms.DataGridView()
         Me.tbAPI = New System.Windows.Forms.TabPage()
@@ -101,6 +104,8 @@ Partial Class frmLoadLead
         Me.dgAPI = New System.Windows.Forms.DataGridView()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
+        Me.txCampaign = New System.Windows.Forms.TextBox()
+        Me.lbCampaign = New System.Windows.Forms.Label()
         Me.txEmailAddSearch = New StingRay.WaterMarkTextBox()
         Me.txIdNumSearch = New StingRay.WaterMarkTextBox()
         Me.txContactNumSearch = New StingRay.WaterMarkTextBox()
@@ -222,6 +227,8 @@ Partial Class frmLoadLead
         '
         'tabDetails
         '
+        Me.tabDetails.Controls.Add(Me.txCampaign)
+        Me.tabDetails.Controls.Add(Me.lbCampaign)
         Me.tabDetails.Controls.Add(Me.btAddToBatch)
         Me.tabDetails.Controls.Add(Me.txComment)
         Me.tabDetails.Controls.Add(Me.Label12)
@@ -256,8 +263,7 @@ Partial Class frmLoadLead
         '
         'btAddToBatch
         '
-        Me.btAddToBatch.Enabled = False
-        Me.btAddToBatch.Location = New System.Drawing.Point(16, 326)
+        Me.btAddToBatch.Location = New System.Drawing.Point(16, 333)
         Me.btAddToBatch.Name = "btAddToBatch"
         Me.btAddToBatch.Size = New System.Drawing.Size(221, 23)
         Me.btAddToBatch.TabIndex = 30
@@ -285,7 +291,7 @@ Partial Class frmLoadLead
         '
         'btLoad
         '
-        Me.btLoad.Location = New System.Drawing.Point(17, 297)
+        Me.btLoad.Location = New System.Drawing.Point(17, 304)
         Me.btLoad.Name = "btLoad"
         Me.btLoad.Size = New System.Drawing.Size(221, 23)
         Me.btLoad.TabIndex = 8
@@ -523,28 +529,28 @@ Partial Class frmLoadLead
         Me.dgLeadsToUpload.AllowUserToAddRows = False
         Me.dgLeadsToUpload.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.dgLeadsToUpload.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgLeadsToUpload.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgLeadsToUpload.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgLeadsToUpload.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgLeadsToUpload.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.title, Me.firstName, Me.lastName, Me.contactNum, Me.Email, Me.Agent, Me.affinityName, Me.comment, Me.source, Me.affinityCode, Me.affinityID, Me.leadNewID, Me.dupLeadID})
         Me.dgLeadsToUpload.ContextMenuStrip = Me.cmsDgRight
         Me.dgLeadsToUpload.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgLeadsToUpload.Location = New System.Drawing.Point(3, 38)
         Me.dgLeadsToUpload.Name = "dgLeadsToUpload"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgLeadsToUpload.RowHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgLeadsToUpload.RowHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgLeadsToUpload.RowHeadersVisible = False
         Me.dgLeadsToUpload.RowHeadersWidth = 25
         Me.dgLeadsToUpload.Size = New System.Drawing.Size(533, 385)
@@ -764,6 +770,9 @@ Partial Class frmLoadLead
         '
         'tbDups
         '
+        Me.tbDups.Controls.Add(Me.btConfirmSingleDup)
+        Me.tbDups.Controls.Add(Me.btEmailBusy)
+        Me.tbDups.Controls.Add(Me.btCheckDups)
         Me.tbDups.Controls.Add(Me.btConfirmDups)
         Me.tbDups.Controls.Add(Me.dgDups)
         Me.tbDups.Location = New System.Drawing.Point(4, 22)
@@ -774,13 +783,42 @@ Partial Class frmLoadLead
         Me.tbDups.Text = "Dups"
         Me.tbDups.UseVisualStyleBackColor = True
         '
+        'btConfirmSingleDup
+        '
+        Me.btConfirmSingleDup.Enabled = False
+        Me.btConfirmSingleDup.Location = New System.Drawing.Point(413, 6)
+        Me.btConfirmSingleDup.Name = "btConfirmSingleDup"
+        Me.btConfirmSingleDup.Size = New System.Drawing.Size(118, 23)
+        Me.btConfirmSingleDup.TabIndex = 4
+        Me.btConfirmSingleDup.Text = "Confirm red as dups"
+        Me.btConfirmSingleDup.UseVisualStyleBackColor = True
+        '
+        'btEmailBusy
+        '
+        Me.btEmailBusy.Enabled = False
+        Me.btEmailBusy.Location = New System.Drawing.Point(289, 7)
+        Me.btEmailBusy.Name = "btEmailBusy"
+        Me.btEmailBusy.Size = New System.Drawing.Size(118, 23)
+        Me.btEmailBusy.TabIndex = 3
+        Me.btEmailBusy.Text = "Email Busy's in blue"
+        Me.btEmailBusy.UseVisualStyleBackColor = True
+        '
+        'btCheckDups
+        '
+        Me.btCheckDups.Location = New System.Drawing.Point(8, 7)
+        Me.btCheckDups.Name = "btCheckDups"
+        Me.btCheckDups.Size = New System.Drawing.Size(118, 23)
+        Me.btCheckDups.TabIndex = 2
+        Me.btCheckDups.Text = "Check Dups"
+        Me.btCheckDups.UseVisualStyleBackColor = True
+        '
         'btConfirmDups
         '
         Me.btConfirmDups.Location = New System.Drawing.Point(725, 7)
         Me.btConfirmDups.Name = "btConfirmDups"
         Me.btConfirmDups.Size = New System.Drawing.Size(118, 23)
         Me.btConfirmDups.TabIndex = 1
-        Me.btConfirmDups.Text = "Confirm Dups"
+        Me.btConfirmDups.Text = "Confirm all as dups"
         Me.btConfirmDups.UseVisualStyleBackColor = True
         '
         'dgDups
@@ -902,6 +940,26 @@ Partial Class frmLoadLead
         Me.OpenFileDialog1.FileName = "leadBatchImporter"
         Me.OpenFileDialog1.Filter = "Excel Files|*.xlsx"
         Me.OpenFileDialog1.Title = "Open Lead Importer"
+        '
+        'txCampaign
+        '
+        Me.txCampaign.Location = New System.Drawing.Point(89, 280)
+        Me.txCampaign.MaxLength = 100
+        Me.txCampaign.Name = "txCampaign"
+        Me.txCampaign.Size = New System.Drawing.Size(149, 20)
+        Me.txCampaign.TabIndex = 31
+        Me.txCampaign.Tag = "firstName"
+        Me.txCampaign.Visible = False
+        '
+        'lbCampaign
+        '
+        Me.lbCampaign.AutoSize = True
+        Me.lbCampaign.Location = New System.Drawing.Point(26, 283)
+        Me.lbCampaign.Name = "lbCampaign"
+        Me.lbCampaign.Size = New System.Drawing.Size(54, 13)
+        Me.lbCampaign.TabIndex = 32
+        Me.lbCampaign.Text = "Campaign"
+        Me.lbCampaign.Visible = False
         '
         'txEmailAddSearch
         '
@@ -1060,4 +1118,9 @@ Partial Class frmLoadLead
     Friend WithEvents btExample As Button
     Friend WithEvents btUpload As Button
     Friend WithEvents btValidate As Button
+    Friend WithEvents btCheckDups As Button
+    Friend WithEvents btConfirmSingleDup As Button
+    Friend WithEvents btEmailBusy As Button
+    Friend WithEvents txCampaign As TextBox
+    Friend WithEvents lbCampaign As Label
 End Class

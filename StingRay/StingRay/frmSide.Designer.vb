@@ -42,6 +42,7 @@ Partial Class frmSide
         Me.lbType = New System.Windows.Forms.Label()
         Me.btTransfers = New System.Windows.Forms.Button()
         Me.lbTransfers = New System.Windows.Forms.Label()
+        Me.cbRecieveLeads = New System.Windows.Forms.CheckBox()
         Me.lvQueue = New StingRay.ListViewCustomReorder.ListViewEx()
         Me.leadID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.leadName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -53,7 +54,7 @@ Partial Class frmSide
         '
         Me.lbUser.BackColor = System.Drawing.Color.Transparent
         Me.lbUser.Font = New System.Drawing.Font("Century Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbUser.Location = New System.Drawing.Point(-1, 9)
+        Me.lbUser.Location = New System.Drawing.Point(-1, 4)
         Me.lbUser.Name = "lbUser"
         Me.lbUser.Size = New System.Drawing.Size(154, 23)
         Me.lbUser.TabIndex = 0
@@ -62,7 +63,7 @@ Partial Class frmSide
         '
         'lbAllocated
         '
-        Me.lbAllocated.Location = New System.Drawing.Point(12, 88)
+        Me.lbAllocated.Location = New System.Drawing.Point(12, 83)
         Me.lbAllocated.Name = "lbAllocated"
         Me.lbAllocated.Size = New System.Drawing.Size(60, 13)
         Me.lbAllocated.TabIndex = 1
@@ -71,7 +72,7 @@ Partial Class frmSide
         '
         'btAllocated
         '
-        Me.btAllocated.Location = New System.Drawing.Point(12, 104)
+        Me.btAllocated.Location = New System.Drawing.Point(12, 97)
         Me.btAllocated.Name = "btAllocated"
         Me.btAllocated.Size = New System.Drawing.Size(60, 23)
         Me.btAllocated.TabIndex = 5
@@ -80,7 +81,7 @@ Partial Class frmSide
         '
         'btScheduled
         '
-        Me.btScheduled.Location = New System.Drawing.Point(12, 150)
+        Me.btScheduled.Location = New System.Drawing.Point(12, 136)
         Me.btScheduled.Name = "btScheduled"
         Me.btScheduled.Size = New System.Drawing.Size(60, 23)
         Me.btScheduled.TabIndex = 9
@@ -89,7 +90,7 @@ Partial Class frmSide
         '
         'lbScheduled
         '
-        Me.lbScheduled.Location = New System.Drawing.Point(12, 134)
+        Me.lbScheduled.Location = New System.Drawing.Point(12, 123)
         Me.lbScheduled.Name = "lbScheduled"
         Me.lbScheduled.Size = New System.Drawing.Size(60, 13)
         Me.lbScheduled.TabIndex = 8
@@ -98,7 +99,7 @@ Partial Class frmSide
         '
         'btQaFails
         '
-        Me.btQaFails.Location = New System.Drawing.Point(78, 150)
+        Me.btQaFails.Location = New System.Drawing.Point(78, 136)
         Me.btQaFails.Name = "btQaFails"
         Me.btQaFails.Size = New System.Drawing.Size(60, 23)
         Me.btQaFails.TabIndex = 17
@@ -107,7 +108,7 @@ Partial Class frmSide
         '
         'lbQaFails
         '
-        Me.lbQaFails.Location = New System.Drawing.Point(78, 134)
+        Me.lbQaFails.Location = New System.Drawing.Point(78, 123)
         Me.lbQaFails.Name = "lbQaFails"
         Me.lbQaFails.Size = New System.Drawing.Size(60, 13)
         Me.lbQaFails.TabIndex = 16
@@ -116,7 +117,7 @@ Partial Class frmSide
         '
         'btBusy
         '
-        Me.btBusy.Location = New System.Drawing.Point(78, 104)
+        Me.btBusy.Location = New System.Drawing.Point(78, 97)
         Me.btBusy.Name = "btBusy"
         Me.btBusy.Size = New System.Drawing.Size(60, 23)
         Me.btBusy.TabIndex = 15
@@ -125,7 +126,7 @@ Partial Class frmSide
         '
         'lbBusy
         '
-        Me.lbBusy.Location = New System.Drawing.Point(78, 88)
+        Me.lbBusy.Location = New System.Drawing.Point(78, 83)
         Me.lbBusy.Name = "lbBusy"
         Me.lbBusy.Size = New System.Drawing.Size(60, 13)
         Me.lbBusy.TabIndex = 14
@@ -134,7 +135,7 @@ Partial Class frmSide
         '
         'btSales
         '
-        Me.btSales.Location = New System.Drawing.Point(78, 192)
+        Me.btSales.Location = New System.Drawing.Point(78, 176)
         Me.btSales.Name = "btSales"
         Me.btSales.Size = New System.Drawing.Size(60, 23)
         Me.btSales.TabIndex = 19
@@ -143,7 +144,7 @@ Partial Class frmSide
         '
         'lbSales
         '
-        Me.lbSales.Location = New System.Drawing.Point(78, 176)
+        Me.lbSales.Location = New System.Drawing.Point(78, 163)
         Me.lbSales.Name = "lbSales"
         Me.lbSales.Size = New System.Drawing.Size(60, 13)
         Me.lbSales.TabIndex = 18
@@ -184,7 +185,7 @@ Partial Class frmSide
         Me.pbRefresh.BackColor = System.Drawing.Color.Transparent
         Me.pbRefresh.Cursor = System.Windows.Forms.Cursors.Hand
         Me.pbRefresh.Image = CType(resources.GetObject("pbRefresh.Image"), System.Drawing.Image)
-        Me.pbRefresh.Location = New System.Drawing.Point(58, 58)
+        Me.pbRefresh.Location = New System.Drawing.Point(58, 50)
         Me.pbRefresh.Name = "pbRefresh"
         Me.pbRefresh.Size = New System.Drawing.Size(34, 27)
         Me.pbRefresh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -205,7 +206,7 @@ Partial Class frmSide
         '
         Me.lbType.BackColor = System.Drawing.Color.Transparent
         Me.lbType.Font = New System.Drawing.Font("Century Gothic", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbType.Location = New System.Drawing.Point(15, 32)
+        Me.lbType.Location = New System.Drawing.Point(15, 25)
         Me.lbType.Name = "lbType"
         Me.lbType.Size = New System.Drawing.Size(123, 23)
         Me.lbType.TabIndex = 29
@@ -214,7 +215,7 @@ Partial Class frmSide
         '
         'btTransfers
         '
-        Me.btTransfers.Location = New System.Drawing.Point(12, 192)
+        Me.btTransfers.Location = New System.Drawing.Point(12, 176)
         Me.btTransfers.Name = "btTransfers"
         Me.btTransfers.Size = New System.Drawing.Size(60, 23)
         Me.btTransfers.TabIndex = 31
@@ -223,12 +224,25 @@ Partial Class frmSide
         '
         'lbTransfers
         '
-        Me.lbTransfers.Location = New System.Drawing.Point(12, 176)
+        Me.lbTransfers.Location = New System.Drawing.Point(12, 163)
         Me.lbTransfers.Name = "lbTransfers"
         Me.lbTransfers.Size = New System.Drawing.Size(60, 13)
         Me.lbTransfers.TabIndex = 30
         Me.lbTransfers.Text = "Transfers"
         Me.lbTransfers.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        '
+        'cbRecieveLeads
+        '
+        Me.cbRecieveLeads.AutoSize = True
+        Me.cbRecieveLeads.Checked = True
+        Me.cbRecieveLeads.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.cbRecieveLeads.Location = New System.Drawing.Point(24, 206)
+        Me.cbRecieveLeads.Name = "cbRecieveLeads"
+        Me.cbRecieveLeads.Size = New System.Drawing.Size(104, 17)
+        Me.cbRecieveLeads.TabIndex = 32
+        Me.cbRecieveLeads.Text = "Recieve Leads?"
+        Me.cbRecieveLeads.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.cbRecieveLeads.UseVisualStyleBackColor = True
         '
         'lvQueue
         '
@@ -257,6 +271,7 @@ Partial Class frmSide
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(153, 479)
         Me.ControlBox = False
+        Me.Controls.Add(Me.cbRecieveLeads)
         Me.Controls.Add(Me.btTransfers)
         Me.Controls.Add(Me.lbTransfers)
         Me.Controls.Add(Me.lbType)
@@ -310,4 +325,5 @@ Partial Class frmSide
     Friend WithEvents lbType As System.Windows.Forms.Label
     Friend WithEvents btTransfers As System.Windows.Forms.Button
     Friend WithEvents lbTransfers As System.Windows.Forms.Label
+    Friend WithEvents cbRecieveLeads As CheckBox
 End Class

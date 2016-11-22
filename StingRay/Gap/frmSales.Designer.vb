@@ -57,6 +57,10 @@ Partial Class frmSales
         Me.dgTop5Outbound = New System.Windows.Forms.DataGridView()
         Me.lbAllocationExplination = New System.Windows.Forms.Label()
         Me.dgAgentOutboundStats = New System.Windows.Forms.DataGridView()
+        Me.tbEndNov = New System.Windows.Forms.TabPage()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.lbDecExtra = New System.Windows.Forms.Label()
+        Me.lbEndNovSales = New System.Windows.Forms.Label()
         Me.dtTo = New System.Windows.Forms.DateTimePicker()
         Me.dtFrom = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -77,6 +81,7 @@ Partial Class frmSales
         Me.tbOutboundAllocation.SuspendLayout()
         CType(Me.dgTop5Outbound, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgAgentOutboundStats, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tbEndNov.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -87,6 +92,7 @@ Partial Class frmSales
         Me.TabControl1.Controls.Add(Me.tbTeamSalesGrid)
         Me.TabControl1.Controls.Add(Me.tbTargets)
         Me.TabControl1.Controls.Add(Me.tbOutboundAllocation)
+        Me.TabControl1.Controls.Add(Me.tbEndNov)
         Me.TabControl1.Location = New System.Drawing.Point(0, 35)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -360,6 +366,50 @@ Partial Class frmSales
         Me.dgAgentOutboundStats.Size = New System.Drawing.Size(785, 73)
         Me.dgAgentOutboundStats.TabIndex = 0
         '
+        'tbEndNov
+        '
+        Me.tbEndNov.Controls.Add(Me.Label4)
+        Me.tbEndNov.Controls.Add(Me.lbDecExtra)
+        Me.tbEndNov.Controls.Add(Me.lbEndNovSales)
+        Me.tbEndNov.Location = New System.Drawing.Point(4, 22)
+        Me.tbEndNov.Name = "tbEndNov"
+        Me.tbEndNov.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbEndNov.Size = New System.Drawing.Size(805, 429)
+        Me.tbEndNov.TabIndex = 6
+        Me.tbEndNov.Text = "End Nov Stats"
+        Me.tbEndNov.UseVisualStyleBackColor = True
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(51, 29)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(386, 66)
+        Me.Label4.TabIndex = 2
+        Me.Label4.Text = "The below stats are for the difference in comm " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "you earn for sales made in the l" &
+    "ast week and a " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "half of November."
+        '
+        'lbDecExtra
+        '
+        Me.lbDecExtra.AutoSize = True
+        Me.lbDecExtra.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbDecExtra.Location = New System.Drawing.Point(51, 159)
+        Me.lbDecExtra.Name = "lbDecExtra"
+        Me.lbDecExtra.Size = New System.Drawing.Size(191, 22)
+        Me.lbDecExtra.TabIndex = 1
+        Me.lbDecExtra.Text = "Dec extra earnings: ##"
+        '
+        'lbEndNovSales
+        '
+        Me.lbEndNovSales.AutoSize = True
+        Me.lbEndNovSales.Font = New System.Drawing.Font("Microsoft Sans Serif", 13.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbEndNovSales.Location = New System.Drawing.Point(51, 137)
+        Me.lbEndNovSales.Name = "lbEndNovSales"
+        Me.lbEndNovSales.Size = New System.Drawing.Size(85, 22)
+        Me.lbEndNovSales.TabIndex = 0
+        Me.lbEndNovSales.Text = "Sales: ##"
+        '
         'dtTo
         '
         Me.dtTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
@@ -446,6 +496,8 @@ Partial Class frmSales
         Me.tbOutboundAllocation.PerformLayout()
         CType(Me.dgTop5Outbound, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgAgentOutboundStats, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tbEndNov.ResumeLayout(False)
+        Me.tbEndNov.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -477,4 +529,8 @@ Partial Class frmSales
     Friend WithEvents lbAllocationExplination As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents dgTop5Outbound As DataGridView
+    Friend WithEvents tbEndNov As TabPage
+    Friend WithEvents lbDecExtra As Label
+    Friend WithEvents lbEndNovSales As Label
+    Friend WithEvents Label4 As Label
 End Class

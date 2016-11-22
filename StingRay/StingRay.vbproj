@@ -205,6 +205,12 @@
     <Compile Include="Gap\frmQaView.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Gap\frmReferralLookUp.Designer.vb">
+      <DependentUpon>frmReferralLookUp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Gap\frmReferralLookUp.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Gap\frmSales.Designer.vb">
       <DependentUpon>frmSales.vb</DependentUpon>
     </Compile>
@@ -329,6 +335,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gap\frmQaView.resx">
       <DependentUpon>frmQaView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gap\frmReferralLookUp.resx">
+      <DependentUpon>frmReferralLookUp.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Gap\frmSales.resx">
       <DependentUpon>frmSales.vb</DependentUpon>

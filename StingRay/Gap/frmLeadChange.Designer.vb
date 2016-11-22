@@ -35,6 +35,7 @@ Partial Class frmLeadChange
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.dgPickUp = New System.Windows.Forms.DataGridView()
         Me.gbChanges = New System.Windows.Forms.GroupBox()
+        Me.btCopyChanges = New System.Windows.Forms.Button()
         Me.btComment = New System.Windows.Forms.Button()
         Me.btHistory = New System.Windows.Forms.Button()
         Me.btAddChange = New System.Windows.Forms.Button()
@@ -191,6 +192,7 @@ Partial Class frmLeadChange
         '
         'gbChanges
         '
+        Me.gbChanges.Controls.Add(Me.btCopyChanges)
         Me.gbChanges.Controls.Add(Me.btComment)
         Me.gbChanges.Controls.Add(Me.btHistory)
         Me.gbChanges.Controls.Add(Me.btAddChange)
@@ -208,6 +210,16 @@ Partial Class frmLeadChange
         Me.gbChanges.TabIndex = 71
         Me.gbChanges.TabStop = False
         Me.gbChanges.Text = "Changes to be made"
+        '
+        'btCopyChanges
+        '
+        Me.btCopyChanges.Location = New System.Drawing.Point(5, 136)
+        Me.btCopyChanges.Name = "btCopyChanges"
+        Me.btCopyChanges.Size = New System.Drawing.Size(173, 21)
+        Me.btCopyChanges.TabIndex = 11
+        Me.btCopyChanges.Text = "Copy Changes"
+        Me.btCopyChanges.UseVisualStyleBackColor = True
+        Me.btCopyChanges.Visible = False
         '
         'btComment
         '
@@ -229,7 +241,7 @@ Partial Class frmLeadChange
         '
         'btAddChange
         '
-        Me.btAddChange.Location = New System.Drawing.Point(5, 136)
+        Me.btAddChange.Location = New System.Drawing.Point(5, 109)
         Me.btAddChange.Name = "btAddChange"
         Me.btAddChange.Size = New System.Drawing.Size(173, 21)
         Me.btAddChange.TabIndex = 6
@@ -244,7 +256,7 @@ Partial Class frmLeadChange
         Me.lvChanges.Location = New System.Drawing.Point(7, 163)
         Me.lvChanges.MultiSelect = False
         Me.lvChanges.Name = "lvChanges"
-        Me.lvChanges.Size = New System.Drawing.Size(171, 223)
+        Me.lvChanges.Size = New System.Drawing.Size(171, 219)
         Me.lvChanges.TabIndex = 5
         Me.lvChanges.UseCompatibleStateImageBehavior = False
         Me.lvChanges.View = System.Windows.Forms.View.Details
@@ -271,7 +283,7 @@ Partial Class frmLeadChange
         'lbChangeTo
         '
         Me.lbChangeTo.AutoSize = True
-        Me.lbChangeTo.Location = New System.Drawing.Point(2, 77)
+        Me.lbChangeTo.Location = New System.Drawing.Point(6, 64)
         Me.lbChangeTo.Name = "lbChangeTo"
         Me.lbChangeTo.Size = New System.Drawing.Size(87, 13)
         Me.lbChangeTo.TabIndex = 3
@@ -283,7 +295,7 @@ Partial Class frmLeadChange
         Me.cbChangeTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbChangeTo.FormattingEnabled = True
         Me.cbChangeTo.Items.AddRange(New Object() {"Agent", "Affinity", "Status", "Source"})
-        Me.cbChangeTo.Location = New System.Drawing.Point(6, 93)
+        Me.cbChangeTo.Location = New System.Drawing.Point(6, 78)
         Me.cbChangeTo.Name = "cbChangeTo"
         Me.cbChangeTo.Size = New System.Drawing.Size(173, 21)
         Me.cbChangeTo.TabIndex = 2
@@ -292,7 +304,7 @@ Partial Class frmLeadChange
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(6, 28)
+        Me.Label2.Location = New System.Drawing.Point(4, 24)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(80, 13)
         Me.Label2.TabIndex = 1
@@ -302,15 +314,15 @@ Partial Class frmLeadChange
         '
         Me.cbFieldChange.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbFieldChange.FormattingEnabled = True
-        Me.cbFieldChange.Items.AddRange(New Object() {"Agent", "Affinity", "Status", "Source", "EmailAddress", "ContactNumber", "firstName", "lastName"})
-        Me.cbFieldChange.Location = New System.Drawing.Point(5, 47)
+        Me.cbFieldChange.Items.AddRange(New Object() {"Agent", "Affinity", "Status", "Source", "EmailAddress", "ContactNumber", "firstName", "lastName", "Comment"})
+        Me.cbFieldChange.Location = New System.Drawing.Point(5, 40)
         Me.cbFieldChange.Name = "cbFieldChange"
         Me.cbFieldChange.Size = New System.Drawing.Size(173, 21)
         Me.cbFieldChange.TabIndex = 0
         '
         'txContactNumChange
         '
-        Me.txContactNumChange.Location = New System.Drawing.Point(6, 93)
+        Me.txContactNumChange.Location = New System.Drawing.Point(6, 79)
         Me.txContactNumChange.Mask = "(999) 000-0000"
         Me.txContactNumChange.Name = "txContactNumChange"
         Me.txContactNumChange.Size = New System.Drawing.Size(173, 20)
@@ -320,7 +332,7 @@ Partial Class frmLeadChange
         '
         'txEmailAddChange
         '
-        Me.txEmailAddChange.Location = New System.Drawing.Point(6, 94)
+        Me.txEmailAddChange.Location = New System.Drawing.Point(6, 79)
         Me.txEmailAddChange.MaxLength = 100
         Me.txEmailAddChange.Name = "txEmailAddChange"
         Me.txEmailAddChange.Size = New System.Drawing.Size(173, 20)
@@ -556,4 +568,5 @@ Partial Class frmLeadChange
     Friend WithEvents txEmailAddChange As System.Windows.Forms.TextBox
     Friend WithEvents btHistory As Button
     Friend WithEvents btComment As Button
+    Friend WithEvents btCopyChanges As Button
 End Class

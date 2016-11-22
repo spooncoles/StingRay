@@ -44,6 +44,7 @@ Partial Class frmMain
         Me.menuQaPickUp = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuQaAdmin = New System.Windows.Forms.ToolStripMenuItem()
         Me.QANonSaleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.QAStatsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NotificationIcon = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -53,7 +54,7 @@ Partial Class frmMain
         Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader8 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.QAStatsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FindReferralDetailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -120,7 +121,7 @@ Partial Class frmMain
         '
         'menuAdmin
         '
-        Me.menuAdmin.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LoadLeadToolStripMenuItem, Me.menuChangeLeads, Me.menuLoadAfinity, Me.menuTempAdminCode, Me.ExportSalesFileToolStripMenuItem, Me.menuNewUser})
+        Me.menuAdmin.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LoadLeadToolStripMenuItem, Me.menuChangeLeads, Me.menuLoadAfinity, Me.menuTempAdminCode, Me.ExportSalesFileToolStripMenuItem, Me.menuNewUser, Me.FindReferralDetailsToolStripMenuItem})
         Me.menuAdmin.Name = "menuAdmin"
         Me.menuAdmin.Size = New System.Drawing.Size(55, 20)
         Me.menuAdmin.Text = "Admin"
@@ -128,37 +129,37 @@ Partial Class frmMain
         'LoadLeadToolStripMenuItem
         '
         Me.LoadLeadToolStripMenuItem.Name = "LoadLeadToolStripMenuItem"
-        Me.LoadLeadToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
+        Me.LoadLeadToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
         Me.LoadLeadToolStripMenuItem.Text = "Load Lead(s)"
         '
         'menuChangeLeads
         '
         Me.menuChangeLeads.Name = "menuChangeLeads"
-        Me.menuChangeLeads.Size = New System.Drawing.Size(176, 22)
+        Me.menuChangeLeads.Size = New System.Drawing.Size(178, 22)
         Me.menuChangeLeads.Text = "Change Leads"
         '
         'menuLoadAfinity
         '
         Me.menuLoadAfinity.Name = "menuLoadAfinity"
-        Me.menuLoadAfinity.Size = New System.Drawing.Size(176, 22)
+        Me.menuLoadAfinity.Size = New System.Drawing.Size(178, 22)
         Me.menuLoadAfinity.Text = "Load Afinity"
         '
         'menuTempAdminCode
         '
         Me.menuTempAdminCode.Name = "menuTempAdminCode"
-        Me.menuTempAdminCode.Size = New System.Drawing.Size(176, 22)
+        Me.menuTempAdminCode.Size = New System.Drawing.Size(178, 22)
         Me.menuTempAdminCode.Text = "Update Temp Code"
         '
         'ExportSalesFileToolStripMenuItem
         '
         Me.ExportSalesFileToolStripMenuItem.Name = "ExportSalesFileToolStripMenuItem"
-        Me.ExportSalesFileToolStripMenuItem.Size = New System.Drawing.Size(176, 22)
+        Me.ExportSalesFileToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
         Me.ExportSalesFileToolStripMenuItem.Text = "Export Sales File"
         '
         'menuNewUser
         '
         Me.menuNewUser.Name = "menuNewUser"
-        Me.menuNewUser.Size = New System.Drawing.Size(176, 22)
+        Me.menuNewUser.Size = New System.Drawing.Size(178, 22)
         Me.menuNewUser.Text = "Load New User"
         '
         'menuQA
@@ -171,32 +172,37 @@ Partial Class frmMain
         'menuQaPickUp
         '
         Me.menuQaPickUp.Name = "menuQaPickUp"
-        Me.menuQaPickUp.Size = New System.Drawing.Size(152, 22)
+        Me.menuQaPickUp.Size = New System.Drawing.Size(143, 22)
         Me.menuQaPickUp.Text = "QA Pick-Up"
         '
         'menuQaAdmin
         '
         Me.menuQaAdmin.Name = "menuQaAdmin"
-        Me.menuQaAdmin.Size = New System.Drawing.Size(152, 22)
+        Me.menuQaAdmin.Size = New System.Drawing.Size(143, 22)
         Me.menuQaAdmin.Text = "QA Admin"
         '
         'QANonSaleToolStripMenuItem
         '
         Me.QANonSaleToolStripMenuItem.Name = "QANonSaleToolStripMenuItem"
-        Me.QANonSaleToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.QANonSaleToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
         Me.QANonSaleToolStripMenuItem.Text = "QA Non-Sale"
+        '
+        'QAStatsToolStripMenuItem
+        '
+        Me.QAStatsToolStripMenuItem.Name = "QAStatsToolStripMenuItem"
+        Me.QAStatsToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
+        Me.QAStatsToolStripMenuItem.Text = "QA Stats"
         '
         'NotificationIcon
         '
         Me.NotificationIcon.Icon = CType(resources.GetObject("NotificationIcon.Icon"), System.Drawing.Icon)
         Me.NotificationIcon.Text = "StingRay"
-        Me.NotificationIcon.Visible = True
         '
-        'QAStatsToolStripMenuItem
+        'FindReferralDetailsToolStripMenuItem
         '
-        Me.QAStatsToolStripMenuItem.Name = "QAStatsToolStripMenuItem"
-        Me.QAStatsToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.QAStatsToolStripMenuItem.Text = "QA Stats"
+        Me.FindReferralDetailsToolStripMenuItem.Name = "FindReferralDetailsToolStripMenuItem"
+        Me.FindReferralDetailsToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.FindReferralDetailsToolStripMenuItem.Text = "Find Referral Details"
         '
         'frmMain
         '
@@ -249,4 +255,5 @@ Partial Class frmMain
     Friend WithEvents menuIncentives As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents QANonSaleToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents QAStatsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents FindReferralDetailsToolStripMenuItem As ToolStripMenuItem
 End Class

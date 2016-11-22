@@ -41,7 +41,7 @@ Public Class frmLeadView
         AddHandler btUncontactable.Click, AddressOf controlRelocate
         AddHandler btSale.Click, AddressOf controlRelocate
 
-        Dim rButtons As New List(Of RadioButton) From {rbCore, rbStandard, rbUniversal, rbNoExcess, rbWithExcess, rbNoCancer, rbCancer1, rbCancer2, rbNoDentistry, rbWithDentistry}
+        Dim rButtons As New List(Of RadioButton) From {rbCore, rbStandard, rbUniversal, rbNoExcess, rbWithExcess, rbNoCancer, rbCancer1, rbCancer2, rbNoDentistry, rbWithDentistry, rbMatchCover, rbUniversal2017, rbTypeOther, rbTypeSingle}
         For Each rb In rButtons
             AddHandler rb.CheckedChanged, AddressOf rbChecked_CheckedChanged
         Next rb
@@ -105,6 +105,8 @@ Public Class frmLeadView
         cbPostalCity.Items.AddRange(arrCityItems)
         cbPostalProvince.Items.AddRange(arrProvinceItems)
 
+        If cbProdYear.Text = "" Then cbProdYear.Text = "2016"
+
     End Sub
 
     Private Sub frmLeadView_Shown(sender As Object, e As EventArgs) Handles Me.Shown
@@ -119,11 +121,12 @@ Public Class frmLeadView
     End Sub
 
     Public Sub loadLead(leadID As Integer)
+        frmSide.removeLead(leadID)
         fromLoad = True
         lbLeadID.Text = leadID
         conn.fillDS("SELECT loadedDate, status, outcome, source, affinityCode, affinityName, title, firstName, lastName, idNumber, contactNumber, emailAddress, cellNumber, homeNumber, workNumber, dateOfBirth, gender, langauge, medicalAid, medicalAidPlan, appType, medicalDependants, procedureIn12Months, annualHousehold, " _
                                        & "holderName, accountNumber, accountType, bankName, branchCode, " _
-                                       & "paymentType, paymentDay, firstDebitDate, productTaken, policyReplaced, popiAccepted, uwPreviousRelitivesCancer, affinities.groupName, employeeNum, " _
+                                       & "paymentType, paymentDay, firstDebitDate, productTaken, productYear, policyReplaced, popiAccepted, uwPreviousRelitivesCancer, affinities.groupName, employeeNum, " _
                                        & "postal1, postal2, postalSuburb, postalCity, postalProvince, postalCode, physicalIsPostal, physical1, physical2, physicalSuburb, physicalCity, physicalProvince, physicalCode " _
                                        & "FROM lead_primary " _
                                        & "LEFT JOIN affinities ON affinityCode = adminCode " _
@@ -239,41 +242,83 @@ Public Class frmLeadView
             'Product
             If IsDBNull(.Item("groupName")) Then
                 If Not IsDBNull(.Item("productTaken")) Then
-                    'Primary Product
-                    Select Case .Item("productTaken").substring(0, 1)
-                        Case "C"
-                            rbCore.Checked = True
-                        Case "S"
-                            rbStandard.Checked = True
-                        Case "U"
-                            rbUniversal.Checked = True
-                    End Select
+                    If Not IsDBNull(.Item("productYear")) Then
+                        If .Item("productYear") = "2017" Then
+                            cbProdYear.Text = "2017"
+                            'Primary Product
+                            If .Item("productTaken").length > 0 Then
+                                Select Case .Item("productTaken").substring(0, 1)
+                                    Case "M"
+                                        rbMatchCover.Checked = True
+                                    Case "U"
+                                        rbUniversal2017.Checked = True
+                                End Select
+                            End If
 
-                    'Excess
-                    Select Case .Item("productTaken").substring(1, 1)
-                        Case "N"
-                            rbNoExcess.Checked = True
-                        Case "E"
-                            rbWithExcess.Checked = True
-                    End Select
+
+                            'Excess
+                            If .Item("productTaken").length > 1 Then
+                                Select Case .Item("productTaken").substring(1, 1)
+                                    Case "S"
+                                        rbTypeSingle.Checked = True
+                                    Case "O"
+                                        rbTypeOther.Checked = True
+                                End Select
+                            End If
+
+                        Else
+                            GoTo 1
+                        End If
+                    Else
+1:
+                        'Primary Product
+                        If .Item("productTaken").length > 0 Then
+                            Select Case .Item("productTaken").substring(0, 1)
+                                Case "C"
+                                    rbCore.Checked = True
+                                Case "S"
+                                    rbStandard.Checked = True
+                                Case "U"
+                                    rbUniversal.Checked = True
+                            End Select
+                        End If
+
+
+                        'Excess
+                        If .Item("productTaken").length > 1 Then
+                            Select Case .Item("productTaken").substring(1, 1)
+                                Case "N"
+                                    rbNoExcess.Checked = True
+                                Case "E"
+                                    rbWithExcess.Checked = True
+                            End Select
+                        End If
+
+                    End If
 
                     'Cancer
-                    Select Case .Item("productTaken").substring(2, 1)
-                        Case "X"
-                            rbNoCancer.Checked = True
-                        Case "C"
-                            rbCancer1.Checked = True
-                        Case "K"
-                            rbCancer2.Checked = True
-                    End Select
+                    If .Item("productTaken").length > 2 Then
+                        Select Case .Item("productTaken").substring(2, 1)
+                            Case "X"
+                                rbNoCancer.Checked = True
+                            Case "C"
+                                rbCancer1.Checked = True
+                            Case "K"
+                                rbCancer2.Checked = True
+                        End Select
+                    End If
+
 
                     'Dentistry
-                    Select Case .Item("productTaken").substring(3, 1)
-                        Case "X"
-                            rbNoDentistry.Checked = True
-                        Case "D"
-                            rbWithDentistry.Checked = True
-                    End Select
+                    If .Item("productTaken").length > 3 Then
+                        Select Case .Item("productTaken").substring(3, 1)
+                            Case "X"
+                                rbNoDentistry.Checked = True
+                            Case "D"
+                                rbWithDentistry.Checked = True
+                        End Select
+                    End If
+
                     rbChecked_CheckedChanged()
                 End If
             Else
@@ -391,6 +436,8 @@ Public Class frmLeadView
 
         fromLoad = False
         Me.Show()
+        rbChecked_CheckedChanged()
+
     End Sub
 
     Private Sub validateSale(bt As Button, lv As ListView, submit As Button)
@@ -454,6 +501,28 @@ Public Class frmLeadView
             If lbProdCost.Text = "" Then
                 lv.Items.Add(New ListViewItem({"Product needed", "Product"}))
             Else
+
+                If cbProdYear.Text = "2016" Then
+                    If dtpCollectionDate.Checked And dtpCollectionDate.Value.Year = 2017 Then
+                        lv.Items.Add(New ListViewItem({"Prod year = 2016 but collection = 2017", "Product"}))
+                    End If
+                ElseIf cbProdYear.Text = "2017" Then
+                    If dtpCollectionDate.Checked And dtpCollectionDate.Value.Year = 2016 Then
+                        lv.Items.Add(New ListViewItem({"Prod year = 2017 but collection = 2016", "Product"}))
+                    End If
+
+                    If rbTypeSingle.Checked Then
+                        If dtpDOB.Value < DateAdd(DateInterval.Year, -55, Today) Then
+                            lv.Items.Add(New ListViewItem({"Too old for singles product", "Product"}))
+                        End If
+                        If nudDependants.Value <> 1 Then
+                            lv.Items.Add(New ListViewItem({"Too many dependants for singles product", "Product"}))
+                        End If
+                    End If
+                Else
+                    lv.Items.Add(New ListViewItem({"Please select product year", "Product"}))
+                End If
+
                 If gbCancerUW.Visible Then
                     If Not (rbCancerUwYes.Checked Or rbCancerUwNo.Checked) Then
                         lv.Items.Add(New ListViewItem({"Please answer cancer UW", "Product"}))
@@ -553,12 +622,12 @@ Public Class frmLeadView
 
         End If
 
-            Dim mtb As MaskedTextBox
+        Dim mtb As MaskedTextBox
         Dim dtp As DateTimePicker
         Dim chb As System.Windows.Forms.CheckBox
 
         Dim lead_primary As New List(Of Control) From {cbTitle, txFirstName, txLastName, dtpDOB, mtbIdNumber, cbGender, mtbCellNumber, mtbContactNumber, mtbHomeNumber, mtbWorkNumber, txEmailAddress, cbMedicalAid, cbMedAidPlan, mtbProcedure, nudDependants}
-        Dim lead_sale_info As New List(Of Control) From {cbAnnualHousehold, cbPaymentType, cbPaymentDay, dtpCollectionDate, txEmployeeNum}
+        Dim lead_sale_info As New List(Of Control) From {cbAnnualHousehold, cbPaymentType, cbPaymentDay, dtpCollectionDate, txEmployeeNum, cbProdYear}
         Dim lead_address As New List(Of Control) From {txPostalLine1, txPostalLine2, cbPostalSuburb, cbPostalCity, cbPostalProvince, txPostalCode, chbSameAsPostal, txPhysicalLine1, txPhysicalLine2, cbPhysicalCity, cbPhysicalSuburb, cbPhysicalProvince, txPhysicalCode}
         Dim lead_banking As New List(Of Control) From {txAccountHolder, txAccountNumber, cbAccountType, cbBankName, txBranchCode}
 
@@ -869,8 +938,7 @@ Public Class frmLeadView
                 saleConfirmationEmail()
                 Me.Cursor = Cursors.Default
 
-
-                If Format(Today, "dddd") = "Monday" Or Format(Today, "dddd") = "Saturday" Then
+                If Format(Today, "dddd") = "Monday" Or Format(Today, "dddd") = "Saturday" Or (Today = #2016-11-22#) Then
                     ballDay = True
                 End If
 
@@ -927,7 +995,9 @@ Public Class frmLeadView
             emailHTML += "<li>" & emailOption & "</li>"
             Select Case emailOption
                 Case "Personal App"
-                    attachements += completePersonalAppForm(systemFolder & "SystemMaterial\Personal App Form2.docx") & ";"
+                    attachements += completePersonalAppForm(systemFolder & "SystemMaterial\Personal App Form.docx") & ";"
+                Case "Personal App (2017)"
+                    attachements += completePersonalAppForm(systemFolder & "SystemMaterial\Personal App Form (2017).docx") & ";"
                 Case Else
                     attachements += systemFolder & "SystemMaterial\" & emailOption & ".pdf" & ";"
             End Select
@@ -1460,9 +1530,22 @@ Public Class frmLeadView
     End Sub
 
     Private Sub rbChecked_CheckedChanged()
+        Dim rbPrimary As Object
+        Dim rbExcess As Object
+        Dim dictProducts As Dictionary(Of String, String)
+        prodCode = ""
+        If cbProdYear.Text = "2016" Then
+            rbPrimary = New List(Of RadioButton) From {rbCore, rbStandard, rbUniversal}
+            rbExcess = New List(Of RadioButton) From {rbNoExcess, rbWithExcess}
+            dictProducts = New Dictionary(Of String, String)(dictProducts2016)
+        Else
+            rbPrimary = New List(Of RadioButton) From {rbMatchCover, rbUniversal2017}
+            rbExcess = New List(Of RadioButton) From {rbTypeSingle, rbTypeOther}
+            dictProducts = New Dictionary(Of String, String)(dictProducts2017)
+        End If
+
 
         'Primary Info
-        Dim rbPrimary As New List(Of RadioButton) From {rbCore, rbStandard, rbUniversal}
         For Each rb In rbPrimary
             If rb.Checked Then
                 prodCode = rb.Tag
@@ -1476,7 +1559,6 @@ Public Class frmLeadView
         End If
 
         'ExcessInfo
-        Dim rbExcess As New List(Of RadioButton) From {rbNoExcess, rbWithExcess}
         For Each rb In rbExcess
             If rb.Checked Then
                 prodCode = prodCode & rb.Tag
@@ -1485,7 +1567,12 @@ Public Class frmLeadView
         Next rb
         If Len(prodCode) = 1 Then
             lbProdCost.Text = ""
-            lbProdDesc.Text = "Please select with or without excess"
+            If cbProdYear.Text = "2016" Then
+                lbProdDesc.Text = "Please select with or without excess"
+            Else
+                lbProdDesc.Text = "Please select ""Single < 55"" or ""Other"""
+            End If
+
             Exit Sub
         End If
 
@@ -1541,6 +1628,19 @@ Public Class frmLeadView
     Private Sub cbAfford_CheckedChanged(sender As Object, e As EventArgs) Handles cbAfford.CheckedChanged
         If lbProdCost.Text = "" Then
             cbAfford.Checked = False
+        End If
+
+        If rbTypeSingle.Checked Then
+            If cbAfford.Checked Then
+                If dtpDOB.Value < DateAdd(DateInterval.Year, -55, Today) Then
+                    MsgBox("Too old for singles product")
+                    cbAfford.Checked = False
+                End If
+                If nudDependants.Value > 1 Then
+                    MsgBox("Too many dependants for singles product")
+                    cbAfford.Checked = False
+                End If
+            End If
         End If
     End Sub
 
@@ -1936,6 +2036,13 @@ Public Class frmLeadView
                 .Replacement.Text = prodCode
                 .Execute(Replace:=Word.WdReplace.wdReplaceAll)
 
+                Dim dictProducts As New Dictionary(Of String, String)
+                If cbProdYear.Text = "2016" Then
+                    dictProducts = dictProducts2016
+                Else
+                    dictProducts = dictProducts2017
+                End If
+
                 .Text = "<planName>"
                 .Replacement.Text = dictProducts.Item(prodCode).Split("_")(1)
                 .Execute(Replace:=Word.WdReplace.wdReplaceAll)
@@ -1943,7 +2050,6 @@ Public Class frmLeadView
                 .Text = "<planMonthlyPremium>"
                 .Replacement.Text = "R " & dictProducts.Item(prodCode).Split("_")(0)
                 .Execute(Replace:=Word.WdReplace.wdReplaceAll)
-
 
             End If
 
@@ -2085,4 +2191,17 @@ Public Class frmLeadView
     Private Sub llPreExisting_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles llPreExisting.LinkClicked
         MsgBox("Pre-existing condition definition:" & vbNewLine & "Any medical condition the client is aware of and has sort professional medical assistance of any kind in the last 12 months.", , "Pre-existing condition")
     End Sub
+
+    Private Sub cbProdYear_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbProdYear.SelectedIndexChanged
+        If cbProdYear.Text = "2016" Then
+            gbProduct2016.Visible = True
+            gbProduct2017.Visible = False
+        ElseIf cbProdYear.Text = "2017" Then
+            gbProduct2017.Visible = True
+            gbProduct2016.Visible = False
+        End If
+        rbChecked_CheckedChanged()
+
+    End Sub
+
 End Class

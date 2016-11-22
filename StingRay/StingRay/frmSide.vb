@@ -141,4 +141,22 @@
             MsgBox("No transfers avaliable")
         End If
     End Sub
+
+    Public Sub removeLead(leadID As String)
+        For Each item In lvQueue.Items
+            If item.SubItems(0).Text() = leadID Then
+                lvQueue.Items.Remove(item)
+            End If
+        Next
+    End Sub
+
+    Private Sub cbRecieveLeads_CheckedChanged(sender As Object, e As EventArgs) Handles cbRecieveLeads.CheckedChanged
+        If cbRecieveLeads.Checked Then
+            conn.send("UPDATE sys_agent_info SET recieveLeads = 1 WHERE userName = '" & lbUser.Text & "'")
+            cbRecieveLeads.ForeColor = Color.Black
+        Else
+            conn.send("UPDATE sys_agent_info SET recieveLeads = 0 WHERE userName = '" & lbUser.Text & "'")
+            cbRecieveLeads.ForeColor = Color.Red
+        End If
+    End Sub
 End Class
