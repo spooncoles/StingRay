@@ -3,11 +3,12 @@ Public Class frmLogin
 
     Sub login(ByRef user As String)
         If user = "Natasha Vdmerwe" Then user = "natashavandermerwe"
-        conn.fillDS("SELECT userName, type FROM sys_users WHERE REPLACE(userName, ' ', '') = '" & Replace(user, " ", "") & "'", "userInfo")
+        conn.fillDS("SELECT userName, type, campaign FROM sys_users WHERE REPLACE(userName, ' ', '') = '" & Replace(user, " ", "") & "'", "userInfo")
         If conn.ds.Tables("userInfo").Rows.Count <> 0 Then
             With conn.ds.Tables("userInfo").Rows(0)
                 frmSide.lbUser.Text = .Item(0)
                 frmSide.lbType.Text = .Item(1)
+                campaign = .Item(2)
                 conn.recordEvent("Login")
             End With
         Else
@@ -31,6 +32,7 @@ Public Class frmLogin
 
     Private Sub frmLogin_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         If txUser.Text = "Dean" Or txUser.Text = "Michael Adams" Then
+            'Global password = zestlifeAdmin
             login("Admin")
             'login("Jason Ohlson")
             'login("Elize Kruger")

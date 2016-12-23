@@ -63,6 +63,7 @@ Partial Class frmQaView
         Me.cbEvents = New System.Windows.Forms.CheckBox()
         Me.dgHistory = New System.Windows.Forms.DataGridView()
         Me.btCopy = New System.Windows.Forms.Button()
+        Me.btTransfer = New System.Windows.Forms.Button()
         Me.gbLeadDetails.SuspendLayout()
         CType(Me.dgleadInfo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tbControl.SuspendLayout()
@@ -109,6 +110,7 @@ Partial Class frmQaView
         '
         'TabPage1
         '
+        Me.TabPage1.Controls.Add(Me.btTransfer)
         Me.TabPage1.Controls.Add(Me.btSave)
         Me.TabPage1.Controls.Add(Me.btBypass)
         Me.TabPage1.Controls.Add(Me.gbClientUnderstanding)
@@ -540,6 +542,15 @@ Partial Class frmQaView
         Me.btCopy.Text = "Copy"
         Me.btCopy.UseVisualStyleBackColor = True
         '
+        'btTransfer
+        '
+        Me.btTransfer.Location = New System.Drawing.Point(699, 273)
+        Me.btTransfer.Name = "btTransfer"
+        Me.btTransfer.Size = New System.Drawing.Size(75, 23)
+        Me.btTransfer.TabIndex = 11
+        Me.btTransfer.Text = "Transfer"
+        Me.btTransfer.UseVisualStyleBackColor = True
+        '
         'frmQaView
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -613,4 +624,5 @@ Partial Class frmQaView
     Friend WithEvents cbChanges As System.Windows.Forms.CheckBox
     Friend WithEvents cbEvents As System.Windows.Forms.CheckBox
     Friend WithEvents dgHistory As System.Windows.Forms.DataGridView
+    Friend WithEvents btTransfer As Button
 End Class

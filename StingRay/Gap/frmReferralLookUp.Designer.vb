@@ -24,11 +24,12 @@ Partial Class frmReferralLookUp
     Private Sub InitializeComponent()
         Me.btSearch = New System.Windows.Forms.Button()
         Me.dgReferralDetails = New System.Windows.Forms.DataGridView()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.txEmailAdd = New StingRay.WaterMarkTextBox()
         Me.txIDNum = New StingRay.WaterMarkTextBox()
         Me.txContactNum = New StingRay.WaterMarkTextBox()
         Me.txName = New StingRay.WaterMarkTextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.btExportWithAddress = New System.Windows.Forms.Button()
         CType(Me.dgReferralDetails, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -53,8 +54,17 @@ Partial Class frmReferralLookUp
         Me.dgReferralDetails.ReadOnly = True
         Me.dgReferralDetails.RowHeadersVisible = False
         Me.dgReferralDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.dgReferralDetails.Size = New System.Drawing.Size(707, 353)
+        Me.dgReferralDetails.Size = New System.Drawing.Size(840, 353)
         Me.dgReferralDetails.TabIndex = 52
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(661, 4)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(58, 27)
+        Me.Button1.TabIndex = 57
+        Me.Button1.Text = "Export"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'txEmailAdd
         '
@@ -100,20 +110,21 @@ Partial Class frmReferralLookUp
         Me.txName.WaterMarkColor = System.Drawing.Color.Gray
         Me.txName.WaterMarkText = "Name"
         '
-        'Button1
+        'btExportWithAddress
         '
-        Me.Button1.Location = New System.Drawing.Point(661, 4)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(58, 27)
-        Me.Button1.TabIndex = 57
-        Me.Button1.Text = "Export"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.btExportWithAddress.Location = New System.Drawing.Point(725, 4)
+        Me.btExportWithAddress.Name = "btExportWithAddress"
+        Me.btExportWithAddress.Size = New System.Drawing.Size(127, 27)
+        Me.btExportWithAddress.TabIndex = 58
+        Me.btExportWithAddress.Text = "Export With Address"
+        Me.btExportWithAddress.UseVisualStyleBackColor = True
         '
         'frmReferralLookUp
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(731, 401)
+        Me.ClientSize = New System.Drawing.Size(864, 401)
+        Me.Controls.Add(Me.btExportWithAddress)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.txEmailAdd)
         Me.Controls.Add(Me.txIDNum)
@@ -138,4 +149,5 @@ Partial Class frmReferralLookUp
     Friend WithEvents btSearch As Button
     Friend WithEvents dgReferralDetails As DataGridView
     Friend WithEvents Button1 As Button
+    Friend WithEvents btExportWithAddress As Button
 End Class

@@ -101,7 +101,6 @@ Partial Class frmQaPickUp
         Me.cbAgent.Name = "cbAgent"
         Me.cbAgent.Size = New System.Drawing.Size(99, 21)
         Me.cbAgent.TabIndex = 26
-        Me.cbAgent.Text = "Agent"
         '
         'gbStatuses
         '
@@ -275,7 +274,6 @@ Partial Class frmQaPickUp
         Me.cbAffinity.Name = "cbAffinity"
         Me.cbAffinity.Size = New System.Drawing.Size(99, 21)
         Me.cbAffinity.TabIndex = 52
-        Me.cbAffinity.Text = "Affinity"
         '
         'txIDNum
         '

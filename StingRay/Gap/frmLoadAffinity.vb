@@ -187,8 +187,8 @@
         'End If
 
         If MsgBox("Are you sure you want to load the affinity/referal?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            conn.send("INSERT INTO affinities (loadedBy, adminCode" & insertColumns & ") " _
-                  & "VALUES('" & frmSide.lbUser.Text & "', '" & adminCode & "'" & insertValues & ")")
+            conn.send("INSERT INTO affinities (campaign, loadedBy, adminCode" & insertColumns & ") " _
+                  & "VALUES('Gap', '" & frmSide.lbUser.Text & "', '" & adminCode & "'" & insertValues & ")")
 
             notify("Affinity/Referal loaded. Thank-you.")
             If MsgBox("Would you like to load a lead on this referal/affinity?", MsgBoxStyle.YesNo, "Referal Loaded") = vbYes Then

@@ -121,6 +121,12 @@
     <Compile Include="Gap\frmChangeTempAffinity.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Gap\frmEmailEssential.Designer.vb">
+      <DependentUpon>frmEmailEssential.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Gap\frmEmailEssential.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Gap\frmExportSalesFile.Designer.vb">
       <DependentUpon>frmExportSalesFile.vb</DependentUpon>
     </Compile>
@@ -217,6 +223,12 @@
     <Compile Include="Gap\frmSales.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Gap\frmSalesTools.Designer.vb">
+      <DependentUpon>frmSalesTools.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Gap\frmSalesTools.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="StingRay\Bank_Account_Validation.vb" />
     <Compile Include="StingRay\frmBallDay.Designer.vb">
       <DependentUpon>frmBallDay.vb</DependentUpon>
@@ -294,6 +306,9 @@
     <EmbeddedResource Include="Gap\frmChangeTempAffinity.resx">
       <DependentUpon>frmChangeTempAffinity.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Gap\frmEmailEssential.resx">
+      <DependentUpon>frmEmailEssential.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Gap\frmExportSalesFile.resx">
       <DependentUpon>frmExportSalesFile.vb</DependentUpon>
     </EmbeddedResource>
@@ -341,6 +356,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gap\frmSales.resx">
       <DependentUpon>frmSales.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gap\frmSalesTools.resx">
+      <DependentUpon>frmSalesTools.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StingRay\frmBallDay.resx">
       <DependentUpon>frmBallDay.vb</DependentUpon>

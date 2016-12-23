@@ -27,9 +27,9 @@
         If cbOrderDirection.Text = "" Then cbOrderDirection.Text = "ASC"
 
         Dim sqlString As String
-        Dim selectString As String = "SELECT lead_primary.leadID, closedDate, CONCAT(firstName, ' ', lastName) AS Name, agent, affinityName, qaStatus, qaManditory, qaManditoryReason, contactNumber, idNumber, appType FROM lead_primary" _
+        Dim selectString As String = "SELECT lead_primary.leadID, closedDate, CONCAT(firstName, ' ', lastName) AS Name, agent, status, qaAgent, affinityName, qaStatus, qaManditory, qaManditoryReason, contactNumber, idNumber, appType FROM lead_primary" _
                                          & " INNER JOIN lead_sale_info ON lead_sale_info.leadID = lead_primary.leadID INNER JOIN affinities ON affinities.adminCode = lead_primary.affinityCode"
-        Dim whereString As String = " WHERE (qaAgent = '" & frmSide.lbUser.Text & "' OR qaAgent IS NULL) AND status = 'Sale'"
+        Dim whereString As String = " WHERE (qaAgent = '" & frmSide.lbUser.Text & "' OR qaAgent IS NULL) AND lead_primary.campaign = '" & campaign & "' AND status IN ('Sale', 'Busy')"
         Dim orderString As String = " ORDER BY " & cbOrder.Text & " " & UCase(cbOrderDirection.Text)
 
         'Field Searches
@@ -152,14 +152,22 @@
     Private Sub dgPickUp_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles dgPickUp.KeyDown
         If e.KeyCode = Keys.Enter Then
             If conn.ds.Tables("leadPicks").Rows.Count <> 0 Then
-                frmQaView.loadLead(dgPickUp.Item("leadID", dgPickUp.CurrentRow.Index).Value.ToString)
+                If dgPickUp.Item("status", dgPickUp.CurrentRow.Index).Value.ToString = "Sale" Then
+                    frmQaView.loadLead(dgPickUp.Item("leadID", dgPickUp.CurrentRow.Index).Value.ToString)
+                Else
+                    MsgBox("Lead in busy status. Please ask agent to re-submit sale.")
+                End If
             End If
         End If
     End Sub
 
     Private Sub dgPickUp_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles dgPickUp.MouseDoubleClick
         If conn.ds.Tables("leadPicks").Rows.Count <> 0 Then
-            frmQaView.loadLead(dgPickUp.Item("leadID", dgPickUp.CurrentRow.Index).Value.ToString)
+            If dgPickUp.Item("status", dgPickUp.CurrentRow.Index).Value.ToString = "Sale" Then
+                frmQaView.loadLead(dgPickUp.Item("leadID", dgPickUp.CurrentRow.Index).Value.ToString)
+            Else
+                MsgBox("Lead in busy status. Please ask agent to re-submit sale.")
+            End If
         End If
     End Sub
 

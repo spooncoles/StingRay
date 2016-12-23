@@ -7,7 +7,7 @@
     End Sub
 
     Private Sub frmQaAdmin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        conn.fillDS("SELECT DISTINCT(section) FROM qa_questions WHERE active = 1", "sections")
+        conn.fillDS("SELECT DISTINCT(section) FROM qa_questions WHERE active = 1 AND campaign = '" & campaign & "'", "sections")
         For Each section In conn.ds.Tables("sections").Rows
             cbSection.Items.Add(section.item(0))
         Next
@@ -22,7 +22,7 @@
     End Sub
 
     Public Sub refreshData()
-        conn.fillDS("SELECT questionID, questionOrder, question, allowNA FROM qa_questions WHERE active = 1 AND section = '" & cbSection.Text & "' ORDER BY questionOrder", "sectionQuestions")
+        conn.fillDS("SELECT questionID, questionOrder, question, allowNA FROM qa_questions WHERE active = 1 AND section = '" & cbSection.Text & "' AND campaign = '" & campaign & "' ORDER BY questionOrder", "sectionQuestions")
 
         lvQuestions.Items.Clear()
         With conn.ds.Tables("sectionQuestions")
@@ -38,7 +38,7 @@
         Dim sectionName As String = InputBox("Please enter section name:", "New Section")
 1:
         If MsgBox("Are you sure you want to add the below section:" & vbNewLine & sectionName, MsgBoxStyle.YesNo) = vbNo Then
-            sectionName = InputBox("Please enter sectino name:", "New Section", sectionName)
+            sectionName = InputBox("Please enter section name:", "New Section", sectionName)
         Else
             cbSection.Items.Add(sectionName)
             conn.recordEvent("Qa section added", sectionName, )
@@ -53,11 +53,11 @@
             question = InputBox("Please enter question:", "New Question", question)
         Else
             If MsgBox("Can the user select N/A for this question?" & vbNewLine & question, MsgBoxStyle.YesNo) = vbYes Then
-                conn.send("INSERT INTO qa_questions (section, questionOrder, question, allowNA, createdBy, active) " _
-                      & "VALUES('" & cbSection.Text & "', 3, '" & question & "', 1, '" & frmSide.lbUser.Text & "', 1)")
+                conn.send("INSERT INTO qa_questions (section, questionOrder, question, allowNA, createdBy, active, campaign) " _
+                      & "VALUES('" & cbSection.Text & "', 3, '" & question & "', 1, '" & frmSide.lbUser.Text & "', 1, '" & campaign & "')")
             Else
-                conn.send("INSERT INTO qa_questions (section, questionOrder, question, allowNA, createdBy, active) " _
-                      & "VALUES('" & cbSection.Text & "', 3, '" & question & "', 0, '" & frmSide.lbUser.Text & "', 1)")
+                conn.send("INSERT INTO qa_questions (section, questionOrder, question, allowNA, createdBy, active, campaign) " _
+                      & "VALUES('" & cbSection.Text & "', 3, '" & question & "', 0, '" & frmSide.lbUser.Text & "', 1, '" & campaign & "')")
             End If
             refreshData()
         End If
@@ -77,10 +77,10 @@
                     question = InputBox("Please enter question:", "New Question", question)
                     GoTo 1
                 Else
-                    conn.send("INSERT INTO qa_questions (section, questionOrder, question, createdBy, active) " _
-                              & "VALUES('" & cbSection.Text & "', 3, '" & question & "', '" & frmSide.lbUser.Text & "', 1)")
+                    conn.send("INSERT INTO qa_questions (section, questionOrder, question, createdBy, active, campaign) " _
+                              & "VALUES('" & cbSection.Text & "', 3, '" & question & "', '" & frmSide.lbUser.Text & "', 1, '" & campaign & "')")
                     conn.send("UPDATE qa_questions SET active = 0 WHERE questionID = " & item.SubItems(0).Text)
-                    conn.recordEvent("Qa question removed", frmSide.lbUser.Text, item.SubItems(0).Text)
+                    conn.recordEvent("Qa question replaced", frmSide.lbUser.Text, item.SubItems(0).Text)
                     refreshData()
                 End If
             Next
@@ -101,5 +101,4 @@
             item.Checked = False
         Next
     End Sub
-
 End Class

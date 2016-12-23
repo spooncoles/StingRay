@@ -105,7 +105,7 @@ Public Class frmLeadView
         cbPostalCity.Items.AddRange(arrCityItems)
         cbPostalProvince.Items.AddRange(arrProvinceItems)
 
-        If cbProdYear.Text = "" Then cbProdYear.Text = "2016"
+        If cbProdYear.Text = "" Then cbProdYear.Text = "2017"
 
     End Sub
 
@@ -169,13 +169,21 @@ Public Class frmLeadView
             End If
             conn.send("UPDATE lead_primary SET status = 'Busy', outcome = 'Picked' WHERE leadID = " & leadID)
 
-            Me.Text = leadID & " - " & If(Not IsDBNull(.Item("title")), .Item("title") & " ", " ") & If(Not IsDBNull(.Item("lastName")), .Item("lastName"), "")
+            Me.Text = leadID & " - " & If(Not IsDBNull(.Item("title")), .Item("title") & " ", " ") & If(Not IsDBNull(.Item("firstName")), .Item("firstName") & " ", "") & If(Not IsDBNull(.Item("lastName")), .Item("lastName"), "")
 
             If Not IsDBNull(.Item("affinityCode")) Then adminCode = .Item("affinityCode")
 
             'Top lead Info
             If (Not IsDBNull(.Item("firstName"))) And (Not IsDBNull(.Item("lastName"))) Then lbLeadName.Text = "Name: " & .Item("firstName") & " " & .Item("lastName")
-            If Not IsDBNull(.Item("contactNumber")) Then lbContactNum.Text = "Contact Number: " & .Item("contactNumber")
+            'If Not IsDBNull(.Item("contactNumber")) Then lbContactNum.Text = "Contact Number: " & .Item("contactNumber")
+            If Not IsDBNull(.Item("contactNumber")) Then
+                Dim contNum As String = .Item("contactNumber")
+                If contNum.Length > 7 Then
+                    lbContactNum.Text = "Contact Number: " & "(" & contNum.Substring(0, contNum.Length - 7) & ") " & contNum.Substring(contNum.Length - 7, 3) & "-" & contNum.Substring(contNum.Length - 4, 4)
+                Else
+                    lbContactNum.Text = "Contact Number: " & contNum
+                End If
+            End If
             If Not IsDBNull(.Item("affinityName")) Then lbAffinity.Text = "Affinity: " & .Item("affinityName")
             If Not IsDBNull(.Item("source")) Then lbSource.Text = "Source: " & .Item("source")
             If Not IsDBNull(.Item("loadedDate")) Then lbLoadedDate.Text = "Loaded: " & .Item("loadedDate")
@@ -888,9 +896,12 @@ Public Class frmLeadView
 
 
             If returnString = "NULL" Then
-                conn.send(insertColumns & insertValues & lbLeadID.Text & ")")
+                If (insertColumns <> "INSERT INTO lead_sale_info(productYear, ") And (insertColumns <> "INSERT INTO lead_address(physicalIsPostal, ") Then
+                    conn.send(insertColumns & insertValues & lbLeadID.Text & ")")
+                End If
+
             ElseIf updateStatment.Substring(updateStatment.Length - 2, 2) = ", " Then
-                conn.send(updateStatment.Substring(0, updateStatment.Length - 2) & " WHERE leadID = " & lbLeadID.Text)
+                    conn.send(updateStatment.Substring(0, updateStatment.Length - 2) & " WHERE leadID = " & lbLeadID.Text)
             End If
         Next tableInDB
 
@@ -954,12 +965,19 @@ Public Class frmLeadView
             notify("Lead updated")
         End If
 
+
         If System.Windows.Forms.Application.OpenForms().OfType(Of frmQaFaults).Any Then frmQaFaults.Close()
 
         If ballDay Then
             frmBallDay.Show()
         Else
-            frmAfterLead.Show()
+            Select Case reason
+                Case "No medical aid", "Wants medical aid", "Wants day-to-day / Pregnancy cover"
+                    frmEmailEssential.loadLead(lbLeadID.Text, txFirstName.Text & " " & txLastName.Text, mtbContactNumber.Text)
+                Case Else
+                    frmAfterLead.Show()
+            End Select
+
         End If
 
         modExtra.refreshSideBar()
@@ -1001,7 +1019,6 @@ Public Class frmLeadView
                 Case Else
                     attachements += systemFolder & "SystemMaterial\" & emailOption & ".pdf" & ";"
             End Select
-
         Next
         emailHTML += "</ul>"
 
@@ -1015,7 +1032,7 @@ Public Class frmLeadView
 
         Dim oWord As New Word.Application
         Dim oDoc As Word.Document = oWord.Documents.Open(appLocation)
-        'oWord.Visible = True
+        oWord.Visible = True
 
         conn.fillDS("SELECT userName, emailAddress, workNumber FROM sys_users WHERE userName = '" & frmSide.lbUser.Text & "'", "agentInfo")
 
@@ -1496,6 +1513,8 @@ Public Class frmLeadView
                 txBranchCode.Text = "580105"
             Case "ABSA"
                 txBranchCode.Text = "632005"
+            Case "Albaraka"
+                txBranchCode.Text = "800000"
         End Select
     End Sub
 
@@ -1934,7 +1953,12 @@ Public Class frmLeadView
         If System.IO.File.Exists(systemFolder & "SystemMaterial\Brochure - " & groupCheck & ".pdf") Then
             attachements += systemFolder & "SystemMaterial\Brochure - " & groupCheck & ".pdf" & ";"
         Else
-            attachements += systemFolder & "SystemMaterial\Brochure.pdf" & ";"
+            If cbProdYear.Text = "2017" Then
+                attachements += systemFolder & "SystemMaterial\Brochure (2017).pdf" & ";"
+            Else
+                attachements += systemFolder & "SystemMaterial\Brochure.pdf" & ";"
+            End If
+
         End If
 
         attachements += systemFolder & "SystemMaterial\Disclosures.pdf" & ";"
@@ -2163,7 +2187,7 @@ Public Class frmLeadView
     End Sub
 
     Private Sub btTransfer_Click(sender As Object, e As EventArgs) Handles btTransfer.Click
-        frmLeadTransfer.loadLead(lbLeadID.Text)
+        frmLeadTransfer.loadLead(lbLeadID.Text, "Agent")
     End Sub
 
     Private Sub llAnnualHosehold_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles llAnnualHosehold.LinkClicked

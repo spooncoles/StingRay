@@ -17,18 +17,17 @@
     End Sub
 
     Sub createTabs()
-        conn.fillDS("SELECT DISTINCT(section) FROM qa_questions WHERE active = 1", "sections")
+        conn.fillDS("SELECT DISTINCT(section) FROM qa_questions WHERE active = 1 and campaign = '" & campaign & "'", "sections")
         For Each section In conn.ds.Tables("sections").Rows
             Dim currentTab As New TabPage
             currentTab.Name = section.item(0)
             currentTab.Text = section.item(0)
             'tbControl.TabPages.Add(currentTab)
 
-
             tbControl.TabPages.Insert(tbControl.TabCount - 2, currentTab)
             conn.fillDS("SELECT questionID AS id, question, allowNA, pass_fail_NA FROM qa_questions " _
                         & "LEFT JOIN (SELECT qaQuestionID, pass_fail_NA FROM qa_lead_stats WHERE leadID = " & gbLeadDetails.Tag & ") AS  a ON qa_questions.questionID = a.qaQuestionID " _
-                        & "WHERE active = 1 AND section = '" & section.item(0) & "' ORDER BY questionOrder", section.item(0))
+                        & "WHERE active = 1 AND campaign = '" & campaign & "' AND section = '" & section.item(0) & "' ORDER BY questionOrder", section.item(0))
             If conn.ds.Tables(section.item(0)).Columns.Count <> 6 Then
                 Dim colYes As New Data.DataColumn("Yes", GetType(Boolean))
                 colYes.DefaultValue = False
@@ -119,6 +118,12 @@
             frmQaPickUp.refreshLeads()
             Exit Sub
         End If
+
+        If conn.sendReturn("SELECT status FROM lead_primary WHERE leadID = " & leadID) <> "Sale" Then
+            MsgBox("This lead is not in ""Sale"" state. Please check with admin.")
+            Exit Sub
+        End If
+
 
         conn.send("UPDATE lead_sale_info SET qaAgent = '" & frmSide.lbUser.Text & "' WHERE leadID = " & leadID)
 
@@ -370,4 +375,9 @@
     Private Sub tbHistory_Enter(sender As Object, e As EventArgs) Handles tbHistory.Enter
         refreshHistory()
     End Sub
+
+    Private Sub btTransfer_Click(sender As Object, e As EventArgs) Handles btTransfer.Click
+        frmLeadTransfer.loadLead(Replace(gbLeadDetails.Text, "Lead ID = ", ""), "QA")
+    End Sub
+
 End Class

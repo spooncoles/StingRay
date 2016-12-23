@@ -44,23 +44,23 @@
             sqlString = "SELECT lead_primary.leadID, Date(loadedDate) As Loaded, CONCAT(COALESCE(firstName,''), ' ', COALESCE(lastName,'')) AS Name, rescheduleDateTime, comment, affinityName" _
                 & " FROM zestlife.lead_reschedule INNER JOIN lead_primary ON lead_primary.leadID = lead_reschedule.leadID" _
                 & " LEFT JOIN affinities ON adminCode = affinityCode" _
-                & " WHERE active = 1 AND DATE(rescheduleDateTime) <= DATE(NOW()) AND status = 'Busy' AND agent = '" & frmSide.lbUser.Text & "' ORDER BY rescheduleDateTime DESC"
+                & " WHERE active = 1 AND DATE(rescheduleDateTime) <= DATE(NOW()) AND status = 'Busy' AND lead_primary.campaign = '" & campaign & "' AND agent = '" & frmSide.lbUser.Text & "' ORDER BY rescheduleDateTime DESC"
         ElseIf qaFails Then
             sqlString = "SELECT lead_sale_info.leadID, DATE(loadedDate) as Loaded, CONCAT(COALESCE(firstName,''), ' ', COALESCE(lastName,'')) AS Name, qaStatus, qaAgent, qaOverallComment" _
-                & " FROM lead_sale_info INNER JOIN lead_primary ON lead_primary.leadID = lead_sale_info.leadID WHERE qaStatus = 'Sent Back' AND agent = '" & frmSide.lbUser.Text & "'"
+                & " FROM lead_sale_info INNER JOIN lead_primary ON lead_primary.leadID = lead_sale_info.leadID WHERE qaStatus = 'Sent Back'  AND status IN ('Sale', 'Busy') AND lead_primary.campaign = '" & campaign & "' AND agent = '" & frmSide.lbUser.Text & "'"
 
         ElseIf transfers Then
             sqlString = "SELECT leadID, DATE(loadedDate) as Loaded, CONCAT(COALESCE(firstName,''), ' ', COALESCE(lastName,'')) AS Name, status, outcome " _
-                & " FROM lead_primary WHERE status = 'Busy' AND outcome = 'Transfered' AND agent = '" & frmSide.lbUser.Text & "'"
+                & " FROM lead_primary WHERE status = 'Busy' AND outcome = 'Transfered' AND lead_primary.campaign = '" & campaign & "' AND agent = '" & frmSide.lbUser.Text & "'"
         ElseIf recycled Then
             sqlString = "SELECT lead_primary.leadID, Date(loadedDate) As Loaded, agent, CONCAT(COALESCE(firstName,''), ' ', COALESCE(lastName,'')) AS Name, affinityName" _
                 & " FROM lead_primary LEFT JOIN affinities ON adminCode = affinityCode" _
-                & " WHERE status = 'Recycle' AND affinityName <> 'Lead Source' AND loadedDate > 0 ORDER BY loadedDate DESC"
+                & " WHERE status = 'Recycle' AND lead_primary.campaign = '" & campaign & "' AND affinityName <> 'Lead Source' AND loadedDate > 0 ORDER BY loadedDate DESC"
         Else
 
             Dim selectString As String = "SELECT leadID, Date(loadedDate) As Loaded, CONCAT(COALESCE(firstName,''), ' ', COALESCE(lastName,'')) AS Name, status, outcome, affinityName FROM lead_primary" _
                                          & " LEFT JOIN affinities ON adminCode = affinityCode"
-            Dim whereString As String = " WHERE agent = '" & frmSide.lbUser.Text & "'"
+            Dim whereString As String = " WHERE lead_primary.campaign = '" & campaign & "' AND agent = '" & frmSide.lbUser.Text & "'"
             Dim orderString As String = " ORDER BY " & cbOrder.Text & " " & UCase(cbOrderDirection.Text)
 
             'Field Searches

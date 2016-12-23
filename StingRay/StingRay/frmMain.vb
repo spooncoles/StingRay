@@ -102,6 +102,7 @@ Public Class frmMain
         If Application.OpenForms().OfType(Of frmLeadView).Any Then
             MsgBox("You cannot update while still in a lead!")
         Else
+            conn.recordEvent("Updated System")
             Process.Start("""\\zactfp03\zestlife_home\Zestlife Call Centre\ZestSystem\Application\StingrayUpdate.vbs""")
         End If
     End Sub
@@ -140,5 +141,17 @@ Public Class frmMain
 
     Private Sub FindReferralDetailsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FindReferralDetailsToolStripMenuItem.Click
         frmReferralLookUp.Show()
+    End Sub
+
+    Private Sub SalesToolsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SalesToolsToolStripMenuItem.Click
+        frmSalesTools.Show()
+    End Sub
+
+    Private Sub menuFindLeadAl_Click(sender As Object, e As EventArgs) Handles menuFindLeadAl.Click
+        If Application.OpenForms().OfType(Of frmLeadView).Any Then
+            MsgBox("You cannot search for a lead if you are viewing a lead.")
+        Else
+            frmLeadPickUp.Show()
+        End If
     End Sub
 End Class

@@ -66,6 +66,8 @@ Public Class frmExportSalesFile
 
 
             'Export
+            Dim qaFixes As New List(Of Integer)
+
             Dim postalSubstitue As String = "0000"
             Dim postal As String
             Dim contactNum As String
@@ -109,16 +111,50 @@ Public Class frmExportSalesFile
                         ElseIf dictColumnLocation.ContainsKey(column.ToString) Then
                             xlWS.Cells(i + 2, CInt(dictColumnLocation.Item(column.ToString))).Value = conn.ds.Tables("leadSales").Rows(i).Item(column.ToString)
                         End If
+                        If column.ToString = "QA Outcome" Then
+                            If conn.ds.Tables("leadSales").Rows(i).Item(column.ToString) <> "Bypass" And conn.ds.Tables("leadSales").Rows(i).Item(column.ToString) <> "Pass" Then
+                                qaFixes.Add(conn.ds.Tables("leadSales").Rows(i).Item("External Ref No"))
+                            End If
+                        End If
+
                     End If
 
                 Next
             Next
 
-            'Catch ex As Exception
-            'MsgBox(ex.Message)
-            'MsgBox(" Error exporting sales file! Please contact the administrtor.", MsgBoxStyle.Critical)
-            'Finally
-            xlApp.ActiveWindow.WindowState = Excel.XlWindowState.xlMaximized
+            'If there's QA Fixes outstanding
+            If qaFixes.Count <> 0 Then
+                If MsgBox("There are some sales that have not completed the QA process." & vbNewLine & "Would you like to email agents and QA?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                    Dim selectQuery As String = "SELECT agent, qaAgent, qaStatus FROM lead_primary INNER JOIN lead_sale_info on lead_primary.leadID = lead_sale_info.leadID " _
+                    & "LEFT JOIN (SELECT userName, emailAddress FROM sys_users WHERE active = 1) as a ON agent = a.userName " _
+                    & "LEFT JOIN (SELECT userName, emailAddress FROM sys_users WHERE active = 1) as b ON qaAgent = b.userName " _
+                    & "WHERE lead_primary.leadID IN ("
+                    For Each leadid As Integer In qaFixes
+                        selectQuery += leadid & ", "
+                    Next
+
+                    selectQuery = selectQuery.Substring(0, selectQuery.Length - 2) & ")"
+                    conn.fillDS(selectQuery, "qaFixes")
+
+                    For Each row As DataRow In conn.ds.Tables("qaFixes").Rows
+                        Select Case row.Item("qaStatus")
+                            Case "Pending", "In progress", "Fixed"
+
+                            Case "Sent Back"
+
+                        End Select
+
+
+                    Next row
+
+                End If
+            End If
+
+                'Catch ex As Exception
+                'MsgBox(ex.Message)
+                'MsgBox(" Error exporting sales file! Please contact the administrtor.", MsgBoxStyle.Critical)
+                'Finally
+                xlApp.ActiveWindow.WindowState = Excel.XlWindowState.xlMaximized
             xlApp.Visible = True
             releaseObject(xlWS)
             releaseObject(xlWB)

@@ -135,6 +135,10 @@
             weightCode = "27654321000"
             fudge = 0
             modder = 11
+        ElseIf BankName = "Albaraka" Then
+            weightCode = "78624354321"
+            fudge = 0
+            modder = 10
         ElseIf BankName = "Investec" Then
             fudge = 0
             modder = 11
@@ -384,6 +388,10 @@
             End If
         ElseIf BankName = "Investec" Then
             If 580000 < BranchCode And BranchCode < 580999 Then
+                invalidBranchCode = False
+            End If
+        ElseIf BankName = "Albaraka" Then
+            If 800000 <= BranchCode And BranchCode <= 800999 Then
                 invalidBranchCode = False
             End If
         Else

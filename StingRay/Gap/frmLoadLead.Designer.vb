@@ -34,6 +34,8 @@ Partial Class frmLoadLead
         Me.rbAffinity = New System.Windows.Forms.RadioButton()
         Me.rbZwinger = New System.Windows.Forms.RadioButton()
         Me.tabDetails = New System.Windows.Forms.TabPage()
+        Me.txCampaign = New System.Windows.Forms.TextBox()
+        Me.lbCampaign = New System.Windows.Forms.Label()
         Me.btAddToBatch = New System.Windows.Forms.Button()
         Me.txComment = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -93,6 +95,8 @@ Partial Class frmLoadLead
         Me.btCheckDups = New System.Windows.Forms.Button()
         Me.btConfirmDups = New System.Windows.Forms.Button()
         Me.dgDups = New System.Windows.Forms.DataGridView()
+        Me.cmsDupRight = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.DeleteAsDupToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.tbAPI = New System.Windows.Forms.TabPage()
         Me.btExample = New System.Windows.Forms.Button()
         Me.btLoadToLeadNew = New System.Windows.Forms.Button()
@@ -104,8 +108,6 @@ Partial Class frmLoadLead
         Me.dgAPI = New System.Windows.Forms.DataGridView()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
-        Me.txCampaign = New System.Windows.Forms.TextBox()
-        Me.lbCampaign = New System.Windows.Forms.Label()
         Me.txEmailAddSearch = New StingRay.WaterMarkTextBox()
         Me.txIdNumSearch = New StingRay.WaterMarkTextBox()
         Me.txContactNumSearch = New StingRay.WaterMarkTextBox()
@@ -124,6 +126,7 @@ Partial Class frmLoadLead
         CType(Me.dgAgents, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tbDups.SuspendLayout()
         CType(Me.dgDups, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cmsDupRight.SuspendLayout()
         Me.tbAPI.SuspendLayout()
         CType(Me.dgAPI, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -260,6 +263,26 @@ Partial Class frmLoadLead
         Me.tabDetails.TabIndex = 1
         Me.tabDetails.Text = "Details"
         Me.tabDetails.UseVisualStyleBackColor = True
+        '
+        'txCampaign
+        '
+        Me.txCampaign.Location = New System.Drawing.Point(89, 280)
+        Me.txCampaign.MaxLength = 100
+        Me.txCampaign.Name = "txCampaign"
+        Me.txCampaign.Size = New System.Drawing.Size(149, 20)
+        Me.txCampaign.TabIndex = 31
+        Me.txCampaign.Tag = "firstName"
+        Me.txCampaign.Visible = False
+        '
+        'lbCampaign
+        '
+        Me.lbCampaign.AutoSize = True
+        Me.lbCampaign.Location = New System.Drawing.Point(26, 283)
+        Me.lbCampaign.Name = "lbCampaign"
+        Me.lbCampaign.Size = New System.Drawing.Size(54, 13)
+        Me.lbCampaign.TabIndex = 32
+        Me.lbCampaign.Text = "Campaign"
+        Me.lbCampaign.Visible = False
         '
         'btAddToBatch
         '
@@ -827,12 +850,25 @@ Partial Class frmLoadLead
         Me.dgDups.AllowUserToDeleteRows = False
         Me.dgDups.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.dgDups.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgDups.ContextMenuStrip = Me.cmsDupRight
         Me.dgDups.Location = New System.Drawing.Point(8, 36)
         Me.dgDups.Name = "dgDups"
         Me.dgDups.ReadOnly = True
         Me.dgDups.RowHeadersVisible = False
         Me.dgDups.Size = New System.Drawing.Size(835, 394)
         Me.dgDups.TabIndex = 0
+        '
+        'cmsDupRight
+        '
+        Me.cmsDupRight.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeleteAsDupToolStripMenuItem1})
+        Me.cmsDupRight.Name = "cmsDupRight"
+        Me.cmsDupRight.Size = New System.Drawing.Size(153, 48)
+        '
+        'DeleteAsDupToolStripMenuItem1
+        '
+        Me.DeleteAsDupToolStripMenuItem1.Name = "DeleteAsDupToolStripMenuItem1"
+        Me.DeleteAsDupToolStripMenuItem1.Size = New System.Drawing.Size(152, 22)
+        Me.DeleteAsDupToolStripMenuItem1.Text = "Delete As Dup"
         '
         'tbAPI
         '
@@ -941,26 +977,6 @@ Partial Class frmLoadLead
         Me.OpenFileDialog1.Filter = "Excel Files|*.xlsx"
         Me.OpenFileDialog1.Title = "Open Lead Importer"
         '
-        'txCampaign
-        '
-        Me.txCampaign.Location = New System.Drawing.Point(89, 280)
-        Me.txCampaign.MaxLength = 100
-        Me.txCampaign.Name = "txCampaign"
-        Me.txCampaign.Size = New System.Drawing.Size(149, 20)
-        Me.txCampaign.TabIndex = 31
-        Me.txCampaign.Tag = "firstName"
-        Me.txCampaign.Visible = False
-        '
-        'lbCampaign
-        '
-        Me.lbCampaign.AutoSize = True
-        Me.lbCampaign.Location = New System.Drawing.Point(26, 283)
-        Me.lbCampaign.Name = "lbCampaign"
-        Me.lbCampaign.Size = New System.Drawing.Size(54, 13)
-        Me.lbCampaign.TabIndex = 32
-        Me.lbCampaign.Text = "Campaign"
-        Me.lbCampaign.Visible = False
-        '
         'txEmailAddSearch
         '
         Me.txEmailAddSearch.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
@@ -1032,6 +1048,7 @@ Partial Class frmLoadLead
         CType(Me.dgAgents, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tbDups.ResumeLayout(False)
         CType(Me.dgDups, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.cmsDupRight.ResumeLayout(False)
         Me.tbAPI.ResumeLayout(False)
         Me.tbAPI.PerformLayout()
         CType(Me.dgAPI, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1123,4 +1140,6 @@ Partial Class frmLoadLead
     Friend WithEvents btEmailBusy As Button
     Friend WithEvents txCampaign As TextBox
     Friend WithEvents lbCampaign As Label
+    Friend WithEvents cmsDupRight As ContextMenuStrip
+    Friend WithEvents DeleteAsDupToolStripMenuItem1 As ToolStripMenuItem
 End Class

@@ -29,6 +29,8 @@ Module modExtra
 
     Public teamLeader As Boolean = False
 
+    Public campaign As String = ""
+
     Public Sub refreshSideBar()
         Dim agent As String = frmSide.lbUser.Text
 
@@ -39,11 +41,15 @@ Module modExtra
         frmSide.btScheduled.Text = conn.sendReturn("SELECT COUNT(id) FROM zestlife.lead_reschedule INNER JOIN lead_primary ON lead_primary.leadID = lead_reschedule.leadID" _
                                    & " WHERE active = 1 AND DATE(rescheduleDateTime) <= DATE(NOW()) AND status = 'Busy' AND agent = '" & agent & "'")
 
-        frmSide.btQaFails.Text = conn.sendReturn("SELECT COUNT(lead_sale_info.leadID) FROM lead_sale_info INNER JOIN lead_primary ON lead_primary.leadID = lead_sale_info.leadID WHERE qaStatus = 'Sent Back' AND agent = '" & agent & "'")
+        frmSide.btQaFails.Text = conn.sendReturn("SELECT COUNT(lead_sale_info.leadID) FROM lead_sale_info INNER JOIN lead_primary ON lead_primary.leadID = lead_sale_info.leadID WHERE qaStatus = 'Sent Back' AND status IN ('Sale', 'Busy') AND agent = '" & agent & "'")
 
         frmSide.btTransfers.Text = conn.sendReturn("SELECT count(leadID) from lead_primary WHERE status = 'Busy' AND outcome = 'Transfered' AND agent = '" & agent & "'")
-
-        frmSide.btSales.Text = conn.sendReturn("SELECT count(leadID) from lead_primary WHERE status = 'Sale' AND MONTH(closedDate) = MONTH(CURDATE()) AND YEAR(closedDate) = YEAR(CURDATE()) AND agent = '" & agent & "'")
+        'Debug.Print(conn.sendReturn("SELECT viewSalesCount FROM sys_agent_info WHERE userName = '" & frmSide.lbUser.Text & "'"))
+        If conn.sendReturn("SELECT viewSalesCount FROM sys_agent_info WHERE userName = '" & frmSide.lbUser.Text & "'") = "True" Then
+            frmSide.btSales.Text = conn.sendReturn("SELECT count(leadID) from lead_primary WHERE status = 'Sale' AND MONTH(closedDate) = MONTH(CURDATE()) AND YEAR(closedDate) = YEAR(CURDATE()) AND agent = '" & agent & "'")
+        Else
+            frmSide.btSales.Text = "###"
+        End If
 
 
         Dim sideButtons As New List(Of Button) From {frmSide.btSales, frmSide.btQaFails, frmSide.btScheduled, frmSide.btAllocated, frmSide.btBusy, frmSide.btTransfers}
@@ -71,12 +77,24 @@ Module modExtra
 
         Select Case frmSide.lbType.Text
             Case "Agent"
+                Select Case campaign
+                    Case "Gap"
+                        frmMain.mainMenuAL.Visible = False
+                    Case "AL"
+                        frmMain.mainMenuGap.Visible = False
+
+
+                End Select
                 refreshSideBar()
                 loadDictionaries(True, True, True, True, True, True)
                 menuItems(True, False, False, False)
 
                 If frmSide.btScheduled.Text <> 0 Then
                     notify("You have " & frmSide.btScheduled.Text & " rechedules today or before." & vbNewLine & "Please click ""Reschedule"" button in side bar to view.")
+                End If
+
+                If frmSide.btQaFails.Text <> 0 Then
+                    MsgBox("You have outstanding QA fix(es). Please try resolve.", MsgBoxStyle.Critical)
                 End If
 
                 recycleAvaliable = conn.sendReturn("SELECT recycleAvaliable FROM sys_agent_info WHERE userName = '" & frmSide.lbUser.Text & "'")
@@ -126,19 +144,27 @@ Module modExtra
         'modSignalrClient.Main()
         frmMain.Show()
 
-
-
     End Sub
 
     Sub menuItems(agent As Boolean, qa As Boolean, leadAdmin As Boolean, saleAdmin As Boolean)
+
         If Not agent Then
             frmMain.menuFindLead.ShortcutKeys = Nothing
+            frmMain.menuFindLeadAl.ShortcutKeys = Nothing
             frmMain.menuFindLead.Visible = False
             frmMain.menuFindLead.Enabled = False
             frmMain.menuLoadLead.Visible = False
             frmMain.menuLoadLead.Enabled = False
             frmMain.menuLoadReferral.Visible = False
             frmMain.menuLoadReferral.Enabled = False
+        Else
+            If campaign = "Gap" Then
+                frmMain.menuFindLeadAl.ShortcutKeys = Nothing
+                frmMain.mainMenuAL.Visible = False
+            ElseIf campaign = "AL" Then
+                frmMain.menuFindLead.ShortcutKeys = Nothing
+                frmMain.mainMenuGap.Visible = False
+            End If
         End If
 
         If Not qa Then
@@ -147,7 +173,8 @@ Module modExtra
         Else
             frmMain.menuQaPickUp.ShortcutKeys = 131142
             If frmSide.lbType.Text = "QA Agent" Then
-                frmMain.GapToolStripMenuItem.Visible = False
+                frmMain.mainMenuGap.Visible = False
+                frmMain.mainMenuAL.Visible = False
             End If
         End If
 
@@ -170,27 +197,27 @@ Module modExtra
             frmMain.menuChangeLeads.Visible = False
             frmMain.menuLoadAfinity.Visible = False
             frmMain.menuNewUser.Visible = False
-            frmMain.GapToolStripMenuItem.Visible = False
+            frmMain.mainMenuGap.Visible = False
         End If
 
     End Sub
 
     Sub loadDictionaries(agents As Boolean, affinities As Boolean, products As Boolean, addresses As Boolean, medAids As Boolean, statuses As Boolean)
         If agents Then
-            conn.fillDS("SELECT userName FROM sys_users WHERE active = 1 AND type = 'Agent' ORDER BY userName", "agents")
+            conn.fillDS("SELECT userName FROM sys_users WHERE active = 1 AND type = 'Agent' AND campaign = '" & campaign & "' ORDER BY userName", "agents")
             For Each agent In conn.ds.Tables("agents").Rows
                 dictAgents.Add(agent.item(0), 0)
             Next agent
         End If
 
         If affinities Then
-            conn.fillDS("SELECT affinityName, adminCode FROM zestlife.affinities WHERE affinity = 1 ORDER BY affinityName", "affinities")
+            conn.fillDS("SELECT affinityName, adminCode FROM zestlife.affinities WHERE affinity = 1 AND campaign = '" & campaign & "' ORDER BY affinityName", "affinities")
             dictAffinities.Add("Referal", 0)
             For Each affinity In conn.ds.Tables("affinities").Rows
                 dictAffinities.Add(affinity.item(0), affinity.item(1))
             Next affinity
 
-            conn.fillDS("SELECT adminCode, type FROM affinities WHERE affinity = 1 AND type NOT IN  ('Inbound', 'Zwing')", "affTypes")
+            conn.fillDS("SELECT adminCode, type FROM affinities WHERE affinity = 1 AND type NOT IN  ('Inbound', 'Zwing') AND campaign = '" & campaign & "'", "affTypes")
             For Each affinity In conn.ds.Tables("affTypes").Rows
                 dictAffType.Add(affinity.item(0), affinity.item(1))
             Next affinity
@@ -421,12 +448,16 @@ Module modExtra
 
     Public Sub loadQueue(agent As String)
         Dim leads As String() = Nothing
+        Dim status As String
         conn.fillDS("SELECT previousQueue FROM sys_agent_info WHERE userName = '" & agent & "'", "queueLeads")
         If Not IsDBNull(conn.ds.Tables("queueLeads").Rows(0).Item(0)) Then
             leads = Split(conn.ds.Tables("queueLeads").Rows(0).Item(0), ";")
         End If
         For Each lead In leads
-            frmSide.addToQueue(lead, conn.sendReturn("SELECT CONCAT(COALESCE(firstName,''), ' ', COALESCE(lastName,'')) AS Name FROM lead_primary WHERE leadID = " & lead))
+            status = conn.sendReturn("SELECT status FROM lead_primary WHERE leadID = " & lead)
+            If status = "Busy" Or status = "Allocated" Then
+                frmSide.addToQueue(lead, conn.sendReturn("SELECT CONCAT(COALESCE(firstName,''), ' ', COALESCE(lastName,'')) AS Name FROM lead_primary WHERE leadID = " & lead))
+            End If
         Next
     End Sub
 

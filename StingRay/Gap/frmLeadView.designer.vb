@@ -30,7 +30,6 @@ Partial Class frmLeadView
         Me.rbTelApplication = New System.Windows.Forms.RadioButton()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.llPreExisting = New System.Windows.Forms.LinkLabel()
-        Me.mtbProcedure = New StingRay.WaterMarkTextBox()
         Me.nudDependants = New System.Windows.Forms.NumericUpDown()
         Me.cbMedAidPlan = New System.Windows.Forms.ComboBox()
         Me.cbMedicalAid = New System.Windows.Forms.ComboBox()
@@ -171,7 +170,6 @@ Partial Class frmLeadView
         Me.tbDisclosures = New System.Windows.Forms.TabPage()
         Me.cbDisclosed = New System.Windows.Forms.CheckBox()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
-        Me.mtbReplacementPolicy = New StingRay.WaterMarkTextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.rbPolicyReplaceNo = New System.Windows.Forms.RadioButton()
         Me.rbPolicyReplaceYes = New System.Windows.Forms.RadioButton()
@@ -211,6 +209,8 @@ Partial Class frmLeadView
         Me.btSendEmail = New System.Windows.Forms.Button()
         Me.btTransfer = New System.Windows.Forms.Button()
         Me.mtbComment = New StingRay.WaterMarkTextBox()
+        Me.mtbProcedure = New StingRay.WaterMarkTextBox()
+        Me.mtbReplacementPolicy = New StingRay.WaterMarkTextBox()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -349,18 +349,6 @@ Partial Class frmLeadView
         Me.llPreExisting.TabIndex = 35
         Me.llPreExisting.TabStop = True
         Me.llPreExisting.Text = "Pre-existing condition"
-        '
-        'mtbProcedure
-        '
-        Me.mtbProcedure.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.mtbProcedure.Location = New System.Drawing.Point(102, 176)
-        Me.mtbProcedure.Name = "mtbProcedure"
-        Me.mtbProcedure.Size = New System.Drawing.Size(511, 20)
-        Me.mtbProcedure.TabIndex = 30
-        Me.mtbProcedure.Tag = "procedureIn12Months"
-        Me.mtbProcedure.Visible = False
-        Me.mtbProcedure.WaterMarkColor = System.Drawing.Color.Gray
-        Me.mtbProcedure.WaterMarkText = "Please fill out procedure details"
         '
         'nudDependants
         '
@@ -1781,7 +1769,7 @@ Partial Class frmLeadView
         '
         Me.cbBankName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbBankName.FormattingEnabled = True
-        Me.cbBankName.Items.AddRange(New Object() {"FNB", "Standard Bank", "Standard Chartered", "Nedbank", "PEP Bank", "Post Bank", "Capitec", "Investec", "ABSA", "African Bank", "Bidvest", "BoE", "Ithala", "Rennies", "SA Bank of Athens", "Teba Bank", "Wizzit"})
+        Me.cbBankName.Items.AddRange(New Object() {"FNB", "Standard Bank", "Standard Chartered", "Nedbank", "PEP Bank", "Post Bank", "Capitec", "Investec", "ABSA", "African Bank", "Bidvest", "BoE", "Ithala", "Rennies", "Albaraka", "SA Bank of Athens", "Teba Bank", "Wizzit"})
         Me.cbBankName.Location = New System.Drawing.Point(126, 102)
         Me.cbBankName.Name = "cbBankName"
         Me.cbBankName.Size = New System.Drawing.Size(141, 21)
@@ -1849,18 +1837,6 @@ Partial Class frmLeadView
         Me.GroupBox8.Size = New System.Drawing.Size(668, 34)
         Me.GroupBox8.TabIndex = 16
         Me.GroupBox8.TabStop = False
-        '
-        'mtbReplacementPolicy
-        '
-        Me.mtbReplacementPolicy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.mtbReplacementPolicy.Location = New System.Drawing.Point(282, 10)
-        Me.mtbReplacementPolicy.Name = "mtbReplacementPolicy"
-        Me.mtbReplacementPolicy.Size = New System.Drawing.Size(380, 20)
-        Me.mtbReplacementPolicy.TabIndex = 31
-        Me.mtbReplacementPolicy.Tag = "policyReplaced"
-        Me.mtbReplacementPolicy.Visible = False
-        Me.mtbReplacementPolicy.WaterMarkColor = System.Drawing.Color.Gray
-        Me.mtbReplacementPolicy.WaterMarkText = "Please fill out replacement policy"
         '
         'Label12
         '
@@ -2256,6 +2232,30 @@ Partial Class frmLeadView
         Me.mtbComment.TabIndex = 31
         Me.mtbComment.WaterMarkColor = System.Drawing.Color.Gray
         Me.mtbComment.WaterMarkText = "Please enter comment then press enter"
+        '
+        'mtbProcedure
+        '
+        Me.mtbProcedure.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
+        Me.mtbProcedure.Location = New System.Drawing.Point(102, 176)
+        Me.mtbProcedure.Name = "mtbProcedure"
+        Me.mtbProcedure.Size = New System.Drawing.Size(511, 20)
+        Me.mtbProcedure.TabIndex = 30
+        Me.mtbProcedure.Tag = "procedureIn12Months"
+        Me.mtbProcedure.Visible = False
+        Me.mtbProcedure.WaterMarkColor = System.Drawing.Color.Gray
+        Me.mtbProcedure.WaterMarkText = "Please fill out procedure details"
+        '
+        'mtbReplacementPolicy
+        '
+        Me.mtbReplacementPolicy.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
+        Me.mtbReplacementPolicy.Location = New System.Drawing.Point(282, 10)
+        Me.mtbReplacementPolicy.Name = "mtbReplacementPolicy"
+        Me.mtbReplacementPolicy.Size = New System.Drawing.Size(380, 20)
+        Me.mtbReplacementPolicy.TabIndex = 31
+        Me.mtbReplacementPolicy.Tag = "policyReplaced"
+        Me.mtbReplacementPolicy.Visible = False
+        Me.mtbReplacementPolicy.WaterMarkColor = System.Drawing.Color.Gray
+        Me.mtbReplacementPolicy.WaterMarkText = "Please fill out replacement policy"
         '
         'frmLeadView
         '

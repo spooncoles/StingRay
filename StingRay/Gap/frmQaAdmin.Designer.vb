@@ -26,15 +26,14 @@ Partial Class frmQaAdmin
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btNew = New System.Windows.Forms.Button()
         Me.btSectionAdd = New System.Windows.Forms.Button()
-        Me.btSaveChanges = New System.Windows.Forms.Button()
-        Me.lvQuestions = New StingRay.ListViewCustomReorder.ListViewEx()
-        Me.questionNum = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.question = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.allowNA = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.btDisallowNA = New System.Windows.Forms.Button()
         Me.btMarkAsNA = New System.Windows.Forms.Button()
         Me.btReplace = New System.Windows.Forms.Button()
+        Me.lvQuestions = New StingRay.ListViewCustomReorder.ListViewEx()
+        Me.questionNum = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.question = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.allowNA = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -73,41 +72,6 @@ Partial Class frmQaAdmin
         Me.btSectionAdd.TabIndex = 5
         Me.btSectionAdd.Text = "+"
         Me.btSectionAdd.UseVisualStyleBackColor = True
-        '
-        'btSaveChanges
-        '
-        Me.btSaveChanges.Location = New System.Drawing.Point(592, 265)
-        Me.btSaveChanges.Name = "btSaveChanges"
-        Me.btSaveChanges.Size = New System.Drawing.Size(103, 23)
-        Me.btSaveChanges.TabIndex = 8
-        Me.btSaveChanges.Text = "Save Changes"
-        Me.btSaveChanges.UseVisualStyleBackColor = True
-        '
-        'lvQuestions
-        '
-        Me.lvQuestions.CheckBoxes = True
-        Me.lvQuestions.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.questionNum, Me.question, Me.allowNA})
-        Me.lvQuestions.FullRowSelect = True
-        Me.lvQuestions.GridLines = True
-        Me.lvQuestions.Location = New System.Drawing.Point(12, 33)
-        Me.lvQuestions.MultiSelect = False
-        Me.lvQuestions.Name = "lvQuestions"
-        Me.lvQuestions.Size = New System.Drawing.Size(574, 255)
-        Me.lvQuestions.TabIndex = 9
-        Me.lvQuestions.UseCompatibleStateImageBehavior = False
-        Me.lvQuestions.View = System.Windows.Forms.View.Details
-        '
-        'questionNum
-        '
-        Me.questionNum.Text = "questionNum"
-        '
-        'question
-        '
-        Me.question.Text = "question"
-        '
-        'allowNA
-        '
-        Me.allowNA.Text = "allowNA"
         '
         'GroupBox1
         '
@@ -148,6 +112,32 @@ Partial Class frmQaAdmin
         Me.btReplace.Text = "Replace"
         Me.btReplace.UseVisualStyleBackColor = True
         '
+        'lvQuestions
+        '
+        Me.lvQuestions.CheckBoxes = True
+        Me.lvQuestions.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.questionNum, Me.question, Me.allowNA})
+        Me.lvQuestions.FullRowSelect = True
+        Me.lvQuestions.GridLines = True
+        Me.lvQuestions.Location = New System.Drawing.Point(12, 33)
+        Me.lvQuestions.MultiSelect = False
+        Me.lvQuestions.Name = "lvQuestions"
+        Me.lvQuestions.Size = New System.Drawing.Size(574, 255)
+        Me.lvQuestions.TabIndex = 9
+        Me.lvQuestions.UseCompatibleStateImageBehavior = False
+        Me.lvQuestions.View = System.Windows.Forms.View.Details
+        '
+        'questionNum
+        '
+        Me.questionNum.Text = "questionNum"
+        '
+        'question
+        '
+        Me.question.Text = "question"
+        '
+        'allowNA
+        '
+        Me.allowNA.Text = "allowNA"
+        '
         'frmQaAdmin
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -155,7 +145,6 @@ Partial Class frmQaAdmin
         Me.ClientSize = New System.Drawing.Size(709, 301)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.lvQuestions)
-        Me.Controls.Add(Me.btSaveChanges)
         Me.Controls.Add(Me.btSectionAdd)
         Me.Controls.Add(Me.btNew)
         Me.Controls.Add(Me.Label1)
@@ -174,7 +163,6 @@ Partial Class frmQaAdmin
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents btNew As System.Windows.Forms.Button
     Friend WithEvents btSectionAdd As System.Windows.Forms.Button
-    Friend WithEvents btSaveChanges As System.Windows.Forms.Button
     Friend WithEvents lvQuestions As StingRay.ListViewCustomReorder.ListViewEx
     Friend WithEvents questionNum As System.Windows.Forms.ColumnHeader
     Friend WithEvents question As System.Windows.Forms.ColumnHeader

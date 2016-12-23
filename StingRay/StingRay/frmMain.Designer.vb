@@ -28,11 +28,14 @@ Partial Class frmMain
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UpdateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GapToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mainMenuGap = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuFindLead = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuLoadLead = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuLoadReferral = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuIncentives = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SalesToolsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mainMenuAL = New System.Windows.Forms.ToolStripMenuItem()
+        Me.menuFindLeadAl = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuAdmin = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadLeadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuChangeLeads = New System.Windows.Forms.ToolStripMenuItem()
@@ -40,6 +43,7 @@ Partial Class frmMain
         Me.menuTempAdminCode = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportSalesFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuNewUser = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FindReferralDetailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuQA = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuQaPickUp = New System.Windows.Forms.ToolStripMenuItem()
         Me.menuQaAdmin = New System.Windows.Forms.ToolStripMenuItem()
@@ -54,13 +58,12 @@ Partial Class frmMain
         Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader8 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.FindReferralDetailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.GapToolStripMenuItem, Me.menuAdmin, Me.menuQA})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.mainMenuGap, Me.mainMenuAL, Me.menuAdmin, Me.menuQA})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(944, 24)
@@ -86,12 +89,12 @@ Partial Class frmMain
         Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(112, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
-        'GapToolStripMenuItem
+        'mainMenuGap
         '
-        Me.GapToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.menuFindLead, Me.menuLoadLead, Me.menuLoadReferral, Me.menuIncentives})
-        Me.GapToolStripMenuItem.Name = "GapToolStripMenuItem"
-        Me.GapToolStripMenuItem.Size = New System.Drawing.Size(40, 20)
-        Me.GapToolStripMenuItem.Text = "Gap"
+        Me.mainMenuGap.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.menuFindLead, Me.menuLoadLead, Me.menuLoadReferral, Me.menuIncentives, Me.SalesToolsToolStripMenuItem})
+        Me.mainMenuGap.Name = "mainMenuGap"
+        Me.mainMenuGap.Size = New System.Drawing.Size(40, 20)
+        Me.mainMenuGap.Text = "Gap"
         '
         'menuFindLead
         '
@@ -118,6 +121,26 @@ Partial Class frmMain
         Me.menuIncentives.Name = "menuIncentives"
         Me.menuIncentives.Size = New System.Drawing.Size(171, 22)
         Me.menuIncentives.Text = "Incentives"
+        '
+        'SalesToolsToolStripMenuItem
+        '
+        Me.SalesToolsToolStripMenuItem.Name = "SalesToolsToolStripMenuItem"
+        Me.SalesToolsToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.SalesToolsToolStripMenuItem.Text = "Sales Tools"
+        '
+        'mainMenuAL
+        '
+        Me.mainMenuAL.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.menuFindLeadAl})
+        Me.mainMenuAL.Name = "mainMenuAL"
+        Me.mainMenuAL.Size = New System.Drawing.Size(33, 20)
+        Me.mainMenuAL.Text = "AL"
+        '
+        'menuFindLeadAl
+        '
+        Me.menuFindLeadAl.Name = "menuFindLeadAl"
+        Me.menuFindLeadAl.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
+        Me.menuFindLeadAl.Size = New System.Drawing.Size(165, 22)
+        Me.menuFindLeadAl.Text = "Find Lead"
         '
         'menuAdmin
         '
@@ -162,6 +185,12 @@ Partial Class frmMain
         Me.menuNewUser.Size = New System.Drawing.Size(178, 22)
         Me.menuNewUser.Text = "Load New User"
         '
+        'FindReferralDetailsToolStripMenuItem
+        '
+        Me.FindReferralDetailsToolStripMenuItem.Name = "FindReferralDetailsToolStripMenuItem"
+        Me.FindReferralDetailsToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
+        Me.FindReferralDetailsToolStripMenuItem.Text = "Find Referral Details"
+        '
         'menuQA
         '
         Me.menuQA.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.menuQaPickUp, Me.menuQaAdmin, Me.QANonSaleToolStripMenuItem, Me.QAStatsToolStripMenuItem})
@@ -198,12 +227,6 @@ Partial Class frmMain
         Me.NotificationIcon.Icon = CType(resources.GetObject("NotificationIcon.Icon"), System.Drawing.Icon)
         Me.NotificationIcon.Text = "StingRay"
         '
-        'FindReferralDetailsToolStripMenuItem
-        '
-        Me.FindReferralDetailsToolStripMenuItem.Name = "FindReferralDetailsToolStripMenuItem"
-        Me.FindReferralDetailsToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
-        Me.FindReferralDetailsToolStripMenuItem.Text = "Find Referral Details"
-        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -227,7 +250,7 @@ Partial Class frmMain
     End Sub
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents FileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents GapToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mainMenuGap As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents menuFindLead As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents menuLoadLead As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ExitToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -256,4 +279,7 @@ Partial Class frmMain
     Friend WithEvents QANonSaleToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents QAStatsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents FindReferralDetailsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SalesToolsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents mainMenuAL As ToolStripMenuItem
+    Friend WithEvents menuFindLeadAl As ToolStripMenuItem
 End Class

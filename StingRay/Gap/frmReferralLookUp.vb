@@ -11,6 +11,9 @@
 
         If whereString <> " WHERE " Then
             searchString = searchString & whereString.Substring(0, whereString.Length - 2)
+            searchString += " AND campaign = '" & campaign & "'"
+        Else
+            searchString += "AND campaign = '" & campaign & "'"
         End If
 
         conn.fillDS(searchString, "referralDetails")
@@ -40,8 +43,19 @@
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        If MsgBox("Are you sure you would Like To export all Zwingers?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            notify("Pulling data...")
+            conn.fillDS("Select adminCode, affinityName, contactNum, Vat_ID, emailAdd, loadedBy FROM zestlife.affinities WHERE type = 'Zwing'", "zwingers")
+            exportDataTable(conn.ds.Tables("zwingers"))
+        End If
+    End Sub
+
+    Private Sub btExportWithAddress_Click(sender As Object, e As EventArgs) Handles btExportWithAddress.Click
         If MsgBox("Are you sure you would like to export all Zwingers?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            conn.fillDS("SELECT adminCode, affinityName, contactNum, Vat_ID, emailAdd, loadedBy FROM zestlife.affinities WHERE type = 'Zwing'", "zwingers")
+            notify("Pulling data...")
+            conn.fillDS("SELECT adminCode, affinityName, contactNum, Vat_ID, emailAdd, affinities.loadedBy, postal1, postal2, postalSuburb, postalCity, postalProvince, postalCode FROM zestlife.affinities " _
+                         & "LEFT JOIN (SELECT idnumber, postal1, postal2, postalSuburb, postalCity, postalProvince, postalCode FROM lead_primary INNER JOIN lead_address ON lead_primary.leadID = lead_address.leadID WHERE idnumber IS NOT NULL) as a " _
+                         & "ON idnumber = Vat_ID WHERE type = 'Zwing'", "zwingers")
             exportDataTable(conn.ds.Tables("zwingers"))
         End If
     End Sub

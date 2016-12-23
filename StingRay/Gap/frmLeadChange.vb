@@ -432,13 +432,18 @@ Public Class frmLeadChange
                         If IsDBNull(rowChange.Item(column)) Then rowChange.Item(column) = ""
 
                         If rowDup.Cells(column).Value <> rowChange.Item(column) Then
-                            If column = "Email" Then
-                                lvChanges.Items.Add(New ListViewItem({"EmailAddress", rowDup.Cells(column).Value}))
-                            ElseIf column = "contactNum" Then
-                                lvChanges.Items.Add(New ListViewItem({"ContactNumber", rowDup.Cells(column).Value}))
-                            Else
-                                lvChanges.Items.Add(New ListViewItem({column, rowDup.Cells(column).Value}))
-                            End If
+                            Select Case column
+                                Case "Email"
+                                    lvChanges.Items.Add(New ListViewItem({"EmailAddress", rowDup.Cells(column).Value}))
+                                Case "contactNum"
+                                    lvChanges.Items.Add(New ListViewItem({"ContactNumber", rowDup.Cells(column).Value}))
+                                Case "firstName", "lastName"
+                                    If rowDup.Cells(column).Value <> "" Then
+                                        lvChanges.Items.Add(New ListViewItem({column, rowDup.Cells(column).Value}))
+                                    End If
+                                Case Else
+                                    lvChanges.Items.Add(New ListViewItem({column, rowDup.Cells(column).Value}))
+                            End Select
                         End If
 
                     Next column

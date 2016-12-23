@@ -44,7 +44,7 @@ Public Class frmLoadLead
             tabControl.SelectedTab = tbBatch
             conn.fillDS("SELECT agent, SUM(IF(status = 'Busy', 1, 0)) AS 'Busy', SUM(IF(status = 'Allocated', 1, 0)) AS Allocated, 0 AS inBatch " _
                         & "FROM lead_primary INNER JOIN sys_users ON agent = userName " _
-                        & "WHERE active = 1 AND type = 'Agent' AND status IN ('Allocated', 'Busy') GROUP BY agent", "agentOutstanding")
+                        & "WHERE active = 1 AND type = 'Agent' AND status IN ('Allocated', 'Busy') AND sys_users.campaign = '" & campaign & "' GROUP BY agent", "agentOutstanding")
             dgAgents.DataSource = conn.ds.Tables("agentOutstanding")
             dgAgents.AutoResizeColumns()
 
@@ -80,7 +80,7 @@ Public Class frmLoadLead
 
     Private Sub searchProviders()
         Dim selectString As String = "SELECT adminCode, affinityName, type, contactNum, emailAdd FROM affinities"
-        Dim whereString As String = " WHERE affinity = '" & CInt(rbAffinity.Checked) * -1 & "'"
+        Dim whereString As String = " WHERE affinity = '" & CInt(rbAffinity.Checked) * -1 & "' AND campaign = '" & campaign & "'"
         Dim orderString As String = " ORDER BY " & cbOrder.Text & " ASC"
 
         'Field Searches
@@ -183,7 +183,7 @@ Public Class frmLoadLead
                             control.Focus()
                             Exit Sub
                         Else
-                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE RIGHT(contactNumber, 9) = '" & txContactNum.Text.Substring(txContactNum.Text.Length - 9) & "'")
+                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE campaign = '" & campaign & "' AND RIGHT(contactNumber, 9) = '" & txContactNum.Text.Substring(txContactNum.Text.Length - 9) & "'")
                             If dupID <> "NULL" Then
                                 dupMsg(CInt(dupID), "contact number")
                                 Exit Sub
@@ -203,7 +203,7 @@ Public Class frmLoadLead
                             control.Focus()
                             Exit Sub
                         Else
-                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE idNumber = '" & control.Text & "'")
+                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE campaign = '" & campaign & "' AND idNumber = '" & control.Text & "'")
                             If dupID <> "NULL" Then
                                 dupMsg(CInt(dupID), "ID Number")
                                 Exit Sub
@@ -216,9 +216,9 @@ Public Class frmLoadLead
                         warning = addToWarning(warning, control)
                     Else
                         If modValidate.validateEmail(control.Text) Then
-                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE emailAddress = '" & control.Text & "'")
+                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE campaign = '" & campaign & "' AND emailAddress = '" & control.Text & "'")
                             If dupID <> "NULL" Then
-                                dupMsg(CInt(dupID), "email address")
+                                dupMsg(CInt(dupID), "eMail Address")
                                 Exit Sub
                             End If
                         Else
@@ -269,7 +269,7 @@ Public Class frmLoadLead
         Next control
 
 
-        Dim leadID As Integer = conn.sendReturn("INSERT INTO lead_primary (" & insertColumns & ")  VALUES (" & insertValues & "); SELECT LAST_INSERT_ID();")
+        Dim leadID As Integer = conn.sendReturn("INSERT INTO lead_primary (campaign, " & insertColumns & ")  VALUES ('Gap', " & insertValues & "); SELECT LAST_INSERT_ID();")
         If txComment.Text <> "" Then conn.send("INSERT INTO lead_comments (leadID, user, comment) VALUES (" & leadID & ", '" & frmSide.lbUser.Text & "', '" & Replace(txComment.Text, "'", "''") & "')")
         conn.recordEvent("Lead Loaded", , leadID)
         If frmSide.lbUser.Text = cbAgent.Text Then
@@ -518,7 +518,7 @@ Public Class frmLoadLead
                         contactNum = .Rows(i).Cells("contactNum").Value
                         If contactNum <> "" And contactNum <> "0" Then
 
-                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE RIGHT(contactNumber, 9) = '" & contactNum.Substring(contactNum.Length - 9) & "'")
+                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE campaign = '" & campaign & "' AND RIGHT(contactNumber, 9) = '" & contactNum.Substring(contactNum.Length - 9) & "'")
                             If dupID <> "NULL" Then
                                 dgLeadsToUpload.Rows(i).Cells("dupLeadID").Value = dupID
                                 insertDup(i)
@@ -531,7 +531,7 @@ Public Class frmLoadLead
                         End If
 
                         If .Rows(i).Cells("email").Value <> "" Then
-                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE emailAddress = '" & .Rows(i).Cells("email").Value & "'")
+                            Dim dupID As String = conn.sendReturn("SELECT leadID FROM lead_primary WHERE campaign = '" & campaign & "' AND emailAddress = '" & .Rows(i).Cells("email").Value & "'")
                             If dupID <> "NULL" Then
                                 dgLeadsToUpload.Rows(i).Cells("dupLeadID").Value = dupID
                                 insertDup(i)
@@ -607,11 +607,11 @@ Public Class frmLoadLead
                 Dim lastNameUpload As String = If(row.Cells("lastName").Value = "", "NULL", "'" & Replace(row.Cells("lastName").Value, "'", "''") & "'")
                 Dim emailUpload As String = If(row.Cells("Email").Value = "", "NULL", "'" & row.Cells("Email").Value & "'")
 
-                leadID = CInt(conn.sendReturn("INSERT INTO lead_primary(agent, status, affinityCode, title, firstName, lastName, contactNumber, emailAddress, source, loadedBy) " _
-                              & "VALUES('" & row.Cells("Agent").Value & "', 'Allocated', '" & row.Cells("affinityCode").Value & "', " _
+                leadID = CInt(conn.sendReturn("INSERT INTO lead_primary(campaign, agent, status, affinityCode, title, firstName, lastName, contactNumber, emailAddress, source, loadedBy) " _
+                              & "VALUES('Gap', '" & row.Cells("Agent").Value & "', 'Allocated', '" & row.Cells("affinityCode").Value & "', " _
                               & titleUpload & ", " & firstnameUpload & ", " & lastNameUpload & ", " & contactNumberUpload & ", " & emailUpload & ", '" & row.Cells("source").Value & "', " _
                               & "'" & frmSide.lbUser.Text & "'); SELECT LAST_INSERT_ID();"))
-                    If row.Cells("affinityID").Value <> "" And row.Cells("leadNewID").Value = "" Then
+                If row.Cells("affinityID").Value <> "" And row.Cells("leadNewID").Value = "" Then
                         conn.send("INSERT INTO lead_new (title, firstName, lastName, contactNumber, emailAdd, comment, supplier, supplierID, source, zestLeadID, actionTaken) " _
                                 & "VALUES (" & titleUpload & ", " & firstnameUpload & ", " & lastNameUpload & ", " & contactNumberUpload & ", " & emailUpload _
                                 & ", '" & Replace(row.Cells("comment").Value, "'", "''") & "', '" & row.Cells("affinityCode").Value & "', '" & row.Cells("affinityID").Value & "', '" & row.Cells("source").Value & "', " & leadID & ", 'Allocated')")
@@ -704,13 +704,13 @@ Public Class frmLoadLead
 
     Sub dupMsg(leadID As Integer, reason As String)
         If frmSide.lbType.Text.Contains("Admin") Then
-            If MsgBox("Dup lead - " & leadID & " - exists for " & reason & ". Show in lead change form?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            If MsgBox("Dup lead - " & leadID & " - exists on " & reason & ". Show in lead change form?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
                 Dim leads As New ArrayList
                 leads.Add(leadID)
                 frmLeadChange.loadSpecificLeads(leads)
             End If
         Else
-            MsgBox("Dup lead - " & leadID & " - exists for " & reason & ". Please contact lead admin.")
+            MsgBox("Dup lead - " & leadID & " - exists on " & reason & ". Please contact lead admin.")
         End If
     End Sub
 
@@ -993,22 +993,31 @@ Public Class frmLoadLead
         Dim agents As String = ""
         'Dim inboundList As New List(Of Integer)
 
+        'Use only selected agents and only if you do not have leads still in allocated for more than a day and busy leads before 2016
         If dgAgents.SelectedRows.Count <= 1 Then
             For Each row As DataGridViewRow In dgAgents.Rows
-                agents += "'" & row.Cells("Agent").Value & "', "
+                If conn.sendReturn("SELECT COUNT(leadID) FROM lead_primary WHERE ((status = 'Busy' AND YEAR(loadedDate) < 2016) OR (status = 'Allocated' AND DATEDIFF(DATE(loadedDate), CURDATE()) < -1)) AND (agent = '" & row.Cells("Agent").Value & "')") = "NULL" Then
+                    agents += "'" & row.Cells("Agent").Value & "', "
+                End If
             Next
         Else
             For Each row As DataGridViewRow In dgAgents.SelectedRows
-                agents += "'" & row.Cells("Agent").Value & "', "
+                If conn.sendReturn("SELECT COUNT(leadID) FROM lead_primary WHERE ((status = 'Busy' AND YEAR(loadedDate) < 2016) OR (status = 'Allocated' AND DATEDIFF(DATE(loadedDate), CURDATE()) < -1)) AND (agent = '" & row.Cells("Agent").Value & "')") = "NULL" Then
+                    agents += "'" & row.Cells("Agent").Value & "', "
+                End If
             Next
         End If
-
+        If agents = "" Then
+            MsgBox("No agent's avaliable right now")
+            Exit Sub
+        End If
         agents = agents.Substring(0, agents.Length - 2)
         recalcAgentAllocated()
 
         conn.fillDS("SELECT lead_primary.agent, SUM(IF(status = 'Sale', 1, 0))/loaded as convRate, loadedToday, 0 AS avaliableToday, 0 AS inBatch, 0 as allocated FROM lead_primary " _
                     & "INNER JOIN (SELECT user FROM hist_events WHERE DATE(timeStamp) = CURDATE() GROUP BY user) AS b ON user = lead_primary.agent INNER JOIN affinities on affinityCode = adminCode " _
                     & "INNER JOIN (SELECT username FROM sys_agent_info WHERE recieveLeads = 1) as d ON lead_primary.agent = userName " _
+                    & "INNER JOIN (SELECT user FROM (SELECT hist_events.user, eventMain, timestamp FROM hist_events INNER JOIN (SELECT MAX(id) as lastID, user from hist_events WHERE DATE(timestamp) = CURDATE() GROUP BY user) as a ON id = lastID) as b WHERE eventmain <> 'Logout') AS e ON lead_primary.agent = e.user " _
                     & "LEFT JOIN (SELECT agent, COUNT(leadID) as loadedToday FROM lead_primary INNER JOIN affinities on affinityCode = adminCode " _
                     & "WHERE type = 'Outbound' AND DATE(loadedDate) = DATE(CURDATE()) GROUP BY agent) as a ON lead_primary.agent = a.agent " _
                     & "LEFT JOIN (SELECT agent, COUNT(leadID) AS loaded FROM lead_primary INNER JOIN affinities on affinityCode = adminCode WHERE type = 'Outbound' AND DATE(loadedDate) BETWEEN DATE_SUB(curdate(), INTERVAL 2 WEEK) AND DATE_SUB(curdate(), INTERVAL 1 DAY) GROUP BY  agent) as c on lead_primary.agent = c.agent " _
@@ -1020,8 +1029,8 @@ Public Class frmLoadLead
             Exit Sub
         End If
 
-
         For Each rowConv As DataRow In conn.ds.Tables("agentConv").Rows
+
             If Not IsDBNull(rowConv.Item("convRate")) Then
                 If rowConv.Item("convRate") < 0.08 Then
                     rowConv.Item("avaliableToday") = 15
@@ -1044,7 +1053,6 @@ Public Class frmLoadLead
                     rowConv.Item("allocated") = row.Cells("allocated").Value
                 End If
             Next
-
         Next rowConv
 
 
@@ -1289,4 +1297,31 @@ Public Class frmLoadLead
         End If
     End Sub
 
+    Private Sub dgDups_MouseDown(sender As Object, e As MouseEventArgs) Handles dgDups.MouseDown
+        If e.Button = Windows.Forms.MouseButtons.Right Then
+            Dim ht As DataGridView.HitTestInfo
+            ht = Me.dgDups.HitTest(e.X, e.Y)
+            If ht.Type = DataGridViewHitTestType.Cell Then
+                dgDups.ClearSelection()
+                dgDups.Rows(ht.RowIndex).Selected = True
+            End If
+        End If
+    End Sub
+
+    Private Sub DeleteAsDupToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DeleteAsDupToolStripMenuItem1.Click
+        Dim rowNew As DataGridViewRow = dgDups.SelectedRows(0)
+
+
+
+        If Application.OpenForms().OfType(Of frmLeadChange).Any Then
+            For Each rowDup As DataGridViewRow In frmLeadChange.dgPickUp.Rows
+                If rowNew.Cells("dupLeadID").Value = rowDup.Cells("leadID").Value Then
+                    frmLeadChange.dgPickUp.Rows.Remove(rowDup)
+                End If
+            Next rowDup
+        End If
+
+        conn.send("UPDATE lead_new SET actionTaken = 'Duplicate', zestLeadID = " & rowNew.Cells("dupLeadID").Value & " WHERE id = " & rowNew.Cells("leadNewID").Value)
+        dgDups.Rows.Remove(rowNew)
+    End Sub
 End Class
